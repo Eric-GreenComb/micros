@@ -4,19 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/banerwai/micros/category/bean"
-	"golang.org/x/net/context"
 	"io/ioutil"
 	"sort"
 	"sync"
-)
 
-// ProfileService is a simple CRUD interface for user profiles.
-type CategoryService interface {
-	LoadCategoriesFile(ctx context.Context, file string) error
-	GetSubCategories(ctx context.Context, categoryID string) ([]bean.SubCategory, error)
-	GetCategories(ctx context.Context) ([]bean.Category, error)
-}
+	"github.com/banerwai/micros/category/service"
+	thriftcategory "github.com/banerwai/micros/category/thrift/gen-go/category"
+)
 
 var (
 	errInconsistentIDs = errors.New("inconsistent IDs")
@@ -26,30 +20,49 @@ var (
 
 type inmemService struct {
 	mtx     sync.RWMutex
-	m       map[string]bean.Category
+	m       map[string]thriftcategory.Category
 	sortkey []string
 }
 
-func newInmemService() CategoryService {
+func newInmemService() service.CategoryService {
 	return &inmemService{
-		m:       map[string]bean.Category{},
+		m:       map[string]thriftcategory.Category{},
 		sortkey: make([]string, 0),
 	}
 }
 
-func (self *inmemService) LoadCategoriesFile(ctx context.Context, file string) error {
-	_f, _ := ioutil.ReadFile("categories.json")
-	var categories []bean.Category
-	err := json.Unmarshal(_f, &categories)
-	if err != nil {
-		fmt.Println("error:", err)
-		return err
-	}
+func (self *inmemService) SayHi(name string) string { return "Hi : " + name }
 
-	return self.InitCategories(ctx, categories)
+func (self *inmemService) GetDemoSubCategory(id string) thriftcategory.SubCategory {
+	return thriftcategory.SubCategory{"001", "name-001"}
 }
 
-func (self *inmemService) InitCategories(ctx context.Context, categories []bean.Category) error {
+func (self *inmemService) GetDemoSubCategories(category_id string) []thriftcategory.SubCategory {
+	var subs []thriftcategory.SubCategory
+
+	subs = append(subs, thriftcategory.SubCategory{"001", "name-001"})
+	subs = append(subs, thriftcategory.SubCategory{"002", "name-002"})
+
+	return subs
+}
+
+func (self *inmemService) LoadCategory(path string) bool {
+	_f, _err := ioutil.ReadFile(path)
+	if _err != nil {
+		fmt.Println("error:", _err)
+		return false
+	}
+	var categories []thriftcategory.Category
+	_err = json.Unmarshal(_f, &categories)
+	if _err != nil {
+		fmt.Println("error:", _err)
+		return false
+	}
+
+	return self.initCategories(categories)
+}
+
+func (self *inmemService) initCategories(categories []thriftcategory.Category) bool {
 	self.mtx.Lock()
 	defer self.mtx.Unlock()
 
@@ -70,26 +83,28 @@ func (self *inmemService) InitCategories(ctx context.Context, categories []bean.
 	}
 	sort.Strings(self.sortkey)
 
-	return nil
+	return true
 }
 
-func (self *inmemService) GetCategories(ctx context.Context) ([]bean.Category, error) {
+func (self *inmemService) GetCategories() []*thriftcategory.Category {
 	self.mtx.RLock()
 	defer self.mtx.RUnlock()
 
-	var _categories []bean.Category
+	var _categories []*thriftcategory.Category
 	for _, _k := range self.sortkey {
-		_categories = append(_categories, self.m[_k])
+		_cat := self.m[_k]
+		_categories = append(_categories, &_cat)
 	}
-	return _categories, nil
+	return _categories
 }
 
-func (self *inmemService) GetSubCategories(ctx context.Context, categoryID string) ([]bean.SubCategory, error) {
+func (self *inmemService) GetSubCategories(category_id string) []*thriftcategory.SubCategory {
 	self.mtx.RLock()
 	defer self.mtx.RUnlock()
-	p, ok := self.m[categoryID]
+
+	p, ok := self.m[category_id]
 	if !ok {
-		return []bean.SubCategory{}, errNotFound
+		return nil
 	}
-	return p.SubCategories, nil
+	return p.Subcategories
 }

@@ -3,56 +3,128 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net/http"
+	stdlog "log"
+	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
-	"golang.org/x/net/context"
+	"github.com/apache/thrift/lib/go/thrift"
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
 
 	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/metrics"
+	"github.com/go-kit/kit/metrics/expvar"
+	"github.com/go-kit/kit/metrics/prometheus"
+
+	"github.com/banerwai/micros/category/service"
+	thriftcategory "github.com/banerwai/micros/category/thrift/gen-go/category"
 )
 
 func main() {
+	// Flag domain. Note that gRPC transitively registers flags via its import
+	// of glog. So, we define a new flag set, to keep those domains distinct.
+	fs := flag.NewFlagSet("", flag.ExitOnError)
 	var (
-		httpAddr = flag.String("http.addr", ":3000", "HTTP listen address")
+		thriftAddr       = fs.String("thrift.addr", ":6001", "Address for Thrift server")
+		thriftProtocol   = fs.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
+		thriftBufferSize = fs.Int("thrift.buffer.size", 0, "0 for unbuffered")
+		thriftFramed     = fs.Bool("thrift.framed", false, "true to enable framing")
 	)
-	flag.Parse()
+	flag.Usage = fs.Usage // only show our flags
+	if err := fs.Parse(os.Args[1:]); err != nil {
+		fmt.Fprintf(os.Stderr, "%v", err)
+		os.Exit(1)
+	}
 
+	// package log
 	var logger log.Logger
 	{
 		logger = log.NewLogfmtLogger(os.Stderr)
-		logger = log.NewContext(logger).With("ts", log.DefaultTimestampUTC)
-		logger = log.NewContext(logger).With("caller", log.DefaultCaller)
+		logger = log.NewContext(logger).With("ts", log.DefaultTimestampUTC).With("caller", log.DefaultCaller)
+		stdlog.SetFlags(0)                             // flags are handled by Go kit's logger
+		stdlog.SetOutput(log.NewStdlibAdapter(logger)) // redirect anything using stdlib log to us
 	}
 
-	var ctx context.Context
+	// package metrics
+	var requestDuration metrics.TimeHistogram
 	{
-		ctx = context.Background()
+		requestDuration = metrics.NewTimeHistogram(time.Nanosecond, metrics.NewMultiHistogram(
+			"request_duration_ns",
+			expvar.NewHistogram("request_duration_ns", 0, 5e9, 1, 50, 95, 99),
+			prometheus.NewSummary(stdprometheus.SummaryOpts{
+				Namespace: "myorg",
+				Subsystem: "addsvc",
+				Name:      "duration_ns",
+				Help:      "Request duration in nanoseconds.",
+			}, []string{"method"}),
+		))
 	}
 
-	var s CategoryService
+	// Business domain
+	var svc service.CategoryService
 	{
-		s = newInmemService()
-		s = loggingMiddleware{s, log.NewContext(logger).With("component", "svc")}
-		// s.LoadCategoriesFile(ctx, "categories.json")
+		svc = newInmemService()
+		svc = loggingMiddleware{svc, logger}
+		svc = instrumentingMiddleware{svc, requestDuration}
 	}
 
-	var h http.Handler
-	{
-		h = makeHandler(ctx, s, log.NewContext(logger).With("component", "http"))
-	}
+	// Mechanical stuff
+	rand.Seed(time.Now().UnixNano())
+	errc := make(chan error)
 
-	errs := make(chan error, 2)
 	go func() {
-		logger.Log("transport", "http", "address", *httpAddr, "msg", "listening")
-		errs <- http.ListenAndServe(*httpAddr, h)
-	}()
-	go func() {
-		c := make(chan os.Signal)
-		signal.Notify(c, syscall.SIGINT)
-		errs <- fmt.Errorf("%s", <-c)
+		errc <- interrupt()
 	}()
 
-	logger.Log("terminated", <-errs)
+	// Transport: Thrift
+	go func() {
+		var protocolFactory thrift.TProtocolFactory
+		switch *thriftProtocol {
+		case "binary":
+			protocolFactory = thrift.NewTBinaryProtocolFactoryDefault()
+		case "compact":
+			protocolFactory = thrift.NewTCompactProtocolFactory()
+		case "json":
+			protocolFactory = thrift.NewTJSONProtocolFactory()
+		case "simplejson":
+			protocolFactory = thrift.NewTSimpleJSONProtocolFactory()
+		default:
+			errc <- fmt.Errorf("invalid Thrift protocol %q", *thriftProtocol)
+			return
+		}
+		var transportFactory thrift.TTransportFactory
+		if *thriftBufferSize > 0 {
+			transportFactory = thrift.NewTBufferedTransportFactory(*thriftBufferSize)
+		} else {
+			transportFactory = thrift.NewTTransportFactory()
+		}
+		if *thriftFramed {
+			transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
+		}
+		transport, err := thrift.NewTServerSocket(*thriftAddr)
+		if err != nil {
+			errc <- err
+			return
+		}
+		transportLogger := log.NewContext(logger).With("transport", "thrift")
+		transportLogger.Log("addr", *thriftAddr)
+		errc <- thrift.NewTSimpleServer4(
+			thriftcategory.NewCategoryServiceProcessor(thriftBinding{svc}),
+			transport,
+			transportFactory,
+			protocolFactory,
+		).Serve()
+	}()
+
+	logger.Log("fatal", <-errc)
 }
+
+func interrupt() error {
+	c := make(chan os.Signal)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+	return fmt.Errorf("%s", <-c)
+}
+
+type loggingCollector struct{ log.Logger }
