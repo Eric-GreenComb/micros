@@ -18,16 +18,24 @@ import (
 	"github.com/go-kit/kit/metrics/expvar"
 	"github.com/go-kit/kit/metrics/prometheus"
 
-	"github.com/banerwai/micros/email/service"
-	thriftemail "github.com/banerwai/micros/email/thrift/gen-go/email"
+	"github.com/banerwai/micros/token/service"
+	thrifttoken "github.com/banerwai/micros/token/thrift/gen-go/token"
+
+	"github.com/banerwai/micros/common/mongo"
+	"labix.org/v2/mgo"
 )
 
+var mgoSession *mgo.Session
+var mgoDatabase *mgo.Database
+var mgoCollectionToken *mgo.Collection
+
 func main() {
+
 	// Flag domain. Note that gRPC transitively registers flags via its import
 	// of glog. So, we define a new flag set, to keep those domains distinct.
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	var (
-		thriftAddr       = fs.String("thrift.addr", ":6002", "Address for Thrift server")
+		thriftAddr       = fs.String("thrift.addr", ":6004", "Address for Thrift server")
 		thriftProtocol   = fs.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = fs.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = fs.Bool("thrift.framed", false, "true to enable framing")
@@ -37,6 +45,11 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%v", err)
 		os.Exit(1)
 	}
+
+	mgoSession, mgoDatabase = mongo.GetMongo()
+	defer mgoSession.Close()
+
+	mgoCollectionToken = mgoDatabase.C("token")
 
 	// package log
 	var logger log.Logger
@@ -55,7 +68,7 @@ func main() {
 			expvar.NewHistogram("request_duration_ns", 0, 5e9, 1, 50, 95, 99),
 			prometheus.NewSummary(stdprometheus.SummaryOpts{
 				Namespace: "banerwai",
-				Subsystem: "email",
+				Subsystem: "token",
 				Name:      "duration_ns",
 				Help:      "Request duration in nanoseconds.",
 			}, []string{"method"}),
@@ -63,7 +76,7 @@ func main() {
 	}
 
 	// Business domain
-	var svc service.EmailService
+	var svc service.TokenService
 	{
 		svc = newInmemService()
 		svc = loggingMiddleware{svc, logger}
@@ -111,7 +124,7 @@ func main() {
 		transportLogger := log.NewContext(logger).With("transport", "thrift")
 		transportLogger.Log("addr", *thriftAddr)
 		errc <- thrift.NewTSimpleServer4(
-			thriftemail.NewEmailServiceProcessor(thriftBinding{svc}),
+			thrifttoken.NewTokenServiceProcessor(thriftBinding{svc}),
 			transport,
 			transportFactory,
 			protocolFactory,

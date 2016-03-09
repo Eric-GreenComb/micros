@@ -7,7 +7,7 @@ import (
 
 	"html/template"
 
-	"github.com/banerwai/gommon/dir"
+	gfile "github.com/banerwai/gommon/file"
 	"github.com/banerwai/micros/render/service"
 )
 
@@ -51,7 +51,7 @@ func (self *inmemService) cachedTmpl(tmpl string) (*template.Template, error) {
 		return &v, nil
 	}
 
-	_file := dir.GetCurrentDirectory() + "/tmpl/" + tmpl + ".tmpl"
+	_file := gfile.GetCurrentDirectory() + "/tmpl/" + tmpl + ".tmpl"
 	fmt.Println(_file)
 
 	t, err := template.ParseFiles(_file)
