@@ -11,7 +11,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	"github.com/banerwai/bean"
+	"github.com/banerwai/micros/bean"
 	thriftclient "github.com/banerwai/micros/category/client/thrift"
 	"github.com/banerwai/micros/category/service"
 	thriftcategory "github.com/banerwai/micros/category/thrift/gen-go/category"

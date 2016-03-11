@@ -43,6 +43,14 @@ func GetValue(key string) (string, error) {
 	return resp.Node.Value, err
 }
 
+func GetString(key string) string {
+	resp, err := GetValue(key)
+	if err != nil {
+		return ""
+	}
+	return resp
+}
+
 // key = /banerwai/mongo return multi node
 // /banerwai/mongo/conn       localhost:27017
 // banerwai/mongo/database    banerwai

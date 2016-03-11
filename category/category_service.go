@@ -31,7 +31,7 @@ func newInmemService() service.CategoryService {
 	}
 }
 
-func (self *inmemService) SayHi(name string) string { return "Hi : " + name }
+func (self *inmemService) SayHi(name string) string { return "hi," + name }
 
 func (self *inmemService) GetDemoSubCategory(id string) thriftcategory.SubCategory {
 	return thriftcategory.SubCategory{"001", "name-001"}
