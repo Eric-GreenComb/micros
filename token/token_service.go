@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/banerwai/gather/bean"
 	"github.com/banerwai/gommon/uuid"
-	"github.com/banerwai/micros/bean"
 	"github.com/banerwai/micros/token/service"
 
 	"labix.org/v2/mgo/bson"
