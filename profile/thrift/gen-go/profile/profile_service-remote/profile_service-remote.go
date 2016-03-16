@@ -21,6 +21,8 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string GetProfile(string profile_id)")
+	fmt.Fprintln(os.Stderr, "  string GetProfileByCat(string name)")
+	fmt.Fprintln(os.Stderr, "  string GetProfileBySubCat(string name)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -123,6 +125,26 @@ func main() {
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
 		fmt.Print(client.GetProfile(value0))
+		fmt.Print("\n")
+		break
+	case "GetProfileByCat":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "GetProfileByCat requires 1 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		fmt.Print(client.GetProfileByCat(value0))
+		fmt.Print("\n")
+		break
+	case "GetProfileBySubCat":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "GetProfileBySubCat requires 1 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		fmt.Print(client.GetProfileBySubCat(value0))
 		fmt.Print("\n")
 		break
 	case "":

@@ -87,7 +87,7 @@ func main() {
 	case "demosub":
 		id := s1
 		v := svc.GetDemoSubCategory(id)
-		_sub := bean.SubCategory{v.ID, v.Name}
+		_sub := bean.SubCategory{v.ID, v.Name, v.Desc}
 
 		// _sub.ID = v.ID
 		// _sub.Name = v.Name

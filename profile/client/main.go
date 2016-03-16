@@ -83,6 +83,16 @@ func main() {
 		v := svc.GetProfile(profile_id)
 		logger.Log("method", "GetProfile", "profile_id", profile_id, "v", v, "took", time.Since(begin))
 
+	case "c":
+		_name := s1
+		v := svc.GetProfileByCat(_name)
+		logger.Log("method", "GetProfileByCat", "name", _name, "v", v, "took", time.Since(begin))
+
+	case "sc":
+		_name := s1
+		v := svc.GetProfileBySubCat(_name)
+		logger.Log("method", "GetProfileBySubCat", "name", _name, "v", v, "took", time.Since(begin))
+
 	default:
 		logger.Log("err", "invalid method "+method)
 		os.Exit(1)

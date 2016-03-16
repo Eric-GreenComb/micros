@@ -34,14 +34,14 @@ func newInmemService() service.CategoryService {
 func (self *inmemService) SayHi(name string) string { return "hi," + name }
 
 func (self *inmemService) GetDemoSubCategory(id string) thriftcategory.SubCategory {
-	return thriftcategory.SubCategory{"001", "name-001"}
+	return thriftcategory.SubCategory{"001", "name-001", "desc-001"}
 }
 
 func (self *inmemService) GetDemoSubCategories(category_id string) []thriftcategory.SubCategory {
 	var subs []thriftcategory.SubCategory
 
-	subs = append(subs, thriftcategory.SubCategory{"001", "name-001"})
-	subs = append(subs, thriftcategory.SubCategory{"002", "name-002"})
+	subs = append(subs, thriftcategory.SubCategory{"001", "name-001", "desc-001"})
+	subs = append(subs, thriftcategory.SubCategory{"002", "name-002", "desc-0012"})
 
 	return subs
 }

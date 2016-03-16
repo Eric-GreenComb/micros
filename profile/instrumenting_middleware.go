@@ -21,3 +21,21 @@ func (m instrumentingMiddleware) GetProfile(profile_id string) (r string) {
 	r = m.ProfileService.GetProfile(profile_id)
 	return
 }
+
+func (m instrumentingMiddleware) GetProfileByCat(name string) (r string) {
+	defer func(begin time.Time) {
+		methodField := metrics.Field{Key: "method", Value: "GetProfileByCat"}
+		m.requestDuration.With(methodField).Observe(time.Since(begin))
+	}(time.Now())
+	r = m.ProfileService.GetProfileByCat(name)
+	return
+}
+
+func (m instrumentingMiddleware) GetProfileBySubCat(name string) (r string) {
+	defer func(begin time.Time) {
+		methodField := metrics.Field{Key: "method", Value: "GetProfileBySubCat"}
+		m.requestDuration.With(methodField).Observe(time.Since(begin))
+	}(time.Now())
+	r = m.ProfileService.GetProfileBySubCat(name)
+	return
+}

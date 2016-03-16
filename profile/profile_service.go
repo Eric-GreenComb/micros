@@ -15,3 +15,13 @@ func (self *inmemService) GetProfile(profile_id string) (r string) {
 	r = profile_id
 	return
 }
+
+func (self *inmemService) GetProfileByCat(name string) (r string) {
+	r = name
+	return
+}
+
+func (self *inmemService) GetProfileBySubCat(name string) (r string) {
+	r = name
+	return
+}

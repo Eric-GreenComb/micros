@@ -1,425 +1,530 @@
 [
     {
-        "id": "201602001",
-        "name": "Web,移动和软件开发",
+        "id": "531770282580000001",
+        "name": "web-mobile-software-dev",
+        "desc": "Web,移动和软件开发",
         "subcategories": [
             {
-                "id": "531770282589057025",
-                "name": "桌面软件开发"
-            },
-            {
-                "id": "531770282589057026",
-                "name": "电子商务发展"
-            },
-            {
-                "id": "531770282589057027",
-                "name": "游戏开发"
+                "id": "531770282584862733",
+                "name": "web-development",
+                "desc": "Web开发"
             },
             {
                 "id": "531770282589057024",
-                "name": "移动开发"
+                "name": "mobile-development",
+                "desc": "移动开发"
             },
             {
-                "id": "531770282589057030",
-                "name": "产品管理"
+                "id": "531770282589057025",
+                "name": "desktop-software-development",
+                "desc": "桌面软件开发"
             },
             {
-                "id": "531770282589057031",
-                "name": "QA&测试"
+                "id": "531770282589057026",
+                "name": "ecommerce-development",
+                "desc": "电子商务开发"
+            },
+            {
+                "id": "531770282589057027",
+                "name": "game-development",
+                "desc": "游戏开发"
             },
             {
                 "id": "531770282589057028",
-                "name": "剧本与公用事业"
-            },
-            {
-                "id": "531770282584862733",
-                "name": "网站开发"
+                "name": "scripts-utilities",
+                "desc": "前端scripts脚本"
             },
             {
                 "id": "531770282589057029",
-                "name": "网络与手机的设计"
+                "name": "web-mobile-design",
+                "desc": "Web-移动设计"
+            },
+            {
+                "id": "531770282589057030",
+                "name": "product-management",
+                "desc": "产品管理"
+            },
+            {
+                "id": "531770282589057031",
+                "name": "qa-testing",
+                "desc": "QA-测试"
             },
             {
                 "id": "531770282589057032",
-                "name": "软件开发"
+                "name": "other-software-development",
+                "desc": "其他软件开发"
             }
         ]
     },
     {
-        "id": "201602002",
-        "name": "网络",
+        "id": "531770282580000002",
+        "name": "it-networking",
+        "desc": "IT及网络",
         "subcategories": [
             {
-                "id": "531770282589057033",
-                "name": "数据库管理"
+                "id": "531770282589057040",
+                "name": "cloud-administration",
+                "desc": "云-上云管理"
             },
             {
-                "id": "531770282589057034",
-                "name": "ERP／CRM软件"
+                "id": "531770282589057041",
+                "name": "ci-architect-administration",
+                "desc": "架构-持续集成管理"
+            },
+            {
+                "id": "531770282589057033",
+                "name": "database-administration",
+                "desc": "DBA"
             },
             {
                 "id": "531770282589057036",
-                "name": "信息安全"
+                "name": "information-security",
+                "desc": "信息安全"
             },
             {
                 "id": "531770282589057035",
-                "name": "网络系统管理"
+                "name": "network-system-administration",
+                "desc": "网络系统管理"
+            },
+            {
+                "id": "531770282589057034",
+                "name": "erp-crm-software",
+                "desc": "ERP-CRM及业务软件"
             },
             {
                 "id": "531770282589057037",
-                "name": "其他-网络"
+                "name": "other-it-networking",
+                "desc": "其他网络"
             }
         ]
     },
     {
-        "id": "201602003",
-        "name": "数据科学分析",
+        "id": "531770282590000001",
+        "name": "data-science-analytics",
+        "desc": "数据-数据分析",
         "subcategories": [
             {
                 "id": "531770282593251330",
-                "name": "A/B测试"
+                "name": "a-b-testing",
+                "desc": "A-B测试"
             },
             {
                 "id": "531770282589057039",
-                "name": "数据可视化"
+                "name": "data-visualization",
+                "desc": "数据可视化"
             },
             {
                 "id": "531770282593251331",
-                "name": "数据提取/ETL"
+                "name": "data-extraction-etl",
+                "desc": "数据提取-ETL"
             },
             {
                 "id": "531770282589057038",
-                "name": "数据挖掘与管理"
+                "name": "data-mining-management",
+                "desc": "数据挖掘与管理"
             },
             {
                 "id": "531770282593251329",
-                "name": "机器学习"
+                "name": "machine-learning",
+                "desc": "机器学习"
             },
             {
                 "id": "531770282593251328",
-                "name": "定量分析"
+                "name": "quantitative-analysis",
+                "desc": "定量分析"
             },
             {
                 "id": "531770282593251332",
-                "name": "其他数据科学分析"
+                "name": "other-data-science-analytics",
+                "desc": "其他数据科学分析"
             }
         ]
     },
     {
-        "id": "201602004",
-        "name": "工程建筑",
+        "id": "531770282600000001",
+        "name": "engineering-architecture",
+        "desc": "工程建筑",
         "subcategories": [
             {
                 "id": "531770282601639948",
-                "name": "三维建模与CAD"
+                "name": "3d-modeling-cad",
+                "desc": "三维建模与CAD"
             },
             {
                 "id": "531770282601639949",
-                "name": "建筑"
+                "name": "architecture",
+                "desc": "建筑工程"
             },
             {
                 "id": "531770282605834240",
-                "name": "化学工程"
+                "name": "chemical-engineering",
+                "desc": "化学工程"
             },
             {
                 "id": "531770282601639950",
-                "name": "土木与结构工程"
+                "name": "civil-structural-engineering",
+                "desc": "土木与结构工程"
             },
             {
                 "id": "531770282605834241",
-                "name": "合同制造"
+                "name": "contract-manufacturing",
+                "desc": "合同制造"
             },
             {
                 "id": "531770282601639951",
-                "name": "电气工程"
+                "name": "electrical-engineering",
+                "desc": "电气工程"
             },
             {
                 "id": "531770282605834242",
-                "name": "室内设计"
+                "name": "interior-design",
+                "desc": "室内设计"
             },
             {
                 "id": "531770282601639952",
-                "name": "机械工程"
+                "name": "mechanical-engineering",
+                "desc": "机械工程"
             },
             {
                 "id": "531770282601639953",
-                "name": "产品设计"
+                "name": "product-design",
+                "desc": "产品设计"
             },
             {
                 "id": "531770282605834243",
-                "name": "其他工程与建筑"
+                "name": "other-engineering-architecture",
+                "desc": "其他工程与建筑"
             }
         ]
     },
     {
-        "id": "201602005",
-        "name": "设计创意",
+        "id": "531770282590000002",
+        "name": "design-creative",
+        "desc": "设计创意",
         "subcategories": [
             {
                 "id": "531770282593251333",
-                "name": "动画"
+                "name": "animation",
+                "desc": "动画"
             },
             {
                 "id": "531770282593251341",
-                "name": "音频制作"
+                "name": "audio-production",
+                "desc": "音频制作"
             },
             {
                 "id": "531770282593251334",
-                "name": "平面设计"
+                "name": "graphic-design",
+                "desc": "平面设计"
             },
             {
                 "id": "531770282593251335",
-                "name": "说明"
+                "name": "illustration",
+                "desc": "图片设计"
             },
             {
                 "id": "531770282593251336",
-                "name": "标志设计与品牌"
+                "name": "logo-design-branding",
+                "desc": "Logo与品牌设计"
             },
             {
                 "id": "531770282593251340",
-                "name": "摄影"
+                "name": "photography",
+                "desc": "摄影"
             },
             {
                 "id": "531770282593251337",
-                "name": "演示"
+                "name": "presentations",
+                "desc": "PPT-演示"
             },
             {
                 "id": "531770282593251338",
-                "name": "影视制作"
+                "name": "video-production",
+                "desc": "影视制作"
             },
             {
                 "id": "531770282593251339",
-                "name": "声音"
+                "name": "voice-talent",
+                "desc": "声音制作"
             },
             {
                 "id": "531770282593251342",
-                "name": "其他设计创意"
+                "name": "other-design-creative",
+                "desc": "其他设计创意"
             }
         ]
     },
     {
-        "id": "201602006",
-        "name": "写作",
+        "id": "531770282590000003",
+        "name": "writing",
+        "desc": "写作",
         "subcategories": [
             {
-                "id": "531770282597445648",
-                "name": "学术写作与研究"
+                "id": "531770282597445647",
+                "name": "web-content",
+                "desc": "营销-内容写作"
             },
             {
                 "id": "531770282597445642",
-                "name": "文章和博客写作"
-            },
-            {
-                "id": "531770282597445643",
-                "name": "文案"
-            },
-            {
-                "id": "531770282597445645",
-                "name": "创意写作"
-            },
-            {
-                "id": "531770282597445644",
-                "name": "编辑与校对"
+                "name": "article-blog-writing",
+                "desc": "文章-博客写作"
             },
             {
                 "id": "531770282601639936",
-                "name": "格兰特写作"
+                "name": "grant-writing",
+                "desc": "标书-方案写作"
             },
             {
                 "id": "531770282601639937",
-                "name": "结果MES与求职信"
+                "name": "resumes-cover-letters",
+                "desc": "简历-求职信"
+            },
+            {
+                "id": "531770282597445648",
+                "name": "academic-writing-research",
+                "desc": "学术-研究写作"
+            },
+            {
+                "id": "531770282597445643",
+                "name": "copywriting",
+                "desc": "文案"
+            },
+            {
+                "id": "531770282597445645",
+                "name": "creative-writing",
+                "desc": "创意写作"
+            },
+            {
+                "id": "531770282597445644",
+                "name": "editing-proofreading",
+                "desc": "编辑-校对"
             },
             {
                 "id": "531770282597445646",
-                "name": "技术写作"
-            },
-            {
-                "id": "531770282597445647",
-                "name": "网站内容"
+                "name": "technical-writing",
+                "desc": "技术写作"
             },
             {
                 "id": "531770282601639938",
-                "name": "写作"
+                "name": "",
+                "desc": "写作"
             }
         ]
     },
     {
-        "id": "201602007",
-        "name": "翻译",
+        "id": "531770282600000001",
+        "name": "translation",
+        "desc": "翻译",
         "subcategories": [
             {
                 "id": "531770282601639939",
-                "name": "翻译"
-            },
-            {
-                "id": "531770282601639940",
-                "name": "法律翻译"
-            },
-            {
-                "id": "531770282601639942",
-                "name": "医疗翻译"
+                "name": "general-translation",
+                "desc": "翻译"
             },
             {
                 "id": "531770282601639941",
-                "name": "技术翻译"
+                "name": "technical-translation",
+                "desc": "技术翻译"
+            },
+            {
+                "id": "531770282601639940",
+                "name": "legal-translation",
+                "desc": "法律翻译"
+            },
+            {
+                "id": "531770282601639942",
+                "name": "medical-translation",
+                "desc": "医疗翻译"
             }
         ]
     },
     {
-        "id": "201602008",
-        "name": "法律",
+        "id": "531770282600000002",
+        "name": "legal",
+        "desc": "法律",
         "subcategories": [
             {
                 "id": "531770282605834246",
-                "name": "合同法"
+                "name": "contract-law",
+                "desc": "合同法"
             },
             {
                 "id": "531770282605834245",
-                "name": "公司法"
+                "name": "corporate-law",
+                "desc": "公司法"
             },
             {
                 "id": "531770282605834247",
-                "name": "刑法"
+                "name": "criminal-law",
+                "desc": "刑法"
             },
             {
                 "id": "531770282605834248",
-                "name": "家庭法"
+                "name": "family-law",
+                "desc": "民法"
             },
             {
                 "id": "531770282605834244",
-                "name": "知识产权法"
+                "name": "intellectual-property-law",
+                "desc": "知识产权法"
             },
             {
                 "id": "531770283692158976",
-                "name": "律师法律服务"
+                "name": "paralegal-services",
+                "desc": "律师法律服务"
             },
             {
                 "id": "531770283696353280",
-                "name": "其他法律"
+                "name": "other-legal",
+                "desc": "其他法律"
             }
         ]
     },
     {
-        "id": "201602009",
-        "name": "行政支持",
+        "id": "531770282580000003",
+        "name": "admin-support",
+        "desc": "行政支持",
         "subcategories": [
             {
                 "id": "531770282584862724",
-                "name": "数据输入"
+                "name": "data-entry",
+                "desc": "数据输入-速记"
             },
             {
                 "id": "531770282584862725",
-                "name": "个人/虚拟助手"
+                "name": "personal-virtual-assistant",
+                "desc": "个人-虚拟助手"
             },
             {
                 "id": "531770282584862728",
-                "name": "项目管理"
+                "name": "project-management",
+                "desc": "项目管理"
             },
             {
                 "id": "531770282584862727",
-                "name": "转录"
+                "name": "transcription",
+                "desc": "抄写-转录"
             },
             {
                 "id": "531770282584862726",
-                "name": "网络研究"
+                "name": "web-research",
+                "desc": "网络研究"
             },
             {
                 "id": "531770282584862729",
-                "name": "其他行政支持"
+                "name": "other-admin-support",
+                "desc": "其他行政支持"
             }
         ]
     },
     {
-        "id": "201602010",
-        "name": "客户服务",
+        "id": "531770282580000004",
+        "name": "customer-service",
+        "desc": "客户服务",
         "subcategories": [
             {
                 "id": "531770282584862730",
-                "name": "客户服务"
+                "name": "customer-service",
+                "desc": "客户服务"
             },
             {
                 "id": "531770282584862731",
-                "name": "技术支持"
+                "name": "technical-support",
+                "desc": "技术支持"
             },
             {
                 "id": "531770282584862732",
-                "name": "其他客户服务"
+                "name": "other-customer-service",
+                "desc": "其他客户服务"
             }
         ]
     },
     {
-        "id": "201602011",
-        "name": "营销",
+        "id": "531770282590000004",
+        "name": "sales-marketing",
+        "desc": "营销",
         "subcategories": [
             {
-                "id": "531770282597445636",
-                "name": "展示广告"
-            },
-            {
-                "id": "531770282597445632",
-                "name": "电子邮件营销自动化"
-            },
-            {
-                "id": "531770282597445634",
-                "name": "领先一代"
-            },
-            {
-                "id": "531770282597445633",
-                "name": "市场与客户研究"
-            },
-            {
-                "id": "531770282593251343",
-                "name": "营销战略"
-            },
-            {
-                "id": "531770282593251344",
-                "name": "公共关系"
+                "id": "531770282597445639",
+                "name": "smm-social-media-marketing",
+                "desc": "微信-社会化媒体营销"
             },
             {
                 "id": "531770282597445637",
-                "name": "SEM搜索引擎营销"
+                "name": "sem-search-engine-marketing",
+                "desc": "SEM搜索引擎营销"
             },
             {
                 "id": "531770282597445638",
-                "name": "SEO搜索引擎优化"
+                "name": "seo-search-engine-optimization",
+                "desc": "SEO搜索引擎优化"
             },
             {
-                "id": "531770282597445639",
-                "name": "SMM社会化媒体营销"
+                "id": "531770282597445632",
+                "name": "email-marketing-automation",
+                "desc": "电子邮件营销"
             },
             {
                 "id": "531770282597445635",
-                "name": "Telemar营销和销售"
+                "name": "telemarketing-telesales",
+                "desc": "电话营销和销售"
+            },
+            {
+                "id": "531770282597445636",
+                "name": "display-advertising",
+                "desc": "展示广告"
+            },
+            {
+                "id": "531770282597445633",
+                "name": "market-customer-research",
+                "desc": "市场-客户研究"
+            },
+            {
+                "id": "531770282593251343",
+                "name": "marketing-strategy",
+                "desc": "营销战略"
+            },
+            {
+                "id": "531770282593251344",
+                "name": "public-relations",
+                "desc": "公共关系"
             },
             {
                 "id": "531770282597445641",
-                "name": "其他销售"
+                "name": "other-sales-marketing",
+                "desc": "其他销售"
             }
         ]
     },
     {
-        "id": "201602012",
-        "name": "会计咨询",
+        "id": "531770282600000003",
+        "name": "accounting-consulting",
+        "desc": "会计咨询",
         "subcategories": [
             {
                 "id": "531770282601639943",
-                "name": "会计"
-            },
-            {
-                "id": "531770282601639945",
-                "name": "财务规划"
+                "name": "accounting",
+                "desc": "会计"
             },
             {
                 "id": "531770282601639946",
-                "name": "人力资源"
+                "name": "human-resources",
+                "desc": "人力资源"
+            },
+            {
+                "id": "531770282601639945",
+                "name": "financial-planning",
+                "desc": "财务规划"
             },
             {
                 "id": "531770282601639944",
-                "name": "管理咨询"
+                "name": "management-consulting",
+                "desc": "管理咨询"
             },
             {
                 "id": "531770282601639947",
-                "name": "其他会计咨询"
+                "name": "other-accounting-consulting",
+                "desc": "其他会计咨询"
             }
         ]
     }

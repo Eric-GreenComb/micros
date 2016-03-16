@@ -16,7 +16,7 @@ func (tb thriftBinding) SayHi(name string) (string, error) {
 
 func (tb thriftBinding) GetDemoSubCategory(id string) (*thriftcategory.SubCategory, error) {
 	v := tb.CategoryService.GetDemoSubCategory(id)
-	sub := thriftcategory.SubCategory{v.ID, v.Name}
+	sub := thriftcategory.SubCategory{v.ID, v.Name, v.Desc}
 	return &sub, nil
 }
 
