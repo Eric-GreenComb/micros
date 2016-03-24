@@ -107,8 +107,9 @@ func main() {
 	case "cats":
 		v := svc.GetCategories()
 		for _, _cat := range v {
+			fmt.Println(_cat.Name + "(" + _cat.Desc + ")")
 			for _, _sub := range _cat.Subcategories {
-				fmt.Println(_sub.Name)
+				fmt.Println("    " + _sub.Name + "(" + _sub.Desc + ")")
 			}
 		}
 
