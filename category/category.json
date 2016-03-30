@@ -208,7 +208,7 @@
             {
                 "id": "531770282589057037",
                 "name": "other-it-networking",
-                "desc": "其他网络"
+                "desc": "其他IT-网络"
             }
         ]
     },
@@ -364,7 +364,7 @@
             {
                 "id": "531770282601639938",
                 "name": "writing",
-                "desc": "写作"
+                "desc": "其他写作"
             }
         ]
     },
@@ -499,7 +499,7 @@
     {
         "id": "531770112600000003",
         "name": "accounting-consulting",
-        "desc": "会计咨询",
+        "desc": "会计-咨询",
         "subcategories": [
             {
                 "id": "531770282601639943",
@@ -524,7 +524,7 @@
             {
                 "id": "531770282601639947",
                 "name": "other-accounting-consulting",
-                "desc": "其他会计咨询"
+                "desc": "其他会计-咨询"
             }
         ]
     }
