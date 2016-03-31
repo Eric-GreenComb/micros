@@ -19,11 +19,8 @@ type ProfileService interface {
 	//  - ProfileID
 	GetProfile(profile_id string) (r string, err error)
 	// Parameters:
-	//  - Name
-	GetProfileByCat(name string) (r string, err error)
-	// Parameters:
-	//  - Name
-	GetProfileBySubCat(name string) (r string, err error)
+	//  - ProfileSearchCondition
+	SearchProfiles(profile_search_condition *ProfileSearchCondition) (r string, err error)
 }
 
 type ProfileServiceClient struct {
@@ -130,26 +127,26 @@ func (p *ProfileServiceClient) recvGetProfile() (value string, err error) {
 }
 
 // Parameters:
-//  - Name
-func (p *ProfileServiceClient) GetProfileByCat(name string) (r string, err error) {
-	if err = p.sendGetProfileByCat(name); err != nil {
+//  - ProfileSearchCondition
+func (p *ProfileServiceClient) SearchProfiles(profile_search_condition *ProfileSearchCondition) (r string, err error) {
+	if err = p.sendSearchProfiles(profile_search_condition); err != nil {
 		return
 	}
-	return p.recvGetProfileByCat()
+	return p.recvSearchProfiles()
 }
 
-func (p *ProfileServiceClient) sendGetProfileByCat(name string) (err error) {
+func (p *ProfileServiceClient) sendSearchProfiles(profile_search_condition *ProfileSearchCondition) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetProfileByCat", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("SearchProfiles", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := ProfileServiceGetProfileByCatArgs{
-		Name: name,
+	args := ProfileServiceSearchProfilesArgs{
+		ProfileSearchCondition: profile_search_condition,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -160,7 +157,7 @@ func (p *ProfileServiceClient) sendGetProfileByCat(name string) (err error) {
 	return oprot.Flush()
 }
 
-func (p *ProfileServiceClient) recvGetProfileByCat() (value string, err error) {
+func (p *ProfileServiceClient) recvSearchProfiles() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -170,12 +167,12 @@ func (p *ProfileServiceClient) recvGetProfileByCat() (value string, err error) {
 	if err != nil {
 		return
 	}
-	if method != "GetProfileByCat" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetProfileByCat failed: wrong method name")
+	if method != "SearchProfiles" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "SearchProfiles failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetProfileByCat failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "SearchProfiles failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -192,87 +189,10 @@ func (p *ProfileServiceClient) recvGetProfileByCat() (value string, err error) {
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetProfileByCat failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "SearchProfiles failed: invalid message type")
 		return
 	}
-	result := ProfileServiceGetProfileByCatResult{}
-	if err = result.Read(iprot); err != nil {
-		return
-	}
-	if err = iprot.ReadMessageEnd(); err != nil {
-		return
-	}
-	value = result.GetSuccess()
-	return
-}
-
-// Parameters:
-//  - Name
-func (p *ProfileServiceClient) GetProfileBySubCat(name string) (r string, err error) {
-	if err = p.sendGetProfileBySubCat(name); err != nil {
-		return
-	}
-	return p.recvGetProfileBySubCat()
-}
-
-func (p *ProfileServiceClient) sendGetProfileBySubCat(name string) (err error) {
-	oprot := p.OutputProtocol
-	if oprot == nil {
-		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
-		p.OutputProtocol = oprot
-	}
-	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetProfileBySubCat", thrift.CALL, p.SeqId); err != nil {
-		return
-	}
-	args := ProfileServiceGetProfileBySubCatArgs{
-		Name: name,
-	}
-	if err = args.Write(oprot); err != nil {
-		return
-	}
-	if err = oprot.WriteMessageEnd(); err != nil {
-		return
-	}
-	return oprot.Flush()
-}
-
-func (p *ProfileServiceClient) recvGetProfileBySubCat() (value string, err error) {
-	iprot := p.InputProtocol
-	if iprot == nil {
-		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
-		p.InputProtocol = iprot
-	}
-	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
-	if err != nil {
-		return
-	}
-	if method != "GetProfileBySubCat" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetProfileBySubCat failed: wrong method name")
-		return
-	}
-	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetProfileBySubCat failed: out of sequence response")
-		return
-	}
-	if mTypeId == thrift.EXCEPTION {
-		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error5 error
-		error5, err = error4.Read(iprot)
-		if err != nil {
-			return
-		}
-		if err = iprot.ReadMessageEnd(); err != nil {
-			return
-		}
-		err = error5
-		return
-	}
-	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetProfileBySubCat failed: invalid message type")
-		return
-	}
-	result := ProfileServiceGetProfileBySubCatResult{}
+	result := ProfileServiceSearchProfilesResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -303,11 +223,10 @@ func (p *ProfileServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFun
 
 func NewProfileServiceProcessor(handler ProfileService) *ProfileServiceProcessor {
 
-	self6 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self6.processorMap["GetProfile"] = &profileServiceProcessorGetProfile{handler: handler}
-	self6.processorMap["GetProfileByCat"] = &profileServiceProcessorGetProfileByCat{handler: handler}
-	self6.processorMap["GetProfileBySubCat"] = &profileServiceProcessorGetProfileBySubCat{handler: handler}
-	return self6
+	self4 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self4.processorMap["GetProfile"] = &profileServiceProcessorGetProfile{handler: handler}
+	self4.processorMap["SearchProfiles"] = &profileServiceProcessorSearchProfiles{handler: handler}
+	return self4
 }
 
 func (p *ProfileServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -320,12 +239,12 @@ func (p *ProfileServiceProcessor) Process(iprot, oprot thrift.TProtocol) (succes
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x7 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x5 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x7.Write(oprot)
+	x5.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x7
+	return false, x5
 
 }
 
@@ -377,16 +296,16 @@ func (p *profileServiceProcessorGetProfile) Process(seqId int32, iprot, oprot th
 	return true, err
 }
 
-type profileServiceProcessorGetProfileByCat struct {
+type profileServiceProcessorSearchProfiles struct {
 	handler ProfileService
 }
 
-func (p *profileServiceProcessorGetProfileByCat) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := ProfileServiceGetProfileByCatArgs{}
+func (p *profileServiceProcessorSearchProfiles) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ProfileServiceSearchProfilesArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetProfileByCat", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("SearchProfiles", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -394,12 +313,12 @@ func (p *profileServiceProcessorGetProfileByCat) Process(seqId int32, iprot, opr
 	}
 
 	iprot.ReadMessageEnd()
-	result := ProfileServiceGetProfileByCatResult{}
+	result := ProfileServiceSearchProfilesResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetProfileByCat(args.Name); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetProfileByCat: "+err2.Error())
-		oprot.WriteMessageBegin("GetProfileByCat", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.SearchProfiles(args.ProfileSearchCondition); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing SearchProfiles: "+err2.Error())
+		oprot.WriteMessageBegin("SearchProfiles", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -407,55 +326,7 @@ func (p *profileServiceProcessorGetProfileByCat) Process(seqId int32, iprot, opr
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetProfileByCat", thrift.REPLY, seqId); err2 != nil {
-		err = err2
-	}
-	if err2 = result.Write(oprot); err == nil && err2 != nil {
-		err = err2
-	}
-	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
-		err = err2
-	}
-	if err2 = oprot.Flush(); err == nil && err2 != nil {
-		err = err2
-	}
-	if err != nil {
-		return
-	}
-	return true, err
-}
-
-type profileServiceProcessorGetProfileBySubCat struct {
-	handler ProfileService
-}
-
-func (p *profileServiceProcessorGetProfileBySubCat) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := ProfileServiceGetProfileBySubCatArgs{}
-	if err = args.Read(iprot); err != nil {
-		iprot.ReadMessageEnd()
-		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetProfileBySubCat", thrift.EXCEPTION, seqId)
-		x.Write(oprot)
-		oprot.WriteMessageEnd()
-		oprot.Flush()
-		return false, err
-	}
-
-	iprot.ReadMessageEnd()
-	result := ProfileServiceGetProfileBySubCatResult{}
-	var retval string
-	var err2 error
-	if retval, err2 = p.handler.GetProfileBySubCat(args.Name); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetProfileBySubCat: "+err2.Error())
-		oprot.WriteMessageBegin("GetProfileBySubCat", thrift.EXCEPTION, seqId)
-		x.Write(oprot)
-		oprot.WriteMessageEnd()
-		oprot.Flush()
-		return true, err2
-	} else {
-		result.Success = &retval
-	}
-	if err2 = oprot.WriteMessageBegin("GetProfileBySubCat", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("SearchProfiles", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -669,19 +540,28 @@ func (p *ProfileServiceGetProfileResult) String() string {
 }
 
 // Attributes:
-//  - Name
-type ProfileServiceGetProfileByCatArgs struct {
-	Name string `thrift:"name,1" json:"name"`
+//  - ProfileSearchCondition
+type ProfileServiceSearchProfilesArgs struct {
+	ProfileSearchCondition *ProfileSearchCondition `thrift:"profile_search_condition,1" json:"profile_search_condition"`
 }
 
-func NewProfileServiceGetProfileByCatArgs() *ProfileServiceGetProfileByCatArgs {
-	return &ProfileServiceGetProfileByCatArgs{}
+func NewProfileServiceSearchProfilesArgs() *ProfileServiceSearchProfilesArgs {
+	return &ProfileServiceSearchProfilesArgs{}
 }
 
-func (p *ProfileServiceGetProfileByCatArgs) GetName() string {
-	return p.Name
+var ProfileServiceSearchProfilesArgs_ProfileSearchCondition_DEFAULT *ProfileSearchCondition
+
+func (p *ProfileServiceSearchProfilesArgs) GetProfileSearchCondition() *ProfileSearchCondition {
+	if !p.IsSetProfileSearchCondition() {
+		return ProfileServiceSearchProfilesArgs_ProfileSearchCondition_DEFAULT
+	}
+	return p.ProfileSearchCondition
 }
-func (p *ProfileServiceGetProfileByCatArgs) Read(iprot thrift.TProtocol) error {
+func (p *ProfileServiceSearchProfilesArgs) IsSetProfileSearchCondition() bool {
+	return p.ProfileSearchCondition != nil
+}
+
+func (p *ProfileServiceSearchProfilesArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -714,17 +594,16 @@ func (p *ProfileServiceGetProfileByCatArgs) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ProfileServiceGetProfileByCatArgs) readField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return thrift.PrependError("error reading field 1: ", err)
-	} else {
-		p.Name = v
+func (p *ProfileServiceSearchProfilesArgs) readField1(iprot thrift.TProtocol) error {
+	p.ProfileSearchCondition = &ProfileSearchCondition{}
+	if err := p.ProfileSearchCondition.Read(iprot); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.ProfileSearchCondition), err)
 	}
 	return nil
 }
 
-func (p *ProfileServiceGetProfileByCatArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetProfileByCat_args"); err != nil {
+func (p *ProfileServiceSearchProfilesArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("SearchProfiles_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -739,49 +618,49 @@ func (p *ProfileServiceGetProfileByCatArgs) Write(oprot thrift.TProtocol) error 
 	return nil
 }
 
-func (p *ProfileServiceGetProfileByCatArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("name", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:name: ", p), err)
+func (p *ProfileServiceSearchProfilesArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("profile_search_condition", thrift.STRUCT, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_search_condition: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.Name)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.name (1) field write error: ", p), err)
+	if err := p.ProfileSearchCondition.Write(oprot); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.ProfileSearchCondition), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:name: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_search_condition: ", p), err)
 	}
 	return err
 }
 
-func (p *ProfileServiceGetProfileByCatArgs) String() string {
+func (p *ProfileServiceSearchProfilesArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ProfileServiceGetProfileByCatArgs(%+v)", *p)
+	return fmt.Sprintf("ProfileServiceSearchProfilesArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type ProfileServiceGetProfileByCatResult struct {
+type ProfileServiceSearchProfilesResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewProfileServiceGetProfileByCatResult() *ProfileServiceGetProfileByCatResult {
-	return &ProfileServiceGetProfileByCatResult{}
+func NewProfileServiceSearchProfilesResult() *ProfileServiceSearchProfilesResult {
+	return &ProfileServiceSearchProfilesResult{}
 }
 
-var ProfileServiceGetProfileByCatResult_Success_DEFAULT string
+var ProfileServiceSearchProfilesResult_Success_DEFAULT string
 
-func (p *ProfileServiceGetProfileByCatResult) GetSuccess() string {
+func (p *ProfileServiceSearchProfilesResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return ProfileServiceGetProfileByCatResult_Success_DEFAULT
+		return ProfileServiceSearchProfilesResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *ProfileServiceGetProfileByCatResult) IsSetSuccess() bool {
+func (p *ProfileServiceSearchProfilesResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ProfileServiceGetProfileByCatResult) Read(iprot thrift.TProtocol) error {
+func (p *ProfileServiceSearchProfilesResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -814,7 +693,7 @@ func (p *ProfileServiceGetProfileByCatResult) Read(iprot thrift.TProtocol) error
 	return nil
 }
 
-func (p *ProfileServiceGetProfileByCatResult) readField0(iprot thrift.TProtocol) error {
+func (p *ProfileServiceSearchProfilesResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -823,8 +702,8 @@ func (p *ProfileServiceGetProfileByCatResult) readField0(iprot thrift.TProtocol)
 	return nil
 }
 
-func (p *ProfileServiceGetProfileByCatResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetProfileByCat_result"); err != nil {
+func (p *ProfileServiceSearchProfilesResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("SearchProfiles_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -839,7 +718,7 @@ func (p *ProfileServiceGetProfileByCatResult) Write(oprot thrift.TProtocol) erro
 	return nil
 }
 
-func (p *ProfileServiceGetProfileByCatResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *ProfileServiceSearchProfilesResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -854,202 +733,9 @@ func (p *ProfileServiceGetProfileByCatResult) writeField0(oprot thrift.TProtocol
 	return err
 }
 
-func (p *ProfileServiceGetProfileByCatResult) String() string {
+func (p *ProfileServiceSearchProfilesResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ProfileServiceGetProfileByCatResult(%+v)", *p)
-}
-
-// Attributes:
-//  - Name
-type ProfileServiceGetProfileBySubCatArgs struct {
-	Name string `thrift:"name,1" json:"name"`
-}
-
-func NewProfileServiceGetProfileBySubCatArgs() *ProfileServiceGetProfileBySubCatArgs {
-	return &ProfileServiceGetProfileBySubCatArgs{}
-}
-
-func (p *ProfileServiceGetProfileBySubCatArgs) GetName() string {
-	return p.Name
-}
-func (p *ProfileServiceGetProfileBySubCatArgs) Read(iprot thrift.TProtocol) error {
-	if _, err := iprot.ReadStructBegin(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
-		if err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-		switch fieldId {
-		case 1:
-			if err := p.readField1(iprot); err != nil {
-				return err
-			}
-		default:
-			if err := iprot.Skip(fieldTypeId); err != nil {
-				return err
-			}
-		}
-		if err := iprot.ReadFieldEnd(); err != nil {
-			return err
-		}
-	}
-	if err := iprot.ReadStructEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-	}
-	return nil
-}
-
-func (p *ProfileServiceGetProfileBySubCatArgs) readField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return thrift.PrependError("error reading field 1: ", err)
-	} else {
-		p.Name = v
-	}
-	return nil
-}
-
-func (p *ProfileServiceGetProfileBySubCatArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetProfileBySubCat_args"); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-	}
-	if err := p.writeField1(oprot); err != nil {
-		return err
-	}
-	if err := oprot.WriteFieldStop(); err != nil {
-		return thrift.PrependError("write field stop error: ", err)
-	}
-	if err := oprot.WriteStructEnd(); err != nil {
-		return thrift.PrependError("write struct stop error: ", err)
-	}
-	return nil
-}
-
-func (p *ProfileServiceGetProfileBySubCatArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("name", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:name: ", p), err)
-	}
-	if err := oprot.WriteString(string(p.Name)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.name (1) field write error: ", p), err)
-	}
-	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:name: ", p), err)
-	}
-	return err
-}
-
-func (p *ProfileServiceGetProfileBySubCatArgs) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("ProfileServiceGetProfileBySubCatArgs(%+v)", *p)
-}
-
-// Attributes:
-//  - Success
-type ProfileServiceGetProfileBySubCatResult struct {
-	Success *string `thrift:"success,0" json:"success,omitempty"`
-}
-
-func NewProfileServiceGetProfileBySubCatResult() *ProfileServiceGetProfileBySubCatResult {
-	return &ProfileServiceGetProfileBySubCatResult{}
-}
-
-var ProfileServiceGetProfileBySubCatResult_Success_DEFAULT string
-
-func (p *ProfileServiceGetProfileBySubCatResult) GetSuccess() string {
-	if !p.IsSetSuccess() {
-		return ProfileServiceGetProfileBySubCatResult_Success_DEFAULT
-	}
-	return *p.Success
-}
-func (p *ProfileServiceGetProfileBySubCatResult) IsSetSuccess() bool {
-	return p.Success != nil
-}
-
-func (p *ProfileServiceGetProfileBySubCatResult) Read(iprot thrift.TProtocol) error {
-	if _, err := iprot.ReadStructBegin(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
-		if err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-		switch fieldId {
-		case 0:
-			if err := p.readField0(iprot); err != nil {
-				return err
-			}
-		default:
-			if err := iprot.Skip(fieldTypeId); err != nil {
-				return err
-			}
-		}
-		if err := iprot.ReadFieldEnd(); err != nil {
-			return err
-		}
-	}
-	if err := iprot.ReadStructEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-	}
-	return nil
-}
-
-func (p *ProfileServiceGetProfileBySubCatResult) readField0(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return thrift.PrependError("error reading field 0: ", err)
-	} else {
-		p.Success = &v
-	}
-	return nil
-}
-
-func (p *ProfileServiceGetProfileBySubCatResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetProfileBySubCat_result"); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-	}
-	if err := p.writeField0(oprot); err != nil {
-		return err
-	}
-	if err := oprot.WriteFieldStop(); err != nil {
-		return thrift.PrependError("write field stop error: ", err)
-	}
-	if err := oprot.WriteStructEnd(); err != nil {
-		return thrift.PrependError("write struct stop error: ", err)
-	}
-	return nil
-}
-
-func (p *ProfileServiceGetProfileBySubCatResult) writeField0(oprot thrift.TProtocol) (err error) {
-	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
-		}
-		if err := oprot.WriteString(string(*p.Success)); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
-		}
-		if err := oprot.WriteFieldEnd(); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
-		}
-	}
-	return err
-}
-
-func (p *ProfileServiceGetProfileBySubCatResult) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("ProfileServiceGetProfileBySubCatResult(%+v)", *p)
+	return fmt.Sprintf("ProfileServiceSearchProfilesResult(%+v)", *p)
 }

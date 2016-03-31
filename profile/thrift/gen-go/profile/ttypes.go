@@ -15,3 +15,374 @@ var _ = fmt.Printf
 var _ = bytes.Equal
 
 var GoUnusedProtection__ int
+
+// Attributes:
+//  - SerialNumber
+//  - HoursBilled
+//  - AvailableHours
+//  - JobSuccess
+//  - LastActivity
+//  - FreelancerType
+//  - HourlyRate
+//  - RegionID
+//  - SearchKey
+type ProfileSearchCondition struct {
+	SerialNumber   int32  `thrift:"serial_number,1" json:"serial_number"`
+	HoursBilled    int32  `thrift:"hours_billed,2" json:"hours_billed"`
+	AvailableHours int32  `thrift:"available_hours,3" json:"available_hours"`
+	JobSuccess     int32  `thrift:"job_success,4" json:"job_success"`
+	LastActivity   int32  `thrift:"last_activity,5" json:"last_activity"`
+	FreelancerType int32  `thrift:"freelancer_type,6" json:"freelancer_type"`
+	HourlyRate     int32  `thrift:"hourly_rate,7" json:"hourly_rate"`
+	RegionID       int32  `thrift:"region_id,8" json:"region_id"`
+	SearchKey      string `thrift:"search_key,9" json:"search_key"`
+}
+
+func NewProfileSearchCondition() *ProfileSearchCondition {
+	return &ProfileSearchCondition{}
+}
+
+func (p *ProfileSearchCondition) GetSerialNumber() int32 {
+	return p.SerialNumber
+}
+
+func (p *ProfileSearchCondition) GetHoursBilled() int32 {
+	return p.HoursBilled
+}
+
+func (p *ProfileSearchCondition) GetAvailableHours() int32 {
+	return p.AvailableHours
+}
+
+func (p *ProfileSearchCondition) GetJobSuccess() int32 {
+	return p.JobSuccess
+}
+
+func (p *ProfileSearchCondition) GetLastActivity() int32 {
+	return p.LastActivity
+}
+
+func (p *ProfileSearchCondition) GetFreelancerType() int32 {
+	return p.FreelancerType
+}
+
+func (p *ProfileSearchCondition) GetHourlyRate() int32 {
+	return p.HourlyRate
+}
+
+func (p *ProfileSearchCondition) GetRegionID() int32 {
+	return p.RegionID
+}
+
+func (p *ProfileSearchCondition) GetSearchKey() string {
+	return p.SearchKey
+}
+func (p *ProfileSearchCondition) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		case 3:
+			if err := p.readField3(iprot); err != nil {
+				return err
+			}
+		case 4:
+			if err := p.readField4(iprot); err != nil {
+				return err
+			}
+		case 5:
+			if err := p.readField5(iprot); err != nil {
+				return err
+			}
+		case 6:
+			if err := p.readField6(iprot); err != nil {
+				return err
+			}
+		case 7:
+			if err := p.readField7(iprot); err != nil {
+				return err
+			}
+		case 8:
+			if err := p.readField8(iprot); err != nil {
+				return err
+			}
+		case 9:
+			if err := p.readField9(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.SerialNumber = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.HoursBilled = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 3: ", err)
+	} else {
+		p.AvailableHours = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 4: ", err)
+	} else {
+		p.JobSuccess = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 5: ", err)
+	} else {
+		p.LastActivity = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField6(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 6: ", err)
+	} else {
+		p.FreelancerType = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField7(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 7: ", err)
+	} else {
+		p.HourlyRate = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField8(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return thrift.PrependError("error reading field 8: ", err)
+	} else {
+		p.RegionID = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) readField9(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 9: ", err)
+	} else {
+		p.SearchKey = v
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("ProfileSearchCondition"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField3(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField4(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField5(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField6(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField7(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField8(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField9(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileSearchCondition) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("serial_number", thrift.I32, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:serial_number: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.SerialNumber)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.serial_number (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:serial_number: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("hours_billed", thrift.I32, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:hours_billed: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.HoursBilled)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.hours_billed (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:hours_billed: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) writeField3(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("available_hours", thrift.I32, 3); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:available_hours: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.AvailableHours)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.available_hours (3) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 3:available_hours: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) writeField4(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("job_success", thrift.I32, 4); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:job_success: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.JobSuccess)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.job_success (4) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 4:job_success: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) writeField5(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("last_activity", thrift.I32, 5); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 5:last_activity: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.LastActivity)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.last_activity (5) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 5:last_activity: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) writeField6(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("freelancer_type", thrift.I32, 6); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 6:freelancer_type: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.FreelancerType)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.freelancer_type (6) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 6:freelancer_type: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) writeField7(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("hourly_rate", thrift.I32, 7); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 7:hourly_rate: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.HourlyRate)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.hourly_rate (7) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 7:hourly_rate: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) writeField8(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("region_id", thrift.I32, 8); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 8:region_id: ", p), err)
+	}
+	if err := oprot.WriteI32(int32(p.RegionID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.region_id (8) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 8:region_id: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) writeField9(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("search_key", thrift.STRING, 9); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 9:search_key: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.SearchKey)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.search_key (9) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 9:search_key: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileSearchCondition) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileSearchCondition(%+v)", *p)
+}

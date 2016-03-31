@@ -29,8 +29,8 @@ type CategoryService interface {
 	LoadCategory(path string) (r bool, err error)
 	GetCategories() (r []*Category, err error)
 	// Parameters:
-	//  - CategoryID
-	GetSubCategories(category_id string) (r []*SubCategory, err error)
+	//  - Serialnumber
+	GetSubCategories(serialnumber int32) (r []*SubCategory, err error)
 }
 
 type CategoryServiceClient struct {
@@ -441,15 +441,15 @@ func (p *CategoryServiceClient) recvGetCategories() (value []*Category, err erro
 }
 
 // Parameters:
-//  - CategoryID
-func (p *CategoryServiceClient) GetSubCategories(category_id string) (r []*SubCategory, err error) {
-	if err = p.sendGetSubCategories(category_id); err != nil {
+//  - Serialnumber
+func (p *CategoryServiceClient) GetSubCategories(serialnumber int32) (r []*SubCategory, err error) {
+	if err = p.sendGetSubCategories(serialnumber); err != nil {
 		return
 	}
 	return p.recvGetSubCategories()
 }
 
-func (p *CategoryServiceClient) sendGetSubCategories(category_id string) (err error) {
+func (p *CategoryServiceClient) sendGetSubCategories(serialnumber int32) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -460,7 +460,7 @@ func (p *CategoryServiceClient) sendGetSubCategories(category_id string) (err er
 		return
 	}
 	args := CategoryServiceGetSubCategoriesArgs{
-		CategoryID: category_id,
+		Serialnumber: serialnumber,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -826,7 +826,7 @@ func (p *categoryServiceProcessorGetSubCategories) Process(seqId int32, iprot, o
 	result := CategoryServiceGetSubCategoriesResult{}
 	var retval []*SubCategory
 	var err2 error
-	if retval, err2 = p.handler.GetSubCategories(args.CategoryID); err2 != nil {
+	if retval, err2 = p.handler.GetSubCategories(args.Serialnumber); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetSubCategories: "+err2.Error())
 		oprot.WriteMessageBegin("GetSubCategories", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -1815,17 +1815,17 @@ func (p *CategoryServiceGetCategoriesResult) String() string {
 }
 
 // Attributes:
-//  - CategoryID
+//  - Serialnumber
 type CategoryServiceGetSubCategoriesArgs struct {
-	CategoryID string `thrift:"category_id,1" json:"category_id"`
+	Serialnumber int32 `thrift:"serialnumber,1" json:"serialnumber"`
 }
 
 func NewCategoryServiceGetSubCategoriesArgs() *CategoryServiceGetSubCategoriesArgs {
 	return &CategoryServiceGetSubCategoriesArgs{}
 }
 
-func (p *CategoryServiceGetSubCategoriesArgs) GetCategoryID() string {
-	return p.CategoryID
+func (p *CategoryServiceGetSubCategoriesArgs) GetSerialnumber() int32 {
+	return p.Serialnumber
 }
 func (p *CategoryServiceGetSubCategoriesArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -1861,10 +1861,10 @@ func (p *CategoryServiceGetSubCategoriesArgs) Read(iprot thrift.TProtocol) error
 }
 
 func (p *CategoryServiceGetSubCategoriesArgs) readField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadI32(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.CategoryID = v
+		p.Serialnumber = v
 	}
 	return nil
 }
@@ -1886,14 +1886,14 @@ func (p *CategoryServiceGetSubCategoriesArgs) Write(oprot thrift.TProtocol) erro
 }
 
 func (p *CategoryServiceGetSubCategoriesArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("category_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:category_id: ", p), err)
+	if err := oprot.WriteFieldBegin("serialnumber", thrift.I32, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:serialnumber: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.CategoryID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.category_id (1) field write error: ", p), err)
+	if err := oprot.WriteI32(int32(p.Serialnumber)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.serialnumber (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:category_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:serialnumber: ", p), err)
 	}
 	return err
 }

@@ -1,14 +1,16 @@
 struct Category{
 	1: string id
-	2: string name
-	3: string desc
-	4: list<SubCategory> subcategories
+	2: i32 serialnumber
+	3: string name
+	4: string desc
+	5: list<SubCategory> subcategories
 }
 
 struct SubCategory{
 	1: string id
-	2: string name
-	3: string desc
+	2: i32 serialnumber
+	3: string name
+	4: string desc
 }
 
 service CategoryService {
@@ -18,5 +20,5 @@ service CategoryService {
 
 	bool LoadCategory(1: string path)
 	list<Category> GetCategories()		
-	list<SubCategory> GetSubCategories(1: string category_id)			
+	list<SubCategory> GetSubCategories(1: i32 serialnumber)			
 }

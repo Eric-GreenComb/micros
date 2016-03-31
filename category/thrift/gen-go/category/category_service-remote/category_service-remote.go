@@ -25,7 +25,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "   GetDemoSubCategories(string category_id)")
 	fmt.Fprintln(os.Stderr, "  bool LoadCategory(string path)")
 	fmt.Fprintln(os.Stderr, "   GetCategories()")
-	fmt.Fprintln(os.Stderr, "   GetSubCategories(string category_id)")
+	fmt.Fprintln(os.Stderr, "   GetSubCategories(i32 serialnumber)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -173,7 +173,12 @@ func main() {
 			fmt.Fprintln(os.Stderr, "GetSubCategories requires 1 args")
 			flag.Usage()
 		}
-		argvalue0 := flag.Arg(1)
+		tmp0, err22 := (strconv.Atoi(flag.Arg(1)))
+		if err22 != nil {
+			Usage()
+			return
+		}
+		argvalue0 := int32(tmp0)
 		value0 := argvalue0
 		fmt.Print(client.GetSubCategories(value0))
 		fmt.Print("\n")

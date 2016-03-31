@@ -1,56 +1,67 @@
 [
     {
         "id": "531770002580000001",
+        "serialnumber": 10100,
         "name": "web-mobile-software-dev",
         "desc": "Web,移动和软件开发",
         "subcategories": [
             {
                 "id": "531770282584862733",
+                "serialnumber": 10101,
                 "name": "web-development",
                 "desc": "Web开发"
             },
             {
                 "id": "531770282589057024",
+                "serialnumber": 10102,
                 "name": "mobile-development",
                 "desc": "移动开发"
             },
             {
                 "id": "531770282589057025",
+                "serialnumber": 10103,
                 "name": "desktop-software-development",
                 "desc": "桌面软件开发"
             },
             {
                 "id": "531770282589057026",
+                "serialnumber": 10104,
                 "name": "ecommerce-development",
                 "desc": "电子商务开发"
             },
             {
                 "id": "531770282589057027",
+                "serialnumber": 10105,
                 "name": "game-development",
                 "desc": "游戏开发"
             },
             {
                 "id": "531770282589057028",
+                "serialnumber": 10106,
                 "name": "scripts-utilities",
                 "desc": "前端scripts脚本"
             },
             {
                 "id": "531770282589057029",
+                "serialnumber": 10107,
                 "name": "web-mobile-design",
                 "desc": "Web-移动设计"
             },
             {
                 "id": "531770282589057030",
+                "serialnumber": 10108,
                 "name": "product-management",
                 "desc": "产品管理"
             },
             {
                 "id": "531770282589057031",
+                "serialnumber": 10109,
                 "name": "qa-testing",
                 "desc": "QA-测试"
             },
             {
                 "id": "531770282589057032",
+                "serialnumber": 10110,
                 "name": "other-software-development",
                 "desc": "其他软件开发"
             }
@@ -58,56 +69,67 @@
     },
     {
         "id": "531770012590000001",
+        "serialnumber": 10200,
         "name": "sales-marketing",
         "desc": "营销",
         "subcategories": [
             {
                 "id": "531770282597445639",
+                "serialnumber": 10201,
                 "name": "smm-social-media-marketing",
                 "desc": "微信-社会化媒体营销"
             },
             {
                 "id": "531770282597445637",
+                "serialnumber": 10202,
                 "name": "sem-search-engine-marketing",
                 "desc": "SEM搜索引擎营销"
             },
             {
                 "id": "531770282597445638",
+                "serialnumber": 10203,
                 "name": "seo-search-engine-optimization",
                 "desc": "SEO搜索引擎优化"
             },
             {
                 "id": "531770282597445632",
+                "serialnumber": 10204,
                 "name": "email-marketing-automation",
                 "desc": "电子邮件营销"
             },
             {
                 "id": "531770282597445635",
+                "serialnumber": 10205,
                 "name": "telemarketing-telesales",
                 "desc": "电话营销和销售"
             },
             {
                 "id": "531770282597445636",
+                "serialnumber": 10206,
                 "name": "display-advertising",
                 "desc": "展示广告"
             },
             {
                 "id": "531770282597445633",
+                "serialnumber": 10207,
                 "name": "market-customer-research",
                 "desc": "市场-客户研究"
             },
             {
                 "id": "531770282593251343",
+                "serialnumber": 10208,
                 "name": "marketing-strategy",
                 "desc": "营销战略"
             },
             {
                 "id": "531770282593251344",
+                "serialnumber": 10209,
                 "name": "public-relations",
                 "desc": "公共关系"
             },
             {
                 "id": "531770282597445641",
+                "serialnumber": 10210,
                 "name": "other-sales-marketing",
                 "desc": "其他销售"
             }
@@ -115,56 +137,67 @@
     },
     {
         "id": "531770022590000002",
+        "serialnumber": 10300,
         "name": "design-creative",
         "desc": "设计创意",
         "subcategories": [
             {
                 "id": "531770282593251333",
+                "serialnumber": 10301,
                 "name": "animation",
                 "desc": "动画"
             },
             {
                 "id": "531770282593251341",
+                "serialnumber": 10302,
                 "name": "audio-production",
                 "desc": "音频制作"
             },
             {
                 "id": "531770282593251334",
+                "serialnumber": 10303,
                 "name": "graphic-design",
                 "desc": "平面设计"
             },
             {
                 "id": "531770282593251335",
+                "serialnumber": 10304,
                 "name": "illustration",
                 "desc": "图片设计"
             },
             {
                 "id": "531770282593251336",
+                "serialnumber": 10305,
                 "name": "logo-design-branding",
                 "desc": "Logo与品牌设计"
             },
             {
                 "id": "531770282593251340",
+                "serialnumber": 10306,
                 "name": "photography",
                 "desc": "摄影"
             },
             {
                 "id": "531770282593251337",
+                "serialnumber": 10307,
                 "name": "presentations",
                 "desc": "PPT-演示"
             },
             {
                 "id": "531770282593251338",
+                "serialnumber": 10308,
                 "name": "video-production",
                 "desc": "影视制作"
             },
             {
                 "id": "531770282593251339",
+                "serialnumber": 10309,
                 "name": "voice-talent",
                 "desc": "声音制作"
             },
             {
                 "id": "531770282593251342",
+                "serialnumber": 10310,
                 "name": "other-design-creative",
                 "desc": "其他设计创意"
             }
@@ -172,41 +205,49 @@
     },
     {
         "id": "531770032580000002",
+        "serialnumber": 10400,
         "name": "it-networking",
         "desc": "IT及网络",
         "subcategories": [
             {
                 "id": "531770282589057040",
+                "serialnumber": 10401,
                 "name": "cloud-administration",
                 "desc": "云-上云管理"
             },
             {
                 "id": "531770282589057041",
+                "serialnumber": 10402,
                 "name": "ci-architect-administration",
                 "desc": "架构-持续集成管理"
             },
             {
                 "id": "531770282589057033",
+                "serialnumber": 10403,
                 "name": "database-administration",
                 "desc": "DBA"
             },
             {
                 "id": "531770282589057036",
+                "serialnumber": 10404,
                 "name": "information-security",
                 "desc": "信息安全"
             },
             {
                 "id": "531770282589057035",
+                "serialnumber": 10405,
                 "name": "network-system-administration",
                 "desc": "网络系统管理"
             },
             {
                 "id": "531770282589057034",
+                "serialnumber": 10406,
                 "name": "erp-crm-software",
                 "desc": "ERP-CRM及业务软件"
             },
             {
                 "id": "531770282589057037",
+                "serialnumber": 10407,
                 "name": "other-it-networking",
                 "desc": "其他IT-网络"
             }
@@ -214,41 +255,49 @@
     },
     {
         "id": "531770042590000003",
+        "serialnumber": 10500,
         "name": "data-science-analytics",
         "desc": "数据-数据分析",
         "subcategories": [
             {
                 "id": "531770282593251330",
+                "serialnumber": 10501,
                 "name": "a-b-testing",
                 "desc": "A-B测试"
             },
             {
                 "id": "531770282589057039",
+                "serialnumber": 10502,
                 "name": "data-visualization",
                 "desc": "数据可视化"
             },
             {
                 "id": "531770282593251331",
+                "serialnumber": 10503,
                 "name": "data-extraction-etl",
                 "desc": "数据提取-ETL"
             },
             {
                 "id": "531770282589057038",
+                "serialnumber": 10504,
                 "name": "data-mining-management",
                 "desc": "数据挖掘与管理"
             },
             {
                 "id": "531770282593251329",
+                "serialnumber": 10505,
                 "name": "machine-learning",
                 "desc": "机器学习"
             },
             {
                 "id": "531770282593251328",
+                "serialnumber": 10506,
                 "name": "quantitative-analysis",
                 "desc": "定量分析"
             },
             {
                 "id": "531770282593251332",
+                "serialnumber": 10507,
                 "name": "other-data-science-analytics",
                 "desc": "其他数据科学分析"
             }
@@ -256,56 +305,67 @@
     },
     {
         "id": "531770052600000001",
+        "serialnumber": 10600,
         "name": "engineering-architecture",
         "desc": "工程建筑",
         "subcategories": [
             {
                 "id": "531770282601639948",
+                "serialnumber": 10601,
                 "name": "3d-modeling-cad",
                 "desc": "三维建模与CAD"
             },
             {
                 "id": "531770282601639949",
+                "serialnumber": 10602,
                 "name": "architecture",
                 "desc": "建筑工程"
             },
             {
                 "id": "531770282605834240",
+                "serialnumber": 10603,
                 "name": "chemical-engineering",
                 "desc": "化学工程"
             },
             {
                 "id": "531770282601639950",
+                "serialnumber": 10604,
                 "name": "civil-structural-engineering",
                 "desc": "土木与结构工程"
             },
             {
                 "id": "531770282605834241",
+                "serialnumber": 10605,
                 "name": "contract-manufacturing",
                 "desc": "合同制造"
             },
             {
                 "id": "531770282601639951",
+                "serialnumber": 10606,
                 "name": "electrical-engineering",
                 "desc": "电气工程"
             },
             {
                 "id": "531770282605834242",
+                "serialnumber": 10607,
                 "name": "interior-design",
                 "desc": "室内设计"
             },
             {
                 "id": "531770282601639952",
+                "serialnumber": 10608,
                 "name": "mechanical-engineering",
                 "desc": "机械工程"
             },
             {
                 "id": "531770282601639953",
+                "serialnumber": 10609,
                 "name": "product-design",
                 "desc": "产品设计"
             },
             {
                 "id": "531770282605834243",
+                "serialnumber": 10610,
                 "name": "other-engineering-architecture",
                 "desc": "其他工程与建筑"
             }
@@ -313,56 +373,67 @@
     },
     {
         "id": "531770062590000004",
+        "serialnumber": 10700,
         "name": "writing",
         "desc": "写作",
         "subcategories": [
             {
                 "id": "531770282597445647",
+                "serialnumber": 10701,
                 "name": "web-content",
                 "desc": "营销-内容写作"
             },
             {
                 "id": "531770282597445642",
+                "serialnumber": 10702,
                 "name": "article-blog-writing",
                 "desc": "文章-博客写作"
             },
             {
                 "id": "531770282601639936",
+                "serialnumber": 10703,
                 "name": "grant-writing",
                 "desc": "标书-方案写作"
             },
             {
                 "id": "531770282601639937",
+                "serialnumber": 10704,
                 "name": "resumes-cover-letters",
                 "desc": "简历-求职信"
             },
             {
                 "id": "531770282597445648",
+                "serialnumber": 10705,
                 "name": "academic-writing-research",
                 "desc": "学术-研究写作"
             },
             {
                 "id": "531770282597445643",
+                "serialnumber": 10706,
                 "name": "copywriting",
                 "desc": "文案"
             },
             {
                 "id": "531770282597445645",
+                "serialnumber": 10707,
                 "name": "creative-writing",
                 "desc": "创意写作"
             },
             {
                 "id": "531770282597445644",
+                "serialnumber": 10708,
                 "name": "editing-proofreading",
                 "desc": "编辑-校对"
             },
             {
                 "id": "531770282597445646",
+                "serialnumber": 10709,
                 "name": "technical-writing",
                 "desc": "技术写作"
             },
             {
                 "id": "531770282601639938",
+                "serialnumber": 10710,
                 "name": "writing",
                 "desc": "其他写作"
             }
@@ -370,26 +441,31 @@
     },
     {
         "id": "531770072600000001",
+        "serialnumber": 10800,
         "name": "translation",
         "desc": "翻译",
         "subcategories": [
             {
                 "id": "531770282601639939",
+                "serialnumber": 10801,
                 "name": "general-translation",
                 "desc": "翻译"
             },
             {
                 "id": "531770282601639941",
+                "serialnumber": 10802,
                 "name": "technical-translation",
                 "desc": "技术翻译"
             },
             {
                 "id": "531770282601639940",
+                "serialnumber": 10803,
                 "name": "legal-translation",
                 "desc": "法律翻译"
             },
             {
                 "id": "531770282601639942",
+                "serialnumber": 10804,
                 "name": "medical-translation",
                 "desc": "医疗翻译"
             }
@@ -397,41 +473,49 @@
     },
     {
         "id": "531770082600000002",
+        "serialnumber": 10900,
         "name": "legal",
         "desc": "法律",
         "subcategories": [
             {
                 "id": "531770282605834246",
+                "serialnumber": 10901,
                 "name": "contract-law",
                 "desc": "合同法"
             },
             {
                 "id": "531770282605834245",
+                "serialnumber": 10902,
                 "name": "corporate-law",
                 "desc": "公司法"
             },
             {
                 "id": "531770282605834247",
+                "serialnumber": 10903,
                 "name": "criminal-law",
                 "desc": "刑法"
             },
             {
                 "id": "531770282605834248",
+                "serialnumber": 10904,
                 "name": "family-law",
                 "desc": "民法"
             },
             {
                 "id": "531770282605834244",
+                "serialnumber": 10905,
                 "name": "intellectual-property-law",
                 "desc": "知识产权法"
             },
             {
                 "id": "531770283692158976",
+                "serialnumber": 10906,
                 "name": "paralegal-services",
                 "desc": "律师法律服务"
             },
             {
                 "id": "531770283696353280",
+                "serialnumber": 10907,
                 "name": "other-legal",
                 "desc": "其他法律"
             }
@@ -439,36 +523,43 @@
     },
     {
         "id": "531770092580000003",
+        "serialnumber": 11000,
         "name": "admin-support",
         "desc": "行政支持",
         "subcategories": [
             {
                 "id": "531770282584862724",
+                "serialnumber": 11001,
                 "name": "data-entry",
                 "desc": "数据输入-速记"
             },
             {
                 "id": "531770282584862725",
+                "serialnumber": 11002,
                 "name": "personal-virtual-assistant",
                 "desc": "个人-虚拟助手"
             },
             {
                 "id": "531770282584862728",
+                "serialnumber": 11003,
                 "name": "project-management",
                 "desc": "项目管理"
             },
             {
                 "id": "531770282584862727",
+                "serialnumber": 11004,
                 "name": "transcription",
                 "desc": "抄写-转录"
             },
             {
                 "id": "531770282584862726",
+                "serialnumber": 11005,
                 "name": "web-research",
                 "desc": "网络研究"
             },
             {
                 "id": "531770282584862729",
+                "serialnumber": 11006,
                 "name": "other-admin-support",
                 "desc": "其他行政支持"
             }
@@ -476,21 +567,25 @@
     },
     {
         "id": "531770102580000004",
+        "serialnumber": 11100,
         "name": "customer-service",
         "desc": "客户服务",
         "subcategories": [
             {
                 "id": "531770282584862730",
+                "serialnumber": 11101,
                 "name": "customer-service",
                 "desc": "客户服务"
             },
             {
                 "id": "531770282584862731",
+                "serialnumber": 11102,
                 "name": "technical-support",
                 "desc": "技术支持"
             },
             {
                 "id": "531770282584862732",
+                "serialnumber": 11103,
                 "name": "other-customer-service",
                 "desc": "其他客户服务"
             }
@@ -498,31 +593,37 @@
     },
     {
         "id": "531770112600000003",
+        "serialnumber": 11200,
         "name": "accounting-consulting",
         "desc": "会计-咨询",
         "subcategories": [
             {
                 "id": "531770282601639943",
+                "serialnumber": 11201,
                 "name": "accounting",
                 "desc": "会计"
             },
             {
                 "id": "531770282601639946",
+                "serialnumber": 11202,
                 "name": "human-resources",
                 "desc": "人力资源"
             },
             {
                 "id": "531770282601639945",
+                "serialnumber": 11203,
                 "name": "financial-planning",
                 "desc": "财务规划"
             },
             {
                 "id": "531770282601639944",
+                "serialnumber": 11204,
                 "name": "management-consulting",
                 "desc": "管理咨询"
             },
             {
                 "id": "531770282601639947",
+                "serialnumber": 11205,
                 "name": "other-accounting-consulting",
                 "desc": "其他会计-咨询"
             }

@@ -65,7 +65,7 @@ func (c client) GetCategories() []*thriftcategory.Category {
 	return reply
 }
 
-func (c client) GetSubCategories(category_id string) []*thriftcategory.SubCategory {
-	_subs, _ := c.CategoryServiceClient.GetSubCategories(category_id)
+func (c client) GetSubCategories(serialnumber int32) []*thriftcategory.SubCategory {
+	_subs, _ := c.CategoryServiceClient.GetSubCategories(serialnumber)
 	return _subs
 }

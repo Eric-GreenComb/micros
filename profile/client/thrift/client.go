@@ -26,17 +26,8 @@ func (c client) GetProfile(profile_id string) string {
 	return reply
 }
 
-func (c client) GetProfileByCat(name string) string {
-	reply, err := c.ProfileServiceClient.GetProfileByCat(name)
-	if err != nil {
-		c.Logger.Log("err", err)
-		return ""
-	}
-	return reply
-}
-
-func (c client) GetProfileBySubCat(name string) string {
-	reply, err := c.ProfileServiceClient.GetProfileBySubCat(name)
+func (c client) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition) string {
+	reply, err := c.ProfileServiceClient.SearchProfiles(profile_search_condition)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

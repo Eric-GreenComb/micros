@@ -21,8 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string GetProfile(string profile_id)")
-	fmt.Fprintln(os.Stderr, "  string GetProfileByCat(string name)")
-	fmt.Fprintln(os.Stderr, "  string GetProfileBySubCat(string name)")
+	fmt.Fprintln(os.Stderr, "  string SearchProfiles(ProfileSearchCondition profile_search_condition)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -127,24 +126,29 @@ func main() {
 		fmt.Print(client.GetProfile(value0))
 		fmt.Print("\n")
 		break
-	case "GetProfileByCat":
+	case "SearchProfiles":
 		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetProfileByCat requires 1 args")
+			fmt.Fprintln(os.Stderr, "SearchProfiles requires 1 args")
 			flag.Usage()
 		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		fmt.Print(client.GetProfileByCat(value0))
-		fmt.Print("\n")
-		break
-	case "GetProfileBySubCat":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetProfileBySubCat requires 1 args")
-			flag.Usage()
+		arg7 := flag.Arg(1)
+		mbTrans8 := thrift.NewTMemoryBufferLen(len(arg7))
+		defer mbTrans8.Close()
+		_, err9 := mbTrans8.WriteString(arg7)
+		if err9 != nil {
+			Usage()
+			return
 		}
-		argvalue0 := flag.Arg(1)
+		factory10 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt11 := factory10.GetProtocol(mbTrans8)
+		argvalue0 := profile.NewProfileSearchCondition()
+		err12 := argvalue0.Read(jsProt11)
+		if err12 != nil {
+			Usage()
+			return
+		}
 		value0 := argvalue0
-		fmt.Print(client.GetProfileBySubCat(value0))
+		fmt.Print(client.SearchProfiles(value0))
 		fmt.Print("\n")
 		break
 	case "":

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/apache/thrift/lib/go/thrift"
@@ -83,15 +84,14 @@ func main() {
 		v := svc.GetProfile(profile_id)
 		logger.Log("method", "GetProfile", "profile_id", profile_id, "v", v, "took", time.Since(begin))
 
-	case "c":
-		_name := s1
-		v := svc.GetProfileByCat(_name)
-		logger.Log("method", "GetProfileByCat", "name", _name, "v", v, "took", time.Since(begin))
-
-	case "sc":
-		_name := s1
-		v := svc.GetProfileBySubCat(_name)
-		logger.Log("method", "GetProfileBySubCat", "name", _name, "v", v, "took", time.Since(begin))
+	case "search":
+		var profile_search thriftprofile.ProfileSearchCondition
+		_serial_number, _ := strconv.Atoi(s1)
+		profile_search.SerialNumber = int32(_serial_number)
+		profile_search.HoursBilled = -1
+		profile_search.AvailableHours = -1
+		v := svc.SearchProfiles(&profile_search)
+		logger.Log("method", "SearchProfiles", "v", v, "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

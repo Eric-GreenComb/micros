@@ -20,28 +20,28 @@ var (
 
 type inmemService struct {
 	mtx     sync.RWMutex
-	m       map[string]thriftcategory.Category
-	sortkey []string
+	m       map[int]thriftcategory.Category
+	sortkey []int
 }
 
 func newInmemService() service.CategoryService {
 	return &inmemService{
-		m:       map[string]thriftcategory.Category{},
-		sortkey: make([]string, 0),
+		m:       map[int]thriftcategory.Category{},
+		sortkey: make([]int, 0),
 	}
 }
 
 func (self *inmemService) SayHi(name string) string { return "hi," + name }
 
 func (self *inmemService) GetDemoSubCategory(id string) thriftcategory.SubCategory {
-	return thriftcategory.SubCategory{"001", "name-001", "desc-001"}
+	return thriftcategory.SubCategory{"001", 10, "name-001", "desc-001"}
 }
 
 func (self *inmemService) GetDemoSubCategories(category_id string) []thriftcategory.SubCategory {
 	var subs []thriftcategory.SubCategory
 
-	subs = append(subs, thriftcategory.SubCategory{"001", "name-001", "desc-001"})
-	subs = append(subs, thriftcategory.SubCategory{"002", "name-002", "desc-0012"})
+	subs = append(subs, thriftcategory.SubCategory{"001", 1001, "name-001", "desc-001"})
+	subs = append(subs, thriftcategory.SubCategory{"002", 1002, "name-002", "desc-0012"})
 
 	return subs
 }
@@ -71,17 +71,17 @@ func (self *inmemService) initCategories(categories []thriftcategory.Category) b
 	}
 
 	for _, _category := range categories {
-		if _, ok := self.m[_category.ID]; ok {
+		if _, ok := self.m[int(_category.Serialnumber)]; ok {
 			continue // don't overwrite
 		}
-		self.m[_category.ID] = _category
+		self.m[int(_category.Serialnumber)] = _category
 	}
 
-	self.sortkey = make([]string, 0)
+	self.sortkey = make([]int, 0)
 	for _k, _ := range self.m {
 		self.sortkey = append(self.sortkey, _k)
 	}
-	sort.Strings(self.sortkey)
+	sort.Ints(self.sortkey)
 
 	return true
 }
@@ -98,11 +98,11 @@ func (self *inmemService) GetCategories() []*thriftcategory.Category {
 	return _categories
 }
 
-func (self *inmemService) GetSubCategories(category_id string) []*thriftcategory.SubCategory {
+func (self *inmemService) GetSubCategories(serialnumber int32) []*thriftcategory.SubCategory {
 	self.mtx.RLock()
 	defer self.mtx.RUnlock()
 
-	p, ok := self.m[category_id]
+	p, ok := self.m[int(serialnumber)]
 	if !ok {
 		return nil
 	}

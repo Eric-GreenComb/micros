@@ -1,16 +1,16 @@
 package service
 
-import ()
+import (
+	thriftprofile "github.com/banerwai/micros/profile/thrift/gen-go/profile"
+)
 
 // Service is the abstract representation of this service.
 type ProfileService interface {
 	// Parameters:
 	//  - ProfileID
 	GetProfile(profile_id string) string
+
 	// Parameters:
-	//  - Name
-	GetProfileByCat(name string) string
-	// Parameters:
-	//  - Name
-	GetProfileBySubCat(name string) string
+	//  - ProfileSearchCondition
+	SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition) string
 }

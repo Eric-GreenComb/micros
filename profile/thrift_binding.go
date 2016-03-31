@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/banerwai/micros/profile/service"
+
+	thriftprofile "github.com/banerwai/micros/profile/thrift/gen-go/profile"
 )
 
 type thriftBinding struct {
@@ -13,12 +15,7 @@ func (tb thriftBinding) GetProfile(profile_id string) (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) GetProfileByCat(name string) (string, error) {
-	r := tb.ProfileService.GetProfileByCat(name)
-	return r, nil
-}
-
-func (tb thriftBinding) GetProfileBySubCat(name string) (string, error) {
-	r := tb.ProfileService.GetProfileBySubCat(name)
+func (tb thriftBinding) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition) (string, error) {
+	r := tb.ProfileService.SearchProfiles(profile_search_condition)
 	return r, nil
 }

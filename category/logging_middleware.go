@@ -79,15 +79,15 @@ func (m loggingMiddleware) GetCategories() (v []*thriftcategory.Category) {
 	return
 }
 
-func (m loggingMiddleware) GetSubCategories(category_id string) (v []*thriftcategory.SubCategory) {
+func (m loggingMiddleware) GetSubCategories(serialnumber int32) (v []*thriftcategory.SubCategory) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetSubCategories",
-			"category_id", category_id,
+			"serialnumber", serialnumber,
 			"v", fmt.Sprintf("%v", v),
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	v = m.CategoryService.GetSubCategories(category_id)
+	v = m.CategoryService.GetSubCategories(serialnumber)
 	return
 }

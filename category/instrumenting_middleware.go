@@ -59,11 +59,11 @@ func (m instrumentingMiddleware) GetCategories() (v []*thriftcategory.Category) 
 	return
 }
 
-func (m instrumentingMiddleware) GetSubCategories(category_id string) (v []*thriftcategory.SubCategory) {
+func (m instrumentingMiddleware) GetSubCategories(serialnumber int32) (v []*thriftcategory.SubCategory) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GetSubCategories"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	v = m.CategoryService.GetSubCategories(category_id)
+	v = m.CategoryService.GetSubCategories(serialnumber)
 	return
 }

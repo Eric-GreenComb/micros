@@ -6,6 +6,7 @@ import (
 	"github.com/go-kit/kit/metrics"
 
 	"github.com/banerwai/micros/profile/service"
+	thriftprofile "github.com/banerwai/micros/profile/thrift/gen-go/profile"
 )
 
 type instrumentingMiddleware struct {
@@ -22,20 +23,11 @@ func (m instrumentingMiddleware) GetProfile(profile_id string) (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) GetProfileByCat(name string) (r string) {
+func (m instrumentingMiddleware) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetProfileByCat"}
+		methodField := metrics.Field{Key: "method", Value: "SearchProfiles"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ProfileService.GetProfileByCat(name)
-	return
-}
-
-func (m instrumentingMiddleware) GetProfileBySubCat(name string) (r string) {
-	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetProfileBySubCat"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
-	}(time.Now())
-	r = m.ProfileService.GetProfileBySubCat(name)
+	r = m.ProfileService.SearchProfiles(profile_search_condition)
 	return
 }

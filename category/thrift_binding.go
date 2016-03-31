@@ -16,7 +16,7 @@ func (tb thriftBinding) SayHi(name string) (string, error) {
 
 func (tb thriftBinding) GetDemoSubCategory(id string) (*thriftcategory.SubCategory, error) {
 	v := tb.CategoryService.GetDemoSubCategory(id)
-	sub := thriftcategory.SubCategory{v.ID, v.Name, v.Desc}
+	sub := thriftcategory.SubCategory{v.ID, v.Serialnumber, v.Name, v.Desc}
 	return &sub, nil
 }
 
@@ -41,6 +41,6 @@ func (tb thriftBinding) GetCategories() ([]*thriftcategory.Category, error) {
 	return tb.CategoryService.GetCategories(), nil
 }
 
-func (tb thriftBinding) GetSubCategories(category_id string) ([]*thriftcategory.SubCategory, error) {
-	return tb.CategoryService.GetSubCategories(category_id), nil
+func (tb thriftBinding) GetSubCategories(serialnumber int32) ([]*thriftcategory.SubCategory, error) {
+	return tb.CategoryService.GetSubCategories(serialnumber), nil
 }

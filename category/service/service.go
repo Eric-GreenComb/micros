@@ -12,5 +12,5 @@ type CategoryService interface {
 
 	LoadCategory(path string) bool
 	GetCategories() []*thriftcategory.Category
-	GetSubCategories(category_id string) []*thriftcategory.SubCategory
+	GetSubCategories(serialnumber int32) []*thriftcategory.SubCategory
 }

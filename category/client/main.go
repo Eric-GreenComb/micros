@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/apache/thrift/lib/go/thrift"
@@ -87,7 +88,7 @@ func main() {
 	case "demosub":
 		id := s1
 		v := svc.GetDemoSubCategory(id)
-		_sub := bean.SubCategory{v.ID, v.Name, v.Desc}
+		_sub := bean.SubCategory{v.ID, v.Serialnumber, v.Name, v.Desc}
 
 		// _sub.ID = v.ID
 		// _sub.Name = v.Name
@@ -107,18 +108,23 @@ func main() {
 	case "cats":
 		v := svc.GetCategories()
 		for _, _cat := range v {
-			fmt.Println(_cat.Name + "(" + _cat.Desc + ")")
+			fmt.Println(strconv.Itoa(int(_cat.Serialnumber)) + " " + _cat.Name + "(" + _cat.Desc + ")")
 			for _, _sub := range _cat.Subcategories {
-				fmt.Println("    " + _sub.Name + "(" + _sub.Desc + ")")
+				fmt.Println("    " + strconv.Itoa(int(_sub.Serialnumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
 			}
 		}
 
 		logger.Log("method", "GetCategories", "v", len(v), "took", time.Since(begin))
 
 	case "subs":
-		category_id := s1
-		v := svc.GetSubCategories(category_id)
-		logger.Log("method", "GetSubCategories", "category_id", category_id, "v", fmt.Sprintf("%v", v), "took", time.Since(begin))
+		_serialnumber, _ := strconv.Atoi(s1)
+		v := svc.GetSubCategories(int32(_serialnumber))
+
+		for _, _sub := range v {
+			fmt.Println("    " + strconv.Itoa(int(_sub.Serialnumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
+		}
+
+		logger.Log("method", "GetSubCategories", "Serialnumber", _serialnumber, "v", len(v), "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

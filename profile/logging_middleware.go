@@ -6,6 +6,7 @@ import (
 	"github.com/go-kit/kit/log"
 
 	"github.com/banerwai/micros/profile/service"
+	thriftprofile "github.com/banerwai/micros/profile/thrift/gen-go/profile"
 )
 
 type loggingMiddleware struct {
@@ -26,28 +27,15 @@ func (m loggingMiddleware) GetProfile(profile_id string) (r string) {
 	return
 }
 
-func (m loggingMiddleware) GetProfileByCat(name string) (r string) {
+func (m loggingMiddleware) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "GetProfileByCat",
-			"name", name,
+			"method", "SearchProfiles",
+			"profile_search_condition", profile_search_condition,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.GetProfileByCat(name)
-	return
-}
-
-func (m loggingMiddleware) GetProfileBySubCat(name string) (r string) {
-	defer func(begin time.Time) {
-		m.Logger.Log(
-			"method", "GetProfileBySubCat",
-			"name", name,
-			"r", r,
-			"took", time.Since(begin),
-		)
-	}(time.Now())
-	r = m.ProfileService.GetProfileBySubCat(name)
+	r = m.ProfileService.SearchProfiles(profile_search_condition)
 	return
 }
