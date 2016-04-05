@@ -20,7 +20,9 @@ type ProfileService interface {
 	GetProfile(profile_id string) (r string, err error)
 	// Parameters:
 	//  - ProfileSearchCondition
-	SearchProfiles(profile_search_condition *ProfileSearchCondition) (r string, err error)
+	//  - Timestamp
+	//  - Pagesize
+	SearchProfiles(profile_search_condition *ProfileSearchCondition, timestamp int64, pagesize int64) (r string, err error)
 }
 
 type ProfileServiceClient struct {
@@ -128,14 +130,16 @@ func (p *ProfileServiceClient) recvGetProfile() (value string, err error) {
 
 // Parameters:
 //  - ProfileSearchCondition
-func (p *ProfileServiceClient) SearchProfiles(profile_search_condition *ProfileSearchCondition) (r string, err error) {
-	if err = p.sendSearchProfiles(profile_search_condition); err != nil {
+//  - Timestamp
+//  - Pagesize
+func (p *ProfileServiceClient) SearchProfiles(profile_search_condition *ProfileSearchCondition, timestamp int64, pagesize int64) (r string, err error) {
+	if err = p.sendSearchProfiles(profile_search_condition, timestamp, pagesize); err != nil {
 		return
 	}
 	return p.recvSearchProfiles()
 }
 
-func (p *ProfileServiceClient) sendSearchProfiles(profile_search_condition *ProfileSearchCondition) (err error) {
+func (p *ProfileServiceClient) sendSearchProfiles(profile_search_condition *ProfileSearchCondition, timestamp int64, pagesize int64) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -147,6 +151,8 @@ func (p *ProfileServiceClient) sendSearchProfiles(profile_search_condition *Prof
 	}
 	args := ProfileServiceSearchProfilesArgs{
 		ProfileSearchCondition: profile_search_condition,
+		Timestamp:              timestamp,
+		Pagesize:               pagesize,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -316,7 +322,7 @@ func (p *profileServiceProcessorSearchProfiles) Process(seqId int32, iprot, opro
 	result := ProfileServiceSearchProfilesResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.SearchProfiles(args.ProfileSearchCondition); err2 != nil {
+	if retval, err2 = p.handler.SearchProfiles(args.ProfileSearchCondition, args.Timestamp, args.Pagesize); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing SearchProfiles: "+err2.Error())
 		oprot.WriteMessageBegin("SearchProfiles", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -541,8 +547,12 @@ func (p *ProfileServiceGetProfileResult) String() string {
 
 // Attributes:
 //  - ProfileSearchCondition
+//  - Timestamp
+//  - Pagesize
 type ProfileServiceSearchProfilesArgs struct {
 	ProfileSearchCondition *ProfileSearchCondition `thrift:"profile_search_condition,1" json:"profile_search_condition"`
+	Timestamp              int64                   `thrift:"timestamp,2" json:"timestamp"`
+	Pagesize               int64                   `thrift:"pagesize,3" json:"pagesize"`
 }
 
 func NewProfileServiceSearchProfilesArgs() *ProfileServiceSearchProfilesArgs {
@@ -556,6 +566,14 @@ func (p *ProfileServiceSearchProfilesArgs) GetProfileSearchCondition() *ProfileS
 		return ProfileServiceSearchProfilesArgs_ProfileSearchCondition_DEFAULT
 	}
 	return p.ProfileSearchCondition
+}
+
+func (p *ProfileServiceSearchProfilesArgs) GetTimestamp() int64 {
+	return p.Timestamp
+}
+
+func (p *ProfileServiceSearchProfilesArgs) GetPagesize() int64 {
+	return p.Pagesize
 }
 func (p *ProfileServiceSearchProfilesArgs) IsSetProfileSearchCondition() bool {
 	return p.ProfileSearchCondition != nil
@@ -577,6 +595,14 @@ func (p *ProfileServiceSearchProfilesArgs) Read(iprot thrift.TProtocol) error {
 		switch fieldId {
 		case 1:
 			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		case 3:
+			if err := p.readField3(iprot); err != nil {
 				return err
 			}
 		default:
@@ -602,11 +628,35 @@ func (p *ProfileServiceSearchProfilesArgs) readField1(iprot thrift.TProtocol) er
 	return nil
 }
 
+func (p *ProfileServiceSearchProfilesArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.Timestamp = v
+	}
+	return nil
+}
+
+func (p *ProfileServiceSearchProfilesArgs) readField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 3: ", err)
+	} else {
+		p.Pagesize = v
+	}
+	return nil
+}
+
 func (p *ProfileServiceSearchProfilesArgs) Write(oprot thrift.TProtocol) error {
 	if err := oprot.WriteStructBegin("SearchProfiles_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField3(oprot); err != nil {
 		return err
 	}
 	if err := oprot.WriteFieldStop(); err != nil {
@@ -627,6 +677,32 @@ func (p *ProfileServiceSearchProfilesArgs) writeField1(oprot thrift.TProtocol) (
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_search_condition: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceSearchProfilesArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("timestamp", thrift.I64, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:timestamp: ", p), err)
+	}
+	if err := oprot.WriteI64(int64(p.Timestamp)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.timestamp (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:timestamp: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceSearchProfilesArgs) writeField3(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("pagesize", thrift.I64, 3); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:pagesize: ", p), err)
+	}
+	if err := oprot.WriteI64(int64(p.Pagesize)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.pagesize (3) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 3:pagesize: ", p), err)
 	}
 	return err
 }

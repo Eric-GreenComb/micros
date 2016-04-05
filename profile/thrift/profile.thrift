@@ -13,5 +13,5 @@ struct ProfileSearchCondition{
 
 service ProfileService {
 	string GetProfile(1: string profile_id)
-	string SearchProfiles(1: ProfileSearchCondition profile_search_condition)		
+	string SearchProfiles(1: ProfileSearchCondition profile_search_condition, 2: i64 timestamp, 3: i64 pagesize)		
 }

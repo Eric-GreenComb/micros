@@ -23,11 +23,11 @@ func (m instrumentingMiddleware) GetProfile(profile_id string) (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition) (r string) {
+func (m instrumentingMiddleware) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition, timestamp int64, pagesize int64) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "SearchProfiles"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ProfileService.SearchProfiles(profile_search_condition)
+	r = m.ProfileService.SearchProfiles(profile_search_condition, timestamp, pagesize)
 	return
 }

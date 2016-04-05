@@ -21,7 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string GetProfile(string profile_id)")
-	fmt.Fprintln(os.Stderr, "  string SearchProfiles(ProfileSearchCondition profile_search_condition)")
+	fmt.Fprintln(os.Stderr, "  string SearchProfiles(ProfileSearchCondition profile_search_condition, i64 timestamp, i64 pagesize)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -127,8 +127,8 @@ func main() {
 		fmt.Print("\n")
 		break
 	case "SearchProfiles":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "SearchProfiles requires 1 args")
+		if flag.NArg()-1 != 3 {
+			fmt.Fprintln(os.Stderr, "SearchProfiles requires 3 args")
 			flag.Usage()
 		}
 		arg7 := flag.Arg(1)
@@ -148,7 +148,19 @@ func main() {
 			return
 		}
 		value0 := argvalue0
-		fmt.Print(client.SearchProfiles(value0))
+		argvalue1, err13 := (strconv.ParseInt(flag.Arg(2), 10, 64))
+		if err13 != nil {
+			Usage()
+			return
+		}
+		value1 := argvalue1
+		argvalue2, err14 := (strconv.ParseInt(flag.Arg(3), 10, 64))
+		if err14 != nil {
+			Usage()
+			return
+		}
+		value2 := argvalue2
+		fmt.Print(client.SearchProfiles(value0, value1, value2))
 		fmt.Print("\n")
 		break
 	case "":

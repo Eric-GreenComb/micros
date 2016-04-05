@@ -27,7 +27,7 @@ func (m loggingMiddleware) GetProfile(profile_id string) (r string) {
 	return
 }
 
-func (m loggingMiddleware) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition) (r string) {
+func (m loggingMiddleware) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition, timestamp int64, pagesize int64) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "SearchProfiles",
@@ -36,6 +36,6 @@ func (m loggingMiddleware) SearchProfiles(profile_search_condition *thriftprofil
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.SearchProfiles(profile_search_condition)
+	r = m.ProfileService.SearchProfiles(profile_search_condition, timestamp, pagesize)
 	return
 }

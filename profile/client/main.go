@@ -12,6 +12,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 
+	banerwaiglobal "github.com/banerwai/gather/global"
 	thriftclient "github.com/banerwai/micros/profile/client/thrift"
 	"github.com/banerwai/micros/profile/service"
 	thriftprofile "github.com/banerwai/micros/profile/thrift/gen-go/profile"
@@ -90,7 +91,7 @@ func main() {
 		profile_search.SerialNumber = int32(_serial_number)
 		profile_search.HoursBilled = -1
 		profile_search.AvailableHours = -1
-		v := svc.SearchProfiles(&profile_search)
+		v := svc.SearchProfiles(&profile_search, time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
 		logger.Log("method", "SearchProfiles", "v", v, "took", time.Since(begin))
 
 	default:

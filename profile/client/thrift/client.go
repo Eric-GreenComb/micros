@@ -26,8 +26,8 @@ func (c client) GetProfile(profile_id string) string {
 	return reply
 }
 
-func (c client) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition) string {
-	reply, err := c.ProfileServiceClient.SearchProfiles(profile_search_condition)
+func (c client) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition, timestamp int64, pagesize int64) string {
+	reply, err := c.ProfileServiceClient.SearchProfiles(profile_search_condition, timestamp, pagesize)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
