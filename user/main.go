@@ -20,7 +20,15 @@ import (
 
 	"github.com/banerwai/micros/user/service"
 	thriftuser "github.com/banerwai/micros/user/thrift/gen-go/user"
+
+	"labix.org/v2/mgo"
 )
+
+// 数据连接
+var Session *mgo.Session
+
+// User表的Collection对象
+var UsersCollection *mgo.Collection
 
 func main() {
 	// Flag domain. Note that gRPC transitively registers flags via its import
@@ -31,12 +39,25 @@ func main() {
 		thriftProtocol   = fs.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = fs.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = fs.Bool("thrift.framed", false, "true to enable framing")
+
+		mongodbUrl    = fs.String("mongodb.url", "127.0.0.1:27017", "mongodb url")
+		mongodbDbname = fs.String("mongodb.dbname", "banerwai", "mongodb dbname")
 	)
 	flag.Usage = fs.Usage // only show our flags
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		fmt.Fprintf(os.Stderr, "%v", err)
 		os.Exit(1)
 	}
+
+	var err error
+	Session, err = mgo.Dial(*mongodbUrl) //连接数据库
+	if err != nil {
+		panic(err)
+	}
+	defer Session.Close()
+	Session.SetMode(mgo.Monotonic, true)
+
+	UsersCollection = Session.DB(*mongodbDbname).C("users") //数据库名称
 
 	// package log
 	var logger log.Logger

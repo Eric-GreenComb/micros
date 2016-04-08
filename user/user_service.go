@@ -2,6 +2,9 @@ package main
 
 import (
 	"github.com/banerwai/micros/user/service"
+
+	"github.com/banerwai/gather/bean"
+	"github.com/banerwai/gommon/db/mongo"
 )
 
 type inmemService struct {
@@ -12,6 +15,11 @@ func newInmemService() service.UserService {
 }
 
 func (self *inmemService) CreateUser(email string, usernameraw string, pwd string) (r string) {
+	var _user bean.User
+	_user.Email = email
+	_user.UsernameRaw = usernameraw
+	_user.Pwd = pwd
+	mongo.Insert(UsersCollection, _user)
 	r = email + usernameraw + pwd
 	return
 }
