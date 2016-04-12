@@ -20,7 +20,7 @@ func newInmemService() service.TokenService {
 
 func (self *inmemService) NewToken_(key string, ttype int64) string {
 	token := bean.Token{Key: key, Token: uuid.UUID(), CreatedTime: time.Now(), Type: ttype}
-	_info, _err := mgoCollectionToken.Upsert(bson.M{"key": key, "type": ttype}, token)
+	_info, _err := TokenCollection.Upsert(bson.M{"key": key, "type": ttype}, token)
 	fmt.Println(_info)
 	if _err != nil {
 		return _err.Error()
@@ -29,7 +29,7 @@ func (self *inmemService) NewToken_(key string, ttype int64) string {
 }
 
 func (self *inmemService) DeleteToken(key string, ttype int64) bool {
-	mgoCollectionToken.Remove(bson.M{"key": key, "type": ttype})
+	TokenCollection.Remove(bson.M{"key": key, "type": ttype})
 	return true
 }
 
@@ -43,7 +43,7 @@ func (self *inmemService) VerifyToken(key string, ttype int64) int64 {
 
 	var _token bean.Token
 
-	err := mgoCollectionToken.Find(bson.M{"key": key, "type": ttype}).One(&_token)
+	err := TokenCollection.Find(bson.M{"key": key, "type": ttype}).One(&_token)
 
 	if err != nil {
 		return -1

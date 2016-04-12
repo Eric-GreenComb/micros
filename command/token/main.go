@@ -21,13 +21,14 @@ import (
 	"github.com/banerwai/micros/command/token/service"
 	thrifttoken "github.com/banerwai/micros/command/token/thrift/gen-go/token"
 
-	"github.com/banerwai/micros/common/mongo"
 	"labix.org/v2/mgo"
 )
 
-var mgoSession *mgo.Session
-var mgoDatabase *mgo.Database
-var mgoCollectionToken *mgo.Collection
+// 数据连接
+var Session *mgo.Session
+
+// User表的Collection对象
+var TokenCollection *mgo.Collection
 
 func main() {
 
@@ -39,6 +40,9 @@ func main() {
 		thriftProtocol   = fs.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = fs.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = fs.Bool("thrift.framed", false, "true to enable framing")
+
+		mongodbUrl    = fs.String("mongodb.url", "127.0.0.1:27017", "mongodb url")
+		mongodbDbname = fs.String("mongodb.dbname", "banerwai", "mongodb dbname")
 	)
 	flag.Usage = fs.Usage // only show our flags
 	if err := fs.Parse(os.Args[1:]); err != nil {
@@ -46,10 +50,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	mgoSession, mgoDatabase = mongo.GetMongo()
-	defer mgoSession.Close()
+	var err error
+	Session, err = mgo.Dial(*mongodbUrl) //连接数据库
+	if err != nil {
+		panic(err)
+	}
+	defer Session.Close()
+	Session.SetMode(mgo.Monotonic, true)
 
-	mgoCollectionToken = mgoDatabase.C("token")
+	TokenCollection = Session.DB(*mongodbDbname).C("token") //数据库名称
 
 	// package log
 	var logger log.Logger
