@@ -14,4 +14,5 @@ var _ = thrift.ZERO
 var _ = fmt.Printf
 var _ = bytes.Equal
 
-var GoUnusedProtection__ int
+func init() {
+}

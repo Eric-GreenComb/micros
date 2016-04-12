@@ -7,7 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/banerwai/micros/command/profile/thrift/gen-go/profile"
+	"github.com/banerwai/micros/query/profile/thrift/gen-go/profile"
 	"math"
 	"net"
 	"net/url"
@@ -20,9 +20,8 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
-	fmt.Fprintln(os.Stderr, "  string AddProfile(string json_profile)")
-	fmt.Fprintln(os.Stderr, "  string UpdateProfile(string json_profile)")
-	fmt.Fprintln(os.Stderr, "  string DeleteProfile(string id)")
+	fmt.Fprintln(os.Stderr, "  string GetProfile(string id)")
+	fmt.Fprintln(os.Stderr, "  string SearchProfiles(string json_search, i64 timestamp, i64 pagesize)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -117,34 +116,36 @@ func main() {
 	}
 
 	switch cmd {
-	case "AddProfile":
+	case "GetProfile":
 		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "AddProfile requires 1 args")
+			fmt.Fprintln(os.Stderr, "GetProfile requires 1 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.AddProfile(value0))
+		fmt.Print(client.GetProfile(value0))
 		fmt.Print("\n")
 		break
-	case "UpdateProfile":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "UpdateProfile requires 1 args")
+	case "SearchProfiles":
+		if flag.NArg()-1 != 3 {
+			fmt.Fprintln(os.Stderr, "SearchProfiles requires 3 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.UpdateProfile(value0))
-		fmt.Print("\n")
-		break
-	case "DeleteProfile":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "DeleteProfile requires 1 args")
-			flag.Usage()
+		argvalue1, err8 := (strconv.ParseInt(flag.Arg(2), 10, 64))
+		if err8 != nil {
+			Usage()
+			return
 		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		fmt.Print(client.DeleteProfile(value0))
+		value1 := argvalue1
+		argvalue2, err9 := (strconv.ParseInt(flag.Arg(3), 10, 64))
+		if err9 != nil {
+			Usage()
+			return
+		}
+		value2 := argvalue2
+		fmt.Print(client.SearchProfiles(value0, value1, value2))
 		fmt.Print("\n")
 		break
 	case "":

@@ -6,7 +6,6 @@ import (
 	"github.com/go-kit/kit/metrics"
 
 	"github.com/banerwai/micros/command/profile/service"
-	thriftprofile "github.com/banerwai/micros/command/profile/thrift/gen-go/profile"
 )
 
 type instrumentingMiddleware struct {
@@ -14,20 +13,29 @@ type instrumentingMiddleware struct {
 	requestDuration metrics.TimeHistogram
 }
 
-func (m instrumentingMiddleware) GetProfile(profile_id string) (r string) {
+func (m instrumentingMiddleware) AddProfile(json_profile string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetProfile"}
+		methodField := metrics.Field{Key: "method", Value: "AddProfile"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ProfileService.GetProfile(profile_id)
+	r = m.ProfileService.AddProfile(json_profile)
 	return
 }
 
-func (m instrumentingMiddleware) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition, timestamp int64, pagesize int64) (r string) {
+func (m instrumentingMiddleware) UpdateProfile(json_profile string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "SearchProfiles"}
+		methodField := metrics.Field{Key: "method", Value: "UpdateProfile"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ProfileService.SearchProfiles(profile_search_condition, timestamp, pagesize)
+	r = m.ProfileService.UpdateProfile(json_profile)
+	return
+}
+
+func (m instrumentingMiddleware) DeleteProfile(id string) (r string) {
+	defer func(begin time.Time) {
+		methodField := metrics.Field{Key: "method", Value: "DeleteProfile"}
+		m.requestDuration.With(methodField).Observe(time.Since(begin))
+	}(time.Now())
+	r = m.ProfileService.DeleteProfile(id)
 	return
 }

@@ -16,13 +16,14 @@ var _ = bytes.Equal
 
 type ProfileService interface {
 	// Parameters:
-	//  - ProfileID
-	GetProfile(profile_id string) (r string, err error)
+	//  - JSONProfile
+	AddProfile(json_profile string) (r string, err error)
 	// Parameters:
-	//  - ProfileSearchCondition
-	//  - Timestamp
-	//  - Pagesize
-	SearchProfiles(profile_search_condition *ProfileSearchCondition, timestamp int64, pagesize int64) (r string, err error)
+	//  - JSONProfile
+	UpdateProfile(json_profile string) (r string, err error)
+	// Parameters:
+	//  - ID
+	DeleteProfile(id string) (r string, err error)
 }
 
 type ProfileServiceClient struct {
@@ -52,26 +53,26 @@ func NewProfileServiceClientProtocol(t thrift.TTransport, iprot thrift.TProtocol
 }
 
 // Parameters:
-//  - ProfileID
-func (p *ProfileServiceClient) GetProfile(profile_id string) (r string, err error) {
-	if err = p.sendGetProfile(profile_id); err != nil {
+//  - JSONProfile
+func (p *ProfileServiceClient) AddProfile(json_profile string) (r string, err error) {
+	if err = p.sendAddProfile(json_profile); err != nil {
 		return
 	}
-	return p.recvGetProfile()
+	return p.recvAddProfile()
 }
 
-func (p *ProfileServiceClient) sendGetProfile(profile_id string) (err error) {
+func (p *ProfileServiceClient) sendAddProfile(json_profile string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetProfile", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("AddProfile", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := ProfileServiceGetProfileArgs{
-		ProfileID: profile_id,
+	args := ProfileServiceAddProfileArgs{
+		JSONProfile: json_profile,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -82,7 +83,7 @@ func (p *ProfileServiceClient) sendGetProfile(profile_id string) (err error) {
 	return oprot.Flush()
 }
 
-func (p *ProfileServiceClient) recvGetProfile() (value string, err error) {
+func (p *ProfileServiceClient) recvAddProfile() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -92,12 +93,12 @@ func (p *ProfileServiceClient) recvGetProfile() (value string, err error) {
 	if err != nil {
 		return
 	}
-	if method != "GetProfile" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetProfile failed: wrong method name")
+	if method != "AddProfile" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "AddProfile failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetProfile failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "AddProfile failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -114,10 +115,10 @@ func (p *ProfileServiceClient) recvGetProfile() (value string, err error) {
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetProfile failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "AddProfile failed: invalid message type")
 		return
 	}
-	result := ProfileServiceGetProfileResult{}
+	result := ProfileServiceAddProfileResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -129,30 +130,26 @@ func (p *ProfileServiceClient) recvGetProfile() (value string, err error) {
 }
 
 // Parameters:
-//  - ProfileSearchCondition
-//  - Timestamp
-//  - Pagesize
-func (p *ProfileServiceClient) SearchProfiles(profile_search_condition *ProfileSearchCondition, timestamp int64, pagesize int64) (r string, err error) {
-	if err = p.sendSearchProfiles(profile_search_condition, timestamp, pagesize); err != nil {
+//  - JSONProfile
+func (p *ProfileServiceClient) UpdateProfile(json_profile string) (r string, err error) {
+	if err = p.sendUpdateProfile(json_profile); err != nil {
 		return
 	}
-	return p.recvSearchProfiles()
+	return p.recvUpdateProfile()
 }
 
-func (p *ProfileServiceClient) sendSearchProfiles(profile_search_condition *ProfileSearchCondition, timestamp int64, pagesize int64) (err error) {
+func (p *ProfileServiceClient) sendUpdateProfile(json_profile string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("SearchProfiles", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("UpdateProfile", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := ProfileServiceSearchProfilesArgs{
-		ProfileSearchCondition: profile_search_condition,
-		Timestamp:              timestamp,
-		Pagesize:               pagesize,
+	args := ProfileServiceUpdateProfileArgs{
+		JSONProfile: json_profile,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -163,7 +160,7 @@ func (p *ProfileServiceClient) sendSearchProfiles(profile_search_condition *Prof
 	return oprot.Flush()
 }
 
-func (p *ProfileServiceClient) recvSearchProfiles() (value string, err error) {
+func (p *ProfileServiceClient) recvUpdateProfile() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -173,12 +170,12 @@ func (p *ProfileServiceClient) recvSearchProfiles() (value string, err error) {
 	if err != nil {
 		return
 	}
-	if method != "SearchProfiles" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "SearchProfiles failed: wrong method name")
+	if method != "UpdateProfile" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "UpdateProfile failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "SearchProfiles failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "UpdateProfile failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -195,10 +192,87 @@ func (p *ProfileServiceClient) recvSearchProfiles() (value string, err error) {
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "SearchProfiles failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "UpdateProfile failed: invalid message type")
 		return
 	}
-	result := ProfileServiceSearchProfilesResult{}
+	result := ProfileServiceUpdateProfileResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - ID
+func (p *ProfileServiceClient) DeleteProfile(id string) (r string, err error) {
+	if err = p.sendDeleteProfile(id); err != nil {
+		return
+	}
+	return p.recvDeleteProfile()
+}
+
+func (p *ProfileServiceClient) sendDeleteProfile(id string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("DeleteProfile", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ProfileServiceDeleteProfileArgs{
+		ID: id,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ProfileServiceClient) recvDeleteProfile() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "DeleteProfile" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "DeleteProfile failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "DeleteProfile failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error5 error
+		error5, err = error4.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error5
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "DeleteProfile failed: invalid message type")
+		return
+	}
+	result := ProfileServiceDeleteProfileResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -229,10 +303,11 @@ func (p *ProfileServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFun
 
 func NewProfileServiceProcessor(handler ProfileService) *ProfileServiceProcessor {
 
-	self4 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self4.processorMap["GetProfile"] = &profileServiceProcessorGetProfile{handler: handler}
-	self4.processorMap["SearchProfiles"] = &profileServiceProcessorSearchProfiles{handler: handler}
-	return self4
+	self6 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self6.processorMap["AddProfile"] = &profileServiceProcessorAddProfile{handler: handler}
+	self6.processorMap["UpdateProfile"] = &profileServiceProcessorUpdateProfile{handler: handler}
+	self6.processorMap["DeleteProfile"] = &profileServiceProcessorDeleteProfile{handler: handler}
+	return self6
 }
 
 func (p *ProfileServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -245,25 +320,25 @@ func (p *ProfileServiceProcessor) Process(iprot, oprot thrift.TProtocol) (succes
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x5 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x7 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x5.Write(oprot)
+	x7.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x5
+	return false, x7
 
 }
 
-type profileServiceProcessorGetProfile struct {
+type profileServiceProcessorAddProfile struct {
 	handler ProfileService
 }
 
-func (p *profileServiceProcessorGetProfile) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := ProfileServiceGetProfileArgs{}
+func (p *profileServiceProcessorAddProfile) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ProfileServiceAddProfileArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetProfile", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("AddProfile", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -271,12 +346,12 @@ func (p *profileServiceProcessorGetProfile) Process(seqId int32, iprot, oprot th
 	}
 
 	iprot.ReadMessageEnd()
-	result := ProfileServiceGetProfileResult{}
+	result := ProfileServiceAddProfileResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetProfile(args.ProfileID); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetProfile: "+err2.Error())
-		oprot.WriteMessageBegin("GetProfile", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.AddProfile(args.JSONProfile); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing AddProfile: "+err2.Error())
+		oprot.WriteMessageBegin("AddProfile", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -284,7 +359,7 @@ func (p *profileServiceProcessorGetProfile) Process(seqId int32, iprot, oprot th
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetProfile", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("AddProfile", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -302,16 +377,16 @@ func (p *profileServiceProcessorGetProfile) Process(seqId int32, iprot, oprot th
 	return true, err
 }
 
-type profileServiceProcessorSearchProfiles struct {
+type profileServiceProcessorUpdateProfile struct {
 	handler ProfileService
 }
 
-func (p *profileServiceProcessorSearchProfiles) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := ProfileServiceSearchProfilesArgs{}
+func (p *profileServiceProcessorUpdateProfile) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ProfileServiceUpdateProfileArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("SearchProfiles", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("UpdateProfile", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -319,12 +394,12 @@ func (p *profileServiceProcessorSearchProfiles) Process(seqId int32, iprot, opro
 	}
 
 	iprot.ReadMessageEnd()
-	result := ProfileServiceSearchProfilesResult{}
+	result := ProfileServiceUpdateProfileResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.SearchProfiles(args.ProfileSearchCondition, args.Timestamp, args.Pagesize); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing SearchProfiles: "+err2.Error())
-		oprot.WriteMessageBegin("SearchProfiles", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.UpdateProfile(args.JSONProfile); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateProfile: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateProfile", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -332,7 +407,55 @@ func (p *profileServiceProcessorSearchProfiles) Process(seqId int32, iprot, opro
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("SearchProfiles", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("UpdateProfile", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type profileServiceProcessorDeleteProfile struct {
+	handler ProfileService
+}
+
+func (p *profileServiceProcessorDeleteProfile) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ProfileServiceDeleteProfileArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("DeleteProfile", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ProfileServiceDeleteProfileResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.DeleteProfile(args.ID); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing DeleteProfile: "+err2.Error())
+		oprot.WriteMessageBegin("DeleteProfile", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("DeleteProfile", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -353,19 +476,19 @@ func (p *profileServiceProcessorSearchProfiles) Process(seqId int32, iprot, opro
 // HELPER FUNCTIONS AND STRUCTURES
 
 // Attributes:
-//  - ProfileID
-type ProfileServiceGetProfileArgs struct {
-	ProfileID string `thrift:"profile_id,1" json:"profile_id"`
+//  - JSONProfile
+type ProfileServiceAddProfileArgs struct {
+	JSONProfile string `thrift:"json_profile,1" json:"json_profile"`
 }
 
-func NewProfileServiceGetProfileArgs() *ProfileServiceGetProfileArgs {
-	return &ProfileServiceGetProfileArgs{}
+func NewProfileServiceAddProfileArgs() *ProfileServiceAddProfileArgs {
+	return &ProfileServiceAddProfileArgs{}
 }
 
-func (p *ProfileServiceGetProfileArgs) GetProfileID() string {
-	return p.ProfileID
+func (p *ProfileServiceAddProfileArgs) GetJSONProfile() string {
+	return p.JSONProfile
 }
-func (p *ProfileServiceGetProfileArgs) Read(iprot thrift.TProtocol) error {
+func (p *ProfileServiceAddProfileArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -398,17 +521,17 @@ func (p *ProfileServiceGetProfileArgs) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ProfileServiceGetProfileArgs) readField1(iprot thrift.TProtocol) error {
+func (p *ProfileServiceAddProfileArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.ProfileID = v
+		p.JSONProfile = v
 	}
 	return nil
 }
 
-func (p *ProfileServiceGetProfileArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetProfile_args"); err != nil {
+func (p *ProfileServiceAddProfileArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("AddProfile_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -423,49 +546,49 @@ func (p *ProfileServiceGetProfileArgs) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ProfileServiceGetProfileArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("profile_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_id: ", p), err)
+func (p *ProfileServiceAddProfileArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("json_profile", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_profile: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.ProfileID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.profile_id (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.JSONProfile)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.json_profile (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_profile: ", p), err)
 	}
 	return err
 }
 
-func (p *ProfileServiceGetProfileArgs) String() string {
+func (p *ProfileServiceAddProfileArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ProfileServiceGetProfileArgs(%+v)", *p)
+	return fmt.Sprintf("ProfileServiceAddProfileArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type ProfileServiceGetProfileResult struct {
+type ProfileServiceAddProfileResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewProfileServiceGetProfileResult() *ProfileServiceGetProfileResult {
-	return &ProfileServiceGetProfileResult{}
+func NewProfileServiceAddProfileResult() *ProfileServiceAddProfileResult {
+	return &ProfileServiceAddProfileResult{}
 }
 
-var ProfileServiceGetProfileResult_Success_DEFAULT string
+var ProfileServiceAddProfileResult_Success_DEFAULT string
 
-func (p *ProfileServiceGetProfileResult) GetSuccess() string {
+func (p *ProfileServiceAddProfileResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return ProfileServiceGetProfileResult_Success_DEFAULT
+		return ProfileServiceAddProfileResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *ProfileServiceGetProfileResult) IsSetSuccess() bool {
+func (p *ProfileServiceAddProfileResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ProfileServiceGetProfileResult) Read(iprot thrift.TProtocol) error {
+func (p *ProfileServiceAddProfileResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -498,7 +621,7 @@ func (p *ProfileServiceGetProfileResult) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ProfileServiceGetProfileResult) readField0(iprot thrift.TProtocol) error {
+func (p *ProfileServiceAddProfileResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -507,8 +630,8 @@ func (p *ProfileServiceGetProfileResult) readField0(iprot thrift.TProtocol) erro
 	return nil
 }
 
-func (p *ProfileServiceGetProfileResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetProfile_result"); err != nil {
+func (p *ProfileServiceAddProfileResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("AddProfile_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -523,7 +646,7 @@ func (p *ProfileServiceGetProfileResult) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ProfileServiceGetProfileResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *ProfileServiceAddProfileResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -538,48 +661,27 @@ func (p *ProfileServiceGetProfileResult) writeField0(oprot thrift.TProtocol) (er
 	return err
 }
 
-func (p *ProfileServiceGetProfileResult) String() string {
+func (p *ProfileServiceAddProfileResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ProfileServiceGetProfileResult(%+v)", *p)
+	return fmt.Sprintf("ProfileServiceAddProfileResult(%+v)", *p)
 }
 
 // Attributes:
-//  - ProfileSearchCondition
-//  - Timestamp
-//  - Pagesize
-type ProfileServiceSearchProfilesArgs struct {
-	ProfileSearchCondition *ProfileSearchCondition `thrift:"profile_search_condition,1" json:"profile_search_condition"`
-	Timestamp              int64                   `thrift:"timestamp,2" json:"timestamp"`
-	Pagesize               int64                   `thrift:"pagesize,3" json:"pagesize"`
+//  - JSONProfile
+type ProfileServiceUpdateProfileArgs struct {
+	JSONProfile string `thrift:"json_profile,1" json:"json_profile"`
 }
 
-func NewProfileServiceSearchProfilesArgs() *ProfileServiceSearchProfilesArgs {
-	return &ProfileServiceSearchProfilesArgs{}
+func NewProfileServiceUpdateProfileArgs() *ProfileServiceUpdateProfileArgs {
+	return &ProfileServiceUpdateProfileArgs{}
 }
 
-var ProfileServiceSearchProfilesArgs_ProfileSearchCondition_DEFAULT *ProfileSearchCondition
-
-func (p *ProfileServiceSearchProfilesArgs) GetProfileSearchCondition() *ProfileSearchCondition {
-	if !p.IsSetProfileSearchCondition() {
-		return ProfileServiceSearchProfilesArgs_ProfileSearchCondition_DEFAULT
-	}
-	return p.ProfileSearchCondition
+func (p *ProfileServiceUpdateProfileArgs) GetJSONProfile() string {
+	return p.JSONProfile
 }
-
-func (p *ProfileServiceSearchProfilesArgs) GetTimestamp() int64 {
-	return p.Timestamp
-}
-
-func (p *ProfileServiceSearchProfilesArgs) GetPagesize() int64 {
-	return p.Pagesize
-}
-func (p *ProfileServiceSearchProfilesArgs) IsSetProfileSearchCondition() bool {
-	return p.ProfileSearchCondition != nil
-}
-
-func (p *ProfileServiceSearchProfilesArgs) Read(iprot thrift.TProtocol) error {
+func (p *ProfileServiceUpdateProfileArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -597,14 +699,6 @@ func (p *ProfileServiceSearchProfilesArgs) Read(iprot thrift.TProtocol) error {
 			if err := p.readField1(iprot); err != nil {
 				return err
 			}
-		case 2:
-			if err := p.readField2(iprot); err != nil {
-				return err
-			}
-		case 3:
-			if err := p.readField3(iprot); err != nil {
-				return err
-			}
 		default:
 			if err := iprot.Skip(fieldTypeId); err != nil {
 				return err
@@ -620,43 +714,20 @@ func (p *ProfileServiceSearchProfilesArgs) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ProfileServiceSearchProfilesArgs) readField1(iprot thrift.TProtocol) error {
-	p.ProfileSearchCondition = &ProfileSearchCondition{}
-	if err := p.ProfileSearchCondition.Read(iprot); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.ProfileSearchCondition), err)
-	}
-	return nil
-}
-
-func (p *ProfileServiceSearchProfilesArgs) readField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI64(); err != nil {
-		return thrift.PrependError("error reading field 2: ", err)
+func (p *ProfileServiceUpdateProfileArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.Timestamp = v
+		p.JSONProfile = v
 	}
 	return nil
 }
 
-func (p *ProfileServiceSearchProfilesArgs) readField3(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI64(); err != nil {
-		return thrift.PrependError("error reading field 3: ", err)
-	} else {
-		p.Pagesize = v
-	}
-	return nil
-}
-
-func (p *ProfileServiceSearchProfilesArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("SearchProfiles_args"); err != nil {
+func (p *ProfileServiceUpdateProfileArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateProfile_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
-		return err
-	}
-	if err := p.writeField2(oprot); err != nil {
-		return err
-	}
-	if err := p.writeField3(oprot); err != nil {
 		return err
 	}
 	if err := oprot.WriteFieldStop(); err != nil {
@@ -668,75 +739,49 @@ func (p *ProfileServiceSearchProfilesArgs) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ProfileServiceSearchProfilesArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("profile_search_condition", thrift.STRUCT, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_search_condition: ", p), err)
+func (p *ProfileServiceUpdateProfileArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("json_profile", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_profile: ", p), err)
 	}
-	if err := p.ProfileSearchCondition.Write(oprot); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.ProfileSearchCondition), err)
+	if err := oprot.WriteString(string(p.JSONProfile)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.json_profile (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_search_condition: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_profile: ", p), err)
 	}
 	return err
 }
 
-func (p *ProfileServiceSearchProfilesArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("timestamp", thrift.I64, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:timestamp: ", p), err)
-	}
-	if err := oprot.WriteI64(int64(p.Timestamp)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.timestamp (2) field write error: ", p), err)
-	}
-	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:timestamp: ", p), err)
-	}
-	return err
-}
-
-func (p *ProfileServiceSearchProfilesArgs) writeField3(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("pagesize", thrift.I64, 3); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:pagesize: ", p), err)
-	}
-	if err := oprot.WriteI64(int64(p.Pagesize)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.pagesize (3) field write error: ", p), err)
-	}
-	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 3:pagesize: ", p), err)
-	}
-	return err
-}
-
-func (p *ProfileServiceSearchProfilesArgs) String() string {
+func (p *ProfileServiceUpdateProfileArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ProfileServiceSearchProfilesArgs(%+v)", *p)
+	return fmt.Sprintf("ProfileServiceUpdateProfileArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type ProfileServiceSearchProfilesResult struct {
+type ProfileServiceUpdateProfileResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewProfileServiceSearchProfilesResult() *ProfileServiceSearchProfilesResult {
-	return &ProfileServiceSearchProfilesResult{}
+func NewProfileServiceUpdateProfileResult() *ProfileServiceUpdateProfileResult {
+	return &ProfileServiceUpdateProfileResult{}
 }
 
-var ProfileServiceSearchProfilesResult_Success_DEFAULT string
+var ProfileServiceUpdateProfileResult_Success_DEFAULT string
 
-func (p *ProfileServiceSearchProfilesResult) GetSuccess() string {
+func (p *ProfileServiceUpdateProfileResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return ProfileServiceSearchProfilesResult_Success_DEFAULT
+		return ProfileServiceUpdateProfileResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *ProfileServiceSearchProfilesResult) IsSetSuccess() bool {
+func (p *ProfileServiceUpdateProfileResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ProfileServiceSearchProfilesResult) Read(iprot thrift.TProtocol) error {
+func (p *ProfileServiceUpdateProfileResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -769,7 +814,7 @@ func (p *ProfileServiceSearchProfilesResult) Read(iprot thrift.TProtocol) error 
 	return nil
 }
 
-func (p *ProfileServiceSearchProfilesResult) readField0(iprot thrift.TProtocol) error {
+func (p *ProfileServiceUpdateProfileResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -778,8 +823,8 @@ func (p *ProfileServiceSearchProfilesResult) readField0(iprot thrift.TProtocol) 
 	return nil
 }
 
-func (p *ProfileServiceSearchProfilesResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("SearchProfiles_result"); err != nil {
+func (p *ProfileServiceUpdateProfileResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateProfile_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -794,7 +839,7 @@ func (p *ProfileServiceSearchProfilesResult) Write(oprot thrift.TProtocol) error
 	return nil
 }
 
-func (p *ProfileServiceSearchProfilesResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *ProfileServiceUpdateProfileResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -809,9 +854,202 @@ func (p *ProfileServiceSearchProfilesResult) writeField0(oprot thrift.TProtocol)
 	return err
 }
 
-func (p *ProfileServiceSearchProfilesResult) String() string {
+func (p *ProfileServiceUpdateProfileResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ProfileServiceSearchProfilesResult(%+v)", *p)
+	return fmt.Sprintf("ProfileServiceUpdateProfileResult(%+v)", *p)
+}
+
+// Attributes:
+//  - ID
+type ProfileServiceDeleteProfileArgs struct {
+	ID string `thrift:"id,1" json:"id"`
+}
+
+func NewProfileServiceDeleteProfileArgs() *ProfileServiceDeleteProfileArgs {
+	return &ProfileServiceDeleteProfileArgs{}
+}
+
+func (p *ProfileServiceDeleteProfileArgs) GetID() string {
+	return p.ID
+}
+func (p *ProfileServiceDeleteProfileArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceDeleteProfileArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.ID = v
+	}
+	return nil
+}
+
+func (p *ProfileServiceDeleteProfileArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("DeleteProfile_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceDeleteProfileArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("id", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:id: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.ID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.id (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:id: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceDeleteProfileArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileServiceDeleteProfileArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ProfileServiceDeleteProfileResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewProfileServiceDeleteProfileResult() *ProfileServiceDeleteProfileResult {
+	return &ProfileServiceDeleteProfileResult{}
+}
+
+var ProfileServiceDeleteProfileResult_Success_DEFAULT string
+
+func (p *ProfileServiceDeleteProfileResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ProfileServiceDeleteProfileResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ProfileServiceDeleteProfileResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ProfileServiceDeleteProfileResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceDeleteProfileResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ProfileServiceDeleteProfileResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("DeleteProfile_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceDeleteProfileResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ProfileServiceDeleteProfileResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileServiceDeleteProfileResult(%+v)", *p)
 }

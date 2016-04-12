@@ -17,8 +17,8 @@ type client struct {
 	log.Logger
 }
 
-func (c client) GetProfile(profile_id string) string {
-	reply, err := c.ProfileServiceClient.GetProfile(profile_id)
+func (c client) AddProfile(json_profile string) string {
+	reply, err := c.ProfileServiceClient.AddProfile(json_profile)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -26,8 +26,17 @@ func (c client) GetProfile(profile_id string) string {
 	return reply
 }
 
-func (c client) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition, timestamp int64, pagesize int64) string {
-	reply, err := c.ProfileServiceClient.SearchProfiles(profile_search_condition, timestamp, pagesize)
+func (c client) UpdateProfile(json_profile string) string {
+	reply, err := c.ProfileServiceClient.UpdateProfile(json_profile)
+	if err != nil {
+		c.Logger.Log("err", err)
+		return ""
+	}
+	return reply
+}
+
+func (c client) DeleteProfile(id string) string {
+	reply, err := c.ProfileServiceClient.DeleteProfile(id)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

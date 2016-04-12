@@ -1,24 +1,29 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/apache/thrift/lib/go/thrift"
 
 	"github.com/go-kit/kit/log"
 
-	thriftclient "github.com/banerwai/micros/command/profile/client/thrift"
-	"github.com/banerwai/micros/command/profile/service"
-	thriftprofile "github.com/banerwai/micros/command/profile/thrift/gen-go/profile"
+	banerwaiglobal "github.com/banerwai/gather/global"
+	thriftclient "github.com/banerwai/micros/query/profile/client/thrift"
+	"github.com/banerwai/micros/query/profile/service"
+	thriftprofile "github.com/banerwai/micros/query/profile/thrift/gen-go/profile"
+
+	"github.com/banerwai/gather/query/dto"
 )
 
 func main() {
 	var (
-		thriftAddr       = flag.String("thrift.addr", "localhost:6050", "Address for Thrift server")
+		thriftAddr       = flag.String("thrift.addr", "localhost:9050", "Address for Thrift server")
 		thriftProtocol   = flag.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
@@ -78,20 +83,32 @@ func main() {
 	begin := time.Now()
 	switch method {
 
-	case "add":
-		json_profile := s1
-		v := svc.AddProfile(json_profile)
-		logger.Log("method", "AddProfile", "json_profile", json_profile, "v", v, "took", time.Since(begin))
+	case "get":
+		profile_id := s1
+		v := svc.GetProfile(profile_id)
+		logger.Log("method", "GetProfile", "profile_id", profile_id, "v", v, "took", time.Since(begin))
 
-	case "update":
-		json_profile := s1
-		v := svc.UpdateProfile(json_profile)
-		logger.Log("method", "UpdateProfile", "json_profile", json_profile, "v", v, "took", time.Since(begin))
+	case "search":
+		_serial_number, _ := strconv.Atoi(s1)
 
-	case "del":
-		_id := s1
-		v := svc.DeleteProfile(_id)
-		logger.Log("method", "DeleteProfile", "_id", _id, "v", v, "took", time.Since(begin))
+		var profile_search_dto dto.ProfileSearchDto
+		profile_search_dto.SerialNumber = _serial_number
+		profile_search_dto.AvailableHours = -1
+		profile_search_dto.HoursBilled = -1
+		profile_search_dto.FreelancerType = 0
+		profile_search_dto.HourlyRate = 1
+		profile_search_dto.HoursBilled = 1
+		profile_search_dto.JobSuccess = 1
+		profile_search_dto.RegionId = 1
+		profile_search_dto.SearchKey = "ttt"
+
+		_search_key, err := json.Marshal(profile_search_dto)
+		if err != nil {
+			fmt.Println("error:", err)
+		}
+
+		v := svc.SearchProfiles(string(_search_key), time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
+		logger.Log("method", "SearchProfiles", "v", v, "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

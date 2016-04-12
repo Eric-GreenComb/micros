@@ -6,7 +6,6 @@ import (
 	"github.com/go-kit/kit/log"
 
 	"github.com/banerwai/micros/command/profile/service"
-	thriftprofile "github.com/banerwai/micros/command/profile/thrift/gen-go/profile"
 )
 
 type loggingMiddleware struct {
@@ -14,28 +13,41 @@ type loggingMiddleware struct {
 	log.Logger
 }
 
-func (m loggingMiddleware) GetProfile(profile_id string) (r string) {
+func (m loggingMiddleware) AddProfile(json_profile string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "GetProfile",
-			"profile_id", profile_id,
+			"method", "AddProfile",
+			"json_profile", json_profile,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.GetProfile(profile_id)
+	r = m.ProfileService.AddProfile(json_profile)
 	return
 }
 
-func (m loggingMiddleware) SearchProfiles(profile_search_condition *thriftprofile.ProfileSearchCondition, timestamp int64, pagesize int64) (r string) {
+func (m loggingMiddleware) UpdateProfile(json_profile string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "SearchProfiles",
-			"profile_search_condition", profile_search_condition,
+			"method", "UpdateProfile",
+			"json_profile", json_profile,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.SearchProfiles(profile_search_condition, timestamp, pagesize)
+	r = m.ProfileService.UpdateProfile(json_profile)
+	return
+}
+
+func (m loggingMiddleware) DeleteProfile(id string) (r string) {
+	defer func(begin time.Time) {
+		m.Logger.Log(
+			"method", "DeleteProfile",
+			"id", id,
+			"r", r,
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+	r = m.ProfileService.DeleteProfile(id)
 	return
 }
