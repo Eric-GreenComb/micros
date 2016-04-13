@@ -39,7 +39,6 @@ func (self *inmemService) DeleteToken(key string, ttype int64) bool {
 
 func (self *inmemService) VerifyToken(key string, ttype int64) int64 {
 	_overHours := self.GetOverHours(ttype)
-	fmt.Println(_overHours)
 
 	var _token bean.Token
 

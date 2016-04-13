@@ -13,7 +13,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	banerwaiglobal "github.com/banerwai/gather/global"
+	banerwaiglobal "github.com/banerwai/global"
 	thriftclient "github.com/banerwai/micros/query/profile/client/thrift"
 	"github.com/banerwai/micros/query/profile/service"
 	thriftprofile "github.com/banerwai/micros/query/profile/thrift/gen-go/profile"
