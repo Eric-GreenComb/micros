@@ -20,6 +20,9 @@ import (
 
 	"github.com/banerwai/micros/query/category/service"
 	thriftcategory "github.com/banerwai/micros/query/category/thrift/gen-go/category"
+
+	banerwaiglobal "github.com/banerwai/global"
+	"github.com/banerwai/gommon/etcd"
 )
 
 func main() {
@@ -27,7 +30,7 @@ func main() {
 	// of glog. So, we define a new flag set, to keep those domains distinct.
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	var (
-		thriftAddr       = fs.String("thrift.addr", ":9010", "Address for Thrift server")
+		thriftAddr       = fs.String("thrift.addr", "127.0.0.1:9010", "Address for Thrift server")
 		thriftProtocol   = fs.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = fs.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = fs.Bool("thrift.framed", false, "true to enable framing")
@@ -78,6 +81,17 @@ func main() {
 		errc <- interrupt()
 	}()
 
+	client := etcd.EtcdReigistryClient{
+		etcd.EtcdRegistryConfig{
+			ServiceName:  banerwaiglobal.ETCD_KEY_MICROS_QUERY_CATEGORY,
+			InstanceName: *thriftAddr,
+			BaseURL:      *thriftAddr,
+		},
+		etcd.KeysAPI,
+	}
+	client.Register()
+	defer client.Unregister()
+
 	// Transport: Thrift
 	go func() {
 		var protocolFactory thrift.TProtocolFactory
@@ -108,6 +122,7 @@ func main() {
 			errc <- err
 			return
 		}
+
 		transportLogger := log.NewContext(logger).With("transport", "thrift")
 		transportLogger.Log("addr", *thriftAddr)
 		errc <- thrift.NewTSimpleServer4(

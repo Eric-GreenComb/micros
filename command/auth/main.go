@@ -20,6 +20,9 @@ import (
 
 	"github.com/banerwai/micros/command/auth/service"
 	thriftauth "github.com/banerwai/micros/command/auth/thrift/gen-go/auth"
+
+	banerwaiglobal "github.com/banerwai/global"
+	"github.com/banerwai/gommon/etcd"
 )
 
 func main() {
@@ -77,6 +80,17 @@ func main() {
 	go func() {
 		errc <- interrupt()
 	}()
+
+	client := etcd.EtcdReigistryClient{
+		etcd.EtcdRegistryConfig{
+			ServiceName:  banerwaiglobal.ETCD_KEY_MICROS_COMMAND_AUTH,
+			InstanceName: *thriftAddr,
+			BaseURL:      *thriftAddr,
+		},
+		etcd.KeysAPI,
+	}
+	client.Register()
+	defer client.Unregister()
 
 	// Transport: Thrift
 	go func() {

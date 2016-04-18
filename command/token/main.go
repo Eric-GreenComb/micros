@@ -22,6 +22,9 @@ import (
 	thrifttoken "github.com/banerwai/micros/command/token/thrift/gen-go/token"
 
 	"labix.org/v2/mgo"
+
+	banerwaiglobal "github.com/banerwai/global"
+	"github.com/banerwai/gommon/etcd"
 )
 
 // 数据连接
@@ -99,6 +102,17 @@ func main() {
 	go func() {
 		errc <- interrupt()
 	}()
+
+	client := etcd.EtcdReigistryClient{
+		etcd.EtcdRegistryConfig{
+			ServiceName:  banerwaiglobal.ETCD_KEY_MICROS_COMMAND_TOKEN,
+			InstanceName: *thriftAddr,
+			BaseURL:      *thriftAddr,
+		},
+		etcd.KeysAPI,
+	}
+	client.Register()
+	defer client.Unregister()
 
 	// Transport: Thrift
 	go func() {

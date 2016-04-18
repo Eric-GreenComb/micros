@@ -7,18 +7,20 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/apache/thrift/lib/go/thrift"
 
 	"github.com/go-kit/kit/log"
 
+	"github.com/banerwai/gather/query/dto"
 	banerwaiglobal "github.com/banerwai/global"
 	thriftclient "github.com/banerwai/micros/query/profile/client/thrift"
 	"github.com/banerwai/micros/query/profile/service"
 	thriftprofile "github.com/banerwai/micros/query/profile/thrift/gen-go/profile"
 
-	"github.com/banerwai/gather/query/dto"
+	banerwaicrypto "github.com/banerwai/gommon/crypto"
 )
 
 func main() {
@@ -34,6 +36,9 @@ func main() {
 		flag.Usage()
 		os.Exit(1)
 	}
+
+	_instances := strings.Split(*thriftAddr, ",")
+	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, s1 := flag.Arg(0), flag.Arg(1)
 
@@ -66,7 +71,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(*thriftAddr)
+	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)

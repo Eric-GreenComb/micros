@@ -14,10 +14,11 @@ import (
 	"github.com/go-kit/kit/log"
 
 	"github.com/banerwai/gather/query/dto"
-	banerwaicrypto "github.com/banerwai/gommon/crypto"
 	thriftclient "github.com/banerwai/micros/query/category/client/thrift"
 	"github.com/banerwai/micros/query/category/service"
 	thriftcategory "github.com/banerwai/micros/query/category/thrift/gen-go/category"
+
+	banerwaicrypto "github.com/banerwai/gommon/crypto"
 )
 
 func main() {
@@ -35,7 +36,6 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-
 	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, s1 := flag.Arg(0), flag.Arg(1)
