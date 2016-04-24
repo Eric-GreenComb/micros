@@ -6,16 +6,14 @@ import ()
 type UserService interface {
 	// Parameters:
 	//  - Email
-	//  - Usernameraw
-	//  - Pwd
-	CreateUser(email string, usernameraw string, pwd string) string
+	//  - Mmap
+	CreateUser(mmap map[string]string) string
 	// Parameters:
 	//  - Email
-	//  - Oldpwd
 	//  - Newpwd_
-	UpdatePwd(email string, oldpwd string, newpwd string) bool
+	ResetPwd(email string, newpwd string) bool
 	// Parameters:
+	//  - Email
 	//  - Token
-	ActiveUser(token string) bool
-	CountUser() int64
+	ActiveUser(email string) bool
 }

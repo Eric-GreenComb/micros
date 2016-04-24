@@ -17,8 +17,8 @@ type client struct {
 	log.Logger
 }
 
-func (c client) CreateUser(email string, usernameraw string, pwd string) string {
-	reply, err := c.UserServiceClient.CreateUser(email, usernameraw, pwd)
+func (c client) CreateUser(mmap map[string]string) string {
+	reply, err := c.UserServiceClient.CreateUser(mmap)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -26,8 +26,8 @@ func (c client) CreateUser(email string, usernameraw string, pwd string) string 
 	return reply
 }
 
-func (c client) UpdatePwd(email string, oldpwd string, newpwd string) bool {
-	reply, err := c.UserServiceClient.UpdatePwd(email, oldpwd, newpwd)
+func (c client) ResetPwd(email string, newpwd string) bool {
+	reply, err := c.UserServiceClient.ResetPwd(email, newpwd)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return false
@@ -35,20 +35,11 @@ func (c client) UpdatePwd(email string, oldpwd string, newpwd string) bool {
 	return reply
 }
 
-func (c client) ActiveUser(token string) bool {
-	reply, err := c.UserServiceClient.ActiveUser(token)
+func (c client) ActiveUser(email string) bool {
+	reply, err := c.UserServiceClient.ActiveUser(email)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return false
-	}
-	return reply
-}
-
-func (c client) CountUser() int64 {
-	reply, err := c.UserServiceClient.CountUser()
-	if err != nil {
-		c.Logger.Log("err", err)
-		return -1
 	}
 	return reply
 }

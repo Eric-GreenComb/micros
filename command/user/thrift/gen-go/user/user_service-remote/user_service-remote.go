@@ -20,10 +20,9 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
-	fmt.Fprintln(os.Stderr, "  string CreateUser(string email, string usernameraw, string pwd)")
-	fmt.Fprintln(os.Stderr, "  bool UpdatePwd(string email, string oldpwd, string newpwd)")
-	fmt.Fprintln(os.Stderr, "  bool ActiveUser(string token)")
-	fmt.Fprintln(os.Stderr, "  i64 CountUser()")
+	fmt.Fprintln(os.Stderr, "  string CreateUser( mmap)")
+	fmt.Fprintln(os.Stderr, "  bool ResetPwd(string email, string newpwd)")
+	fmt.Fprintln(os.Stderr, "  bool ActiveUser(string email)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -119,31 +118,41 @@ func main() {
 
 	switch cmd {
 	case "CreateUser":
-		if flag.NArg()-1 != 3 {
-			fmt.Fprintln(os.Stderr, "CreateUser requires 3 args")
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "CreateUser requires 1 args")
 			flag.Usage()
 		}
-		argvalue0 := flag.Arg(1)
+		arg10 := flag.Arg(1)
+		mbTrans11 := thrift.NewTMemoryBufferLen(len(arg10))
+		defer mbTrans11.Close()
+		_, err12 := mbTrans11.WriteString(arg10)
+		if err12 != nil {
+			Usage()
+			return
+		}
+		factory13 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt14 := factory13.GetProtocol(mbTrans11)
+		containerStruct0 := user.NewUserServiceCreateUserArgs()
+		err15 := containerStruct0.ReadField1(jsProt14)
+		if err15 != nil {
+			Usage()
+			return
+		}
+		argvalue0 := containerStruct0.Mmap
 		value0 := argvalue0
-		argvalue1 := flag.Arg(2)
-		value1 := argvalue1
-		argvalue2 := flag.Arg(3)
-		value2 := argvalue2
-		fmt.Print(client.CreateUser(value0, value1, value2))
+		fmt.Print(client.CreateUser(value0))
 		fmt.Print("\n")
 		break
-	case "UpdatePwd":
-		if flag.NArg()-1 != 3 {
-			fmt.Fprintln(os.Stderr, "UpdatePwd requires 3 args")
+	case "ResetPwd":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "ResetPwd requires 2 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
 		argvalue1 := flag.Arg(2)
 		value1 := argvalue1
-		argvalue2 := flag.Arg(3)
-		value2 := argvalue2
-		fmt.Print(client.UpdatePwd(value0, value1, value2))
+		fmt.Print(client.ResetPwd(value0, value1))
 		fmt.Print("\n")
 		break
 	case "ActiveUser":
@@ -154,14 +163,6 @@ func main() {
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
 		fmt.Print(client.ActiveUser(value0))
-		fmt.Print("\n")
-		break
-	case "CountUser":
-		if flag.NArg()-1 != 0 {
-			fmt.Fprintln(os.Stderr, "CountUser requires 0 args")
-			flag.Usage()
-		}
-		fmt.Print(client.CountUser())
 		fmt.Print("\n")
 		break
 	case "":

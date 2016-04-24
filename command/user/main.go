@@ -79,8 +79,8 @@ func main() {
 			expvar.NewHistogram("request_duration_ns", 0, 5e9, 1, 50, 95, 99),
 			prometheus.NewSummary(stdprometheus.SummaryOpts{
 				Namespace: "banerwai",
-				Subsystem: "auth",
-				Name:      "duration_ns",
+				Subsystem: "query",
+				Name:      "auth",
 				Help:      "Request duration in nanoseconds.",
 			}, []string{"method"}),
 		))
