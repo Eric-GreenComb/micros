@@ -15,7 +15,3 @@ func (tb thriftBinding) NewToken_(key string, ttype int64) (string, error) {
 func (tb thriftBinding) DeleteToken(key string, ttype int64) (bool, error) {
 	return tb.TokenService.DeleteToken(key, ttype), nil
 }
-
-func (tb thriftBinding) VerifyToken(key string, ttype int64) (int64, error) {
-	return tb.TokenService.VerifyToken(key, ttype), nil
-}

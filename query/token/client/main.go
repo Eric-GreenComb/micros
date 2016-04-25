@@ -13,16 +13,17 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	thriftclient "github.com/banerwai/micros/command/token/client/thrift"
-	"github.com/banerwai/micros/command/token/service"
-	thrifttoken "github.com/banerwai/micros/command/token/thrift/gen-go/token"
+	thriftclient "github.com/banerwai/micros/query/token/client/thrift"
+	"github.com/banerwai/micros/query/token/service"
+	thrifttoken "github.com/banerwai/micros/query/token/thrift/gen-go/token"
 
+	"github.com/banerwai/gather/command/bean"
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
 )
 
 func main() {
 	var (
-		thriftAddr       = flag.String("thrift.addr", "localhost:6040", "Address for Thrift server")
+		thriftAddr       = flag.String("thrift.addr", "localhost:9040", "Address for Thrift server")
 		thriftProtocol   = flag.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
@@ -85,16 +86,33 @@ func main() {
 	begin := time.Now()
 	switch method {
 
-	case "new":
-		v := svc.NewToken_(s1, _i64)
-		logger.Log("method", "NewToken_", "s1", s1, "s2", _i64, "v", v, "took", time.Since(begin))
+	case "ver":
 
-	case "del":
-		v := svc.DeleteToken(s1, _i64)
-		logger.Log("method", "DeleteToken", "s1", s1, "s2", _i64, "v", v, "took", time.Since(begin))
+		_overHours := getOverHours(_i64)
+
+		v := svc.VerifyToken(s1, _i64, _overHours)
+		logger.Log("method", "VerifyToken", "s1", s1, "s2", _i64, "v", v, "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)
 		os.Exit(1)
 	}
+}
+
+func getOverHours(ttype int64) float64 {
+	switch ttype {
+
+	// 0 - 2.0
+	case bean.TokenPwd:
+		return bean.PwdOverHours
+
+	// 1 - 48.0
+	case bean.TokenActiveEmail:
+		return bean.ActiveEmailOverHours
+
+	// 2 - 2.0
+	case bean.TokenUpdateEmail:
+		return bean.UpdateEmailOverHours
+	}
+	return 0
 }

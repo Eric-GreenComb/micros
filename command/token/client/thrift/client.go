@@ -34,12 +34,3 @@ func (c client) DeleteToken(key string, ttype int64) bool {
 	}
 	return reply
 }
-
-func (c client) VerifyToken(key string, ttype int64) int64 {
-	reply, err := c.TokenServiceClient.VerifyToken(key, ttype)
-	if err != nil {
-		c.Logger.Log("err", err)
-		return -1
-	}
-	return reply
-}

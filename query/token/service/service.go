@@ -5,11 +5,8 @@ import ()
 // TokenService is the abstract representation of this service.
 type TokenService interface {
 	// Parameters:
-	//  - Key
+	//  - Token
 	//  - Ttype
-	NewToken_(key string, ttype int64) string
-	// Parameters:
-	//  - Key
-	//  - Ttype
-	DeleteToken(key string, ttype int64) bool
+	//  - Overhour
+	VerifyToken(token string, ttype int64, overhour float64) int64
 }

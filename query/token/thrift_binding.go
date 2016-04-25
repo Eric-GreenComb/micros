@@ -1,0 +1,13 @@
+package main
+
+import (
+	"github.com/banerwai/micros/query/token/service"
+)
+
+type thriftBinding struct {
+	service.TokenService
+}
+
+func (tb thriftBinding) VerifyToken(key string, ttype int64, overhour float64) (int64, error) {
+	return tb.TokenService.VerifyToken(key, ttype, overhour), nil
+}

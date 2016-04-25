@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/banerwai/gather/command/bean"
 	"github.com/banerwai/gommon/uuid"
 	"github.com/banerwai/micros/command/token/service"
 
@@ -19,54 +17,22 @@ func newInmemService() service.TokenService {
 }
 
 func (self *inmemService) NewToken_(key string, ttype int64) string {
-	token := bean.Token{Key: key, Token: uuid.UUID(), CreatedTime: time.Now(), Type: ttype}
-	_info, _err := TokenCollection.Upsert(bson.M{"key": key, "type": ttype}, token)
-	fmt.Println(_info)
+	_uuid := uuid.UUID()
+
+	_mongo_m := bson.M{}
+	_mongo_m["key"] = key
+	_mongo_m["token"] = _uuid
+	_mongo_m["type"] = ttype
+	_mongo_m["createdtime"] = time.Now()
+
+	_, _err := TokenCollection.Upsert(bson.M{"key": key, "type": ttype}, _mongo_m)
 	if _err != nil {
 		return _err.Error()
 	}
-	return token.Token
+	return _uuid
 }
 
 func (self *inmemService) DeleteToken(key string, ttype int64) bool {
 	TokenCollection.Remove(bson.M{"key": key, "type": ttype})
 	return true
-}
-
-// return -1 不存在
-// return -2 过期
-// return 1 验证pass
-
-func (self *inmemService) VerifyToken(key string, ttype int64) int64 {
-	_overHours := self.GetOverHours(ttype)
-
-	var _token bean.Token
-
-	err := TokenCollection.Find(bson.M{"key": key, "type": ttype}).One(&_token)
-
-	if err != nil {
-		return -1
-	}
-
-	// 验证是否过时
-	_now := time.Now()
-	_duration := _now.Sub(_token.CreatedTime)
-
-	if _duration.Hours() > _overHours {
-		return -2
-	}
-
-	return 1
-}
-
-func (self *inmemService) GetOverHours(ttype int64) float64 {
-	switch ttype {
-	case bean.TokenPwd:
-		return bean.PwdOverHours
-	case bean.TokenUpdateEmail:
-		return bean.UpdateEmailOverHours
-	case bean.TokenActiveEmail:
-		return bean.ActiveEmailOverHours
-	}
-	return 0
 }

@@ -23,10 +23,6 @@ type TokenService interface {
 	//  - Key
 	//  - Ttype
 	DeleteToken(key string, ttype int64) (r bool, err error)
-	// Parameters:
-	//  - Token
-	//  - Ttype
-	VerifyToken(token string, ttype int64) (r int64, err error)
 }
 
 type TokenServiceClient struct {
@@ -213,85 +209,6 @@ func (p *TokenServiceClient) recvDeleteToken() (value bool, err error) {
 	return
 }
 
-// Parameters:
-//  - Token
-//  - Ttype
-func (p *TokenServiceClient) VerifyToken(token string, ttype int64) (r int64, err error) {
-	if err = p.sendVerifyToken(token, ttype); err != nil {
-		return
-	}
-	return p.recvVerifyToken()
-}
-
-func (p *TokenServiceClient) sendVerifyToken(token string, ttype int64) (err error) {
-	oprot := p.OutputProtocol
-	if oprot == nil {
-		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
-		p.OutputProtocol = oprot
-	}
-	p.SeqId++
-	if err = oprot.WriteMessageBegin("VerifyToken", thrift.CALL, p.SeqId); err != nil {
-		return
-	}
-	args := TokenServiceVerifyTokenArgs{
-		Token: token,
-		Ttype: ttype,
-	}
-	if err = args.Write(oprot); err != nil {
-		return
-	}
-	if err = oprot.WriteMessageEnd(); err != nil {
-		return
-	}
-	return oprot.Flush()
-}
-
-func (p *TokenServiceClient) recvVerifyToken() (value int64, err error) {
-	iprot := p.InputProtocol
-	if iprot == nil {
-		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
-		p.InputProtocol = iprot
-	}
-	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
-	if err != nil {
-		return
-	}
-	if method != "VerifyToken" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "VerifyToken failed: wrong method name")
-		return
-	}
-	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "VerifyToken failed: out of sequence response")
-		return
-	}
-	if mTypeId == thrift.EXCEPTION {
-		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error5 error
-		error5, err = error4.Read(iprot)
-		if err != nil {
-			return
-		}
-		if err = iprot.ReadMessageEnd(); err != nil {
-			return
-		}
-		err = error5
-		return
-	}
-	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "VerifyToken failed: invalid message type")
-		return
-	}
-	result := TokenServiceVerifyTokenResult{}
-	if err = result.Read(iprot); err != nil {
-		return
-	}
-	if err = iprot.ReadMessageEnd(); err != nil {
-		return
-	}
-	value = result.GetSuccess()
-	return
-}
-
 type TokenServiceProcessor struct {
 	processorMap map[string]thrift.TProcessorFunction
 	handler      TokenService
@@ -312,11 +229,10 @@ func (p *TokenServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFunct
 
 func NewTokenServiceProcessor(handler TokenService) *TokenServiceProcessor {
 
-	self6 := &TokenServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self6.processorMap["NewToken"] = &tokenServiceProcessorNewToken_{handler: handler}
-	self6.processorMap["DeleteToken"] = &tokenServiceProcessorDeleteToken{handler: handler}
-	self6.processorMap["VerifyToken"] = &tokenServiceProcessorVerifyToken{handler: handler}
-	return self6
+	self4 := &TokenServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self4.processorMap["NewToken"] = &tokenServiceProcessorNewToken_{handler: handler}
+	self4.processorMap["DeleteToken"] = &tokenServiceProcessorDeleteToken{handler: handler}
+	return self4
 }
 
 func (p *TokenServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -329,12 +245,12 @@ func (p *TokenServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success 
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x7 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x5 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x7.Write(oprot)
+	x5.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x7
+	return false, x5
 
 }
 
@@ -417,54 +333,6 @@ func (p *tokenServiceProcessorDeleteToken) Process(seqId int32, iprot, oprot thr
 		result.Success = &retval
 	}
 	if err2 = oprot.WriteMessageBegin("DeleteToken", thrift.REPLY, seqId); err2 != nil {
-		err = err2
-	}
-	if err2 = result.Write(oprot); err == nil && err2 != nil {
-		err = err2
-	}
-	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
-		err = err2
-	}
-	if err2 = oprot.Flush(); err == nil && err2 != nil {
-		err = err2
-	}
-	if err != nil {
-		return
-	}
-	return true, err
-}
-
-type tokenServiceProcessorVerifyToken struct {
-	handler TokenService
-}
-
-func (p *tokenServiceProcessorVerifyToken) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := TokenServiceVerifyTokenArgs{}
-	if err = args.Read(iprot); err != nil {
-		iprot.ReadMessageEnd()
-		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("VerifyToken", thrift.EXCEPTION, seqId)
-		x.Write(oprot)
-		oprot.WriteMessageEnd()
-		oprot.Flush()
-		return false, err
-	}
-
-	iprot.ReadMessageEnd()
-	result := TokenServiceVerifyTokenResult{}
-	var retval int64
-	var err2 error
-	if retval, err2 = p.handler.VerifyToken(args.Token, args.Ttype); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing VerifyToken: "+err2.Error())
-		oprot.WriteMessageBegin("VerifyToken", thrift.EXCEPTION, seqId)
-		x.Write(oprot)
-		oprot.WriteMessageEnd()
-		oprot.Flush()
-		return true, err2
-	} else {
-		result.Success = &retval
-	}
-	if err2 = oprot.WriteMessageBegin("VerifyToken", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -938,232 +806,4 @@ func (p *TokenServiceDeleteTokenResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("TokenServiceDeleteTokenResult(%+v)", *p)
-}
-
-// Attributes:
-//  - Token
-//  - Ttype
-type TokenServiceVerifyTokenArgs struct {
-	Token string `thrift:"token,1" json:"token"`
-	Ttype int64  `thrift:"ttype,2" json:"ttype"`
-}
-
-func NewTokenServiceVerifyTokenArgs() *TokenServiceVerifyTokenArgs {
-	return &TokenServiceVerifyTokenArgs{}
-}
-
-func (p *TokenServiceVerifyTokenArgs) GetToken() string {
-	return p.Token
-}
-
-func (p *TokenServiceVerifyTokenArgs) GetTtype() int64 {
-	return p.Ttype
-}
-func (p *TokenServiceVerifyTokenArgs) Read(iprot thrift.TProtocol) error {
-	if _, err := iprot.ReadStructBegin(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
-		if err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-		switch fieldId {
-		case 1:
-			if err := p.readField1(iprot); err != nil {
-				return err
-			}
-		case 2:
-			if err := p.readField2(iprot); err != nil {
-				return err
-			}
-		default:
-			if err := iprot.Skip(fieldTypeId); err != nil {
-				return err
-			}
-		}
-		if err := iprot.ReadFieldEnd(); err != nil {
-			return err
-		}
-	}
-	if err := iprot.ReadStructEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-	}
-	return nil
-}
-
-func (p *TokenServiceVerifyTokenArgs) readField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return thrift.PrependError("error reading field 1: ", err)
-	} else {
-		p.Token = v
-	}
-	return nil
-}
-
-func (p *TokenServiceVerifyTokenArgs) readField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI64(); err != nil {
-		return thrift.PrependError("error reading field 2: ", err)
-	} else {
-		p.Ttype = v
-	}
-	return nil
-}
-
-func (p *TokenServiceVerifyTokenArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("VerifyToken_args"); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-	}
-	if err := p.writeField1(oprot); err != nil {
-		return err
-	}
-	if err := p.writeField2(oprot); err != nil {
-		return err
-	}
-	if err := oprot.WriteFieldStop(); err != nil {
-		return thrift.PrependError("write field stop error: ", err)
-	}
-	if err := oprot.WriteStructEnd(); err != nil {
-		return thrift.PrependError("write struct stop error: ", err)
-	}
-	return nil
-}
-
-func (p *TokenServiceVerifyTokenArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("token", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:token: ", p), err)
-	}
-	if err := oprot.WriteString(string(p.Token)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.token (1) field write error: ", p), err)
-	}
-	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:token: ", p), err)
-	}
-	return err
-}
-
-func (p *TokenServiceVerifyTokenArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("ttype", thrift.I64, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:ttype: ", p), err)
-	}
-	if err := oprot.WriteI64(int64(p.Ttype)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.ttype (2) field write error: ", p), err)
-	}
-	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:ttype: ", p), err)
-	}
-	return err
-}
-
-func (p *TokenServiceVerifyTokenArgs) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("TokenServiceVerifyTokenArgs(%+v)", *p)
-}
-
-// Attributes:
-//  - Success
-type TokenServiceVerifyTokenResult struct {
-	Success *int64 `thrift:"success,0" json:"success,omitempty"`
-}
-
-func NewTokenServiceVerifyTokenResult() *TokenServiceVerifyTokenResult {
-	return &TokenServiceVerifyTokenResult{}
-}
-
-var TokenServiceVerifyTokenResult_Success_DEFAULT int64
-
-func (p *TokenServiceVerifyTokenResult) GetSuccess() int64 {
-	if !p.IsSetSuccess() {
-		return TokenServiceVerifyTokenResult_Success_DEFAULT
-	}
-	return *p.Success
-}
-func (p *TokenServiceVerifyTokenResult) IsSetSuccess() bool {
-	return p.Success != nil
-}
-
-func (p *TokenServiceVerifyTokenResult) Read(iprot thrift.TProtocol) error {
-	if _, err := iprot.ReadStructBegin(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
-		if err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-		switch fieldId {
-		case 0:
-			if err := p.readField0(iprot); err != nil {
-				return err
-			}
-		default:
-			if err := iprot.Skip(fieldTypeId); err != nil {
-				return err
-			}
-		}
-		if err := iprot.ReadFieldEnd(); err != nil {
-			return err
-		}
-	}
-	if err := iprot.ReadStructEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-	}
-	return nil
-}
-
-func (p *TokenServiceVerifyTokenResult) readField0(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI64(); err != nil {
-		return thrift.PrependError("error reading field 0: ", err)
-	} else {
-		p.Success = &v
-	}
-	return nil
-}
-
-func (p *TokenServiceVerifyTokenResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("VerifyToken_result"); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-	}
-	if err := p.writeField0(oprot); err != nil {
-		return err
-	}
-	if err := oprot.WriteFieldStop(); err != nil {
-		return thrift.PrependError("write field stop error: ", err)
-	}
-	if err := oprot.WriteStructEnd(); err != nil {
-		return thrift.PrependError("write struct stop error: ", err)
-	}
-	return nil
-}
-
-func (p *TokenServiceVerifyTokenResult) writeField0(oprot thrift.TProtocol) (err error) {
-	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.I64, 0); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
-		}
-		if err := oprot.WriteI64(int64(*p.Success)); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
-		}
-		if err := oprot.WriteFieldEnd(); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
-		}
-	}
-	return err
-}
-
-func (p *TokenServiceVerifyTokenResult) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("TokenServiceVerifyTokenResult(%+v)", *p)
 }

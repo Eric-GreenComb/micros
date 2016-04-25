@@ -20,8 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
-	fmt.Fprintln(os.Stderr, "  string NewToken(string key, i64 ttype)")
-	fmt.Fprintln(os.Stderr, "  bool DeleteToken(string key, i64 ttype)")
+	fmt.Fprintln(os.Stderr, "  i64 VerifyToken(string token, i64 ttype, double overhour)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -116,36 +115,26 @@ func main() {
 	}
 
 	switch cmd {
-	case "NewToken":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "NewToken_ requires 2 args")
+	case "VerifyToken":
+		if flag.NArg()-1 != 3 {
+			fmt.Fprintln(os.Stderr, "VerifyToken requires 3 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		argvalue1, err7 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err7 != nil {
+		argvalue1, err5 := (strconv.ParseInt(flag.Arg(2), 10, 64))
+		if err5 != nil {
 			Usage()
 			return
 		}
 		value1 := argvalue1
-		fmt.Print(client.NewToken_(value0, value1))
-		fmt.Print("\n")
-		break
-	case "DeleteToken":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "DeleteToken requires 2 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		argvalue1, err9 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err9 != nil {
+		argvalue2, err6 := (strconv.ParseFloat(flag.Arg(3), 64))
+		if err6 != nil {
 			Usage()
 			return
 		}
-		value1 := argvalue1
-		fmt.Print(client.DeleteToken(value0, value1))
+		value2 := argvalue2
+		fmt.Print(client.VerifyToken(value0, value1, value2))
 		fmt.Print("\n")
 		break
 	case "":
