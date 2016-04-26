@@ -8,8 +8,12 @@ type ProfileService interface {
 	//  - ID
 	GetProfile(id string) string
 	// Parameters:
-	//  - JSONSearch
+	//  - Email
+	GetProfilesByEmail(email string) string
+	// Parameters:
+	//  - option_mmap
+	//  - KeyMmap
 	//  - Timestamp
 	//  - Pagesize
-	SearchProfiles(json_search string, timestamp int64, pagesize int64) string
+	SearchProfiles(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64, pagesize int64) string
 }

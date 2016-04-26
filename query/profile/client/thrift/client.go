@@ -17,8 +17,8 @@ type client struct {
 	log.Logger
 }
 
-func (c client) GetProfile(profile_id string) string {
-	reply, err := c.ProfileServiceClient.GetProfile(profile_id)
+func (c client) GetProfile(id string) string {
+	reply, err := c.ProfileServiceClient.GetProfile(id)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -26,8 +26,17 @@ func (c client) GetProfile(profile_id string) string {
 	return reply
 }
 
-func (c client) SearchProfiles(json_search string, timestamp int64, pagesize int64) string {
-	reply, err := c.ProfileServiceClient.SearchProfiles(json_search, timestamp, pagesize)
+func (c client) GetProfilesByEmail(email string) string {
+	reply, err := c.ProfileServiceClient.GetProfilesByEmail(email)
+	if err != nil {
+		c.Logger.Log("err", err)
+		return ""
+	}
+	return reply
+}
+
+func (c client) SearchProfiles(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64, pagesize int64) string {
+	reply, err := c.ProfileServiceClient.SearchProfiles(option_mmap, key_mmap, timestamp, pagesize)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

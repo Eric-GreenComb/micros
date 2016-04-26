@@ -1,11 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"labix.org/v2/mgo/bson"
 
-	"github.com/banerwai/gather/query/dto"
 	"github.com/banerwai/micros/query/profile/service"
 )
 
@@ -16,59 +14,66 @@ func newInmemService() service.ProfileService {
 	return &inmemService{}
 }
 
-func (self *inmemService) GetProfile(profile_id string) (r string) {
-	r = profile_id
+func (self *inmemService) GetProfile(id string) (r string) {
+	r = id
+	return
+}
+
+func (self *inmemService) GetProfilesByEmail(email string) (r string) {
+	r = email
 	return
 }
 
 //  db.profile.find({createdtime:{$gt:timestamp}}).sort({"createdtime":1}).limit(10)
-func (self *inmemService) SearchProfiles(json_search string, timestamp int64, pagesize int64) (r string) {
+func (self *inmemService) SearchProfiles(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64, pagesize int64) (r string) {
 	// db.profile.find(self.genQuery(profile_search_condition, timestamp)).sort({"createdtime":1}).limit(pagesize)
-
-	prfile_search_dto, err := self.genProfileSearchDto(json_search)
-	if err != nil {
-		r = err.Error()
-		return
-	}
-	_query := self.genQuery(prfile_search_dto, timestamp)
+	_query := self.genQuery(option_mmap, key_mmap, timestamp)
 	fmt.Println("%q", _query)
 	r = "OK"
 	return
 }
 
-func (self *inmemService) genProfileSearchDto(json_search string) (dto.ProfileSearchDto, error) {
-	var prfile_search_dto dto.ProfileSearchDto
-	err := json.Unmarshal([]byte(json_search), &prfile_search_dto)
-	return prfile_search_dto, err
-}
-
 //	query := bson.M{"serial_number": ...}
-func (self *inmemService) genQuery(prfile_search_dto dto.ProfileSearchDto, timestamp int64) interface{} {
+func (self *inmemService) genQuery(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64) interface{} {
 	query := bson.M{"createdtime": bson.M{"$gt": timestamp}}
 
-	if prfile_search_dto.SerialNumber != -1 {
-		query["serial_number"] = prfile_search_dto.SerialNumber
+	// search option by search options
+	if serial_number, ok := option_mmap["serial_number"]; ok {
+		query["serial_number"] = serial_number
 	}
-	if prfile_search_dto.HoursBilled != -1 {
-		query["hours_billed"] = prfile_search_dto.HoursBilled
+
+	if hours_billed, ok := option_mmap["hours_billed"]; ok {
+		query["hours_billed"] = hours_billed
 	}
-	if prfile_search_dto.AvailableHours != -1 {
-		query["available_hours"] = prfile_search_dto.AvailableHours
+
+	if available_hours, ok := option_mmap["available_hours"]; ok {
+		query["available_hours"] = available_hours
 	}
-	if prfile_search_dto.JobSuccess != -1 {
-		query["job_success"] = prfile_search_dto.JobSuccess
+
+	if job_success, ok := option_mmap["job_success"]; ok {
+		query["job_success"] = job_success
 	}
-	if prfile_search_dto.LastActivity != -1 {
-		query["last_activity"] = prfile_search_dto.LastActivity
+
+	if last_activity, ok := option_mmap["last_activity"]; ok {
+		query["last_activity"] = last_activity
 	}
-	if prfile_search_dto.FreelancerType != -1 {
-		query["freelancer_type"] = prfile_search_dto.FreelancerType
+
+	if freelancer_type, ok := option_mmap["freelancer_type"]; ok {
+		query["freelancer_type"] = freelancer_type
 	}
-	if prfile_search_dto.HourlyRate != -1 {
-		query["hourly_rate"] = prfile_search_dto.HourlyRate
+
+	if hourly_rate, ok := option_mmap["hourly_rate"]; ok {
+		query["hourly_rate"] = hourly_rate
 	}
-	if prfile_search_dto.RegionId != -1 {
-		query["region_id"] = prfile_search_dto.RegionId
+
+	if region_id, ok := option_mmap["region_id"]; ok {
+		query["region_id"] = region_id
 	}
+
+	// search overview by key
+	if overview, ok := key_mmap["overview"]; ok {
+		query["overview"] = overview
+	}
+
 	return query
 }

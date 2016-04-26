@@ -1,12 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
@@ -14,7 +12,6 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	"github.com/banerwai/gather/query/dto"
 	banerwaiglobal "github.com/banerwai/global"
 	thriftclient "github.com/banerwai/micros/query/profile/client/thrift"
 	"github.com/banerwai/micros/query/profile/service"
@@ -88,31 +85,29 @@ func main() {
 	begin := time.Now()
 	switch method {
 
-	case "get":
+	case "prof":
 		profile_id := s1
 		v := svc.GetProfile(profile_id)
 		logger.Log("method", "GetProfile", "profile_id", profile_id, "v", v, "took", time.Since(begin))
 
+	case "profs":
+		_email := s1
+		v := svc.GetProfilesByEmail(_email)
+		logger.Log("method", "GetProfilesByEmail", "email", _email, "v", v, "took", time.Since(begin))
+
 	case "search":
-		_serial_number, _ := strconv.Atoi(s1)
+		_key := s1
 
-		var profile_search_dto dto.ProfileSearchDto
-		profile_search_dto.SerialNumber = _serial_number
-		profile_search_dto.AvailableHours = -1
-		profile_search_dto.HoursBilled = -1
-		profile_search_dto.FreelancerType = 0
-		profile_search_dto.HourlyRate = 1
-		profile_search_dto.HoursBilled = 1
-		profile_search_dto.JobSuccess = 1
-		profile_search_dto.RegionId = 1
-		profile_search_dto.SearchKey = "ttt"
+		option_mmap := make(map[string]int64)
 
-		_search_key, err := json.Marshal(profile_search_dto)
-		if err != nil {
-			fmt.Println("error:", err)
-		}
+		option_mmap["available_hours"] = 0
+		option_mmap["job_success"] = 1
+		option_mmap["freelancer_type"] = 1
 
-		v := svc.SearchProfiles(string(_search_key), time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
+		key_mmap := make(map[string]string)
+		key_mmap["overview"] = _key
+
+		v := svc.SearchProfiles(option_mmap, key_mmap, time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
 		logger.Log("method", "SearchProfiles", "v", v, "took", time.Since(begin))
 
 	default:

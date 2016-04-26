@@ -21,7 +21,8 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string GetProfile(string id)")
-	fmt.Fprintln(os.Stderr, "  string SearchProfiles(string json_search, i64 timestamp, i64 pagesize)")
+	fmt.Fprintln(os.Stderr, "  string GetProfilesByEmail(string email)")
+	fmt.Fprintln(os.Stderr, "  string SearchProfiles( option_mmap,  key_mmap, i64 timestamp, i64 pagesize)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -126,26 +127,70 @@ func main() {
 		fmt.Print(client.GetProfile(value0))
 		fmt.Print("\n")
 		break
-	case "SearchProfiles":
-		if flag.NArg()-1 != 3 {
-			fmt.Fprintln(os.Stderr, "SearchProfiles requires 3 args")
+	case "GetProfilesByEmail":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "GetProfilesByEmail requires 1 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		argvalue1, err8 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err8 != nil {
+		fmt.Print(client.GetProfilesByEmail(value0))
+		fmt.Print("\n")
+		break
+	case "SearchProfiles":
+		if flag.NArg()-1 != 4 {
+			fmt.Fprintln(os.Stderr, "SearchProfiles requires 4 args")
+			flag.Usage()
+		}
+		arg14 := flag.Arg(1)
+		mbTrans15 := thrift.NewTMemoryBufferLen(len(arg14))
+		defer mbTrans15.Close()
+		_, err16 := mbTrans15.WriteString(arg14)
+		if err16 != nil {
 			Usage()
 			return
 		}
+		factory17 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt18 := factory17.GetProtocol(mbTrans15)
+		containerStruct0 := profile.NewProfileServiceSearchProfilesArgs()
+		err19 := containerStruct0.ReadField1(jsProt18)
+		if err19 != nil {
+			Usage()
+			return
+		}
+		argvalue0 := containerStruct0.OptionMmap
+		value0 := argvalue0
+		arg20 := flag.Arg(2)
+		mbTrans21 := thrift.NewTMemoryBufferLen(len(arg20))
+		defer mbTrans21.Close()
+		_, err22 := mbTrans21.WriteString(arg20)
+		if err22 != nil {
+			Usage()
+			return
+		}
+		factory23 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt24 := factory23.GetProtocol(mbTrans21)
+		containerStruct1 := profile.NewProfileServiceSearchProfilesArgs()
+		err25 := containerStruct1.ReadField2(jsProt24)
+		if err25 != nil {
+			Usage()
+			return
+		}
+		argvalue1 := containerStruct1.KeyMmap
 		value1 := argvalue1
-		argvalue2, err9 := (strconv.ParseInt(flag.Arg(3), 10, 64))
-		if err9 != nil {
+		argvalue2, err26 := (strconv.ParseInt(flag.Arg(3), 10, 64))
+		if err26 != nil {
 			Usage()
 			return
 		}
 		value2 := argvalue2
-		fmt.Print(client.SearchProfiles(value0, value1, value2))
+		argvalue3, err27 := (strconv.ParseInt(flag.Arg(4), 10, 64))
+		if err27 != nil {
+			Usage()
+			return
+		}
+		value3 := argvalue3
+		fmt.Print(client.SearchProfiles(value0, value1, value2, value3))
 		fmt.Print("\n")
 		break
 	case "":

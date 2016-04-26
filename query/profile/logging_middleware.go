@@ -26,15 +26,27 @@ func (m loggingMiddleware) GetProfile(id string) (r string) {
 	return
 }
 
-func (m loggingMiddleware) SearchProfiles(json_search string, timestamp int64, pagesize int64) (r string) {
+func (m loggingMiddleware) GetProfilesByEmail(email string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "SearchProfiles",
-			"json_search", json_search,
+			"method", "GetProfilesByEmail",
+			"email", email,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.SearchProfiles(json_search, timestamp, pagesize)
+	r = m.ProfileService.GetProfilesByEmail(email)
+	return
+}
+
+func (m loggingMiddleware) SearchProfiles(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64, pagesize int64) (r string) {
+	defer func(begin time.Time) {
+		m.Logger.Log(
+			"method", "SearchProfiles",
+			"r", r,
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+	r = m.ProfileService.SearchProfiles(option_mmap, key_mmap, timestamp, pagesize)
 	return
 }
