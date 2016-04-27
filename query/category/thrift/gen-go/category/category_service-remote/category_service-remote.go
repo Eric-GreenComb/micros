@@ -21,11 +21,11 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string SayHi(string name)")
-	fmt.Fprintln(os.Stderr, "  SubCategory GetDemoSubCategory(string id)")
-	fmt.Fprintln(os.Stderr, "   GetDemoSubCategories(string category_id)")
+	fmt.Fprintln(os.Stderr, "  string GetDemoSubCategory(string id)")
+	fmt.Fprintln(os.Stderr, "  string GetDemoSubCategories(string category_id)")
 	fmt.Fprintln(os.Stderr, "  bool LoadCategory(string path)")
-	fmt.Fprintln(os.Stderr, "   GetCategories()")
-	fmt.Fprintln(os.Stderr, "   GetSubCategories(i32 serialnumber)")
+	fmt.Fprintln(os.Stderr, "  string GetCategories()")
+	fmt.Fprintln(os.Stderr, "  string GetSubCategories(i32 serialnumber)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -173,8 +173,8 @@ func main() {
 			fmt.Fprintln(os.Stderr, "GetSubCategories requires 1 args")
 			flag.Usage()
 		}
-		tmp0, err22 := (strconv.Atoi(flag.Arg(1)))
-		if err22 != nil {
+		tmp0, err18 := (strconv.Atoi(flag.Arg(1)))
+		if err18 != nil {
 			Usage()
 			return
 		}

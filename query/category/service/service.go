@@ -1,16 +1,29 @@
 package service
 
-import (
-	thriftcategory "github.com/banerwai/micros/query/category/thrift/gen-go/category"
-)
+import ()
 
 // CategoryService is the abstract representation of this service.
 type CategoryService interface {
+	// Parameters:
+	//  - Name
 	SayHi(name string) string
-	GetDemoSubCategory(id string) thriftcategory.SubCategory
-	GetDemoSubCategories(category_id string) []thriftcategory.SubCategory
+	// Parameters:
+	//  - ID
+	// return: subcategory marshal json string
+	GetDemoSubCategory(id string) string
 
+	// Parameters:
+	//  - CategoryID
+	// return: []subcategory marshal json string
+	GetDemoSubCategories(category_id string) string
+	// Parameters:
+	//  - Path
 	LoadCategory(path string) bool
-	GetCategories() []*thriftcategory.Category
-	GetSubCategories(serialnumber int32) []*thriftcategory.SubCategory
+
+	// return: []category marshal json string
+	GetCategories() string
+	// Parameters:
+	//  - Serialnumber
+	// return: []subcategory marshal json string
+	GetSubCategories(serialnumber int32) string
 }

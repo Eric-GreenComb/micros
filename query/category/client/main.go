@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -13,7 +14,6 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	"github.com/banerwai/gather/query/dto"
 	thriftclient "github.com/banerwai/micros/query/category/client/thrift"
 	"github.com/banerwai/micros/query/category/service"
 	thriftcategory "github.com/banerwai/micros/query/category/thrift/gen-go/category"
@@ -94,17 +94,13 @@ func main() {
 	case "demosub":
 		id := s1
 		v := svc.GetDemoSubCategory(id)
-		_sub := dto.SubCategory{v.ID, v.Serialnumber, v.Name, v.Desc}
 
-		// _sub.ID = v.ID
-		// _sub.Name = v.Name
-
-		logger.Log("method", "GetSubCategory", "id", id, "v", _sub.ID, "took", time.Since(begin))
+		logger.Log("method", "GetSubCategory", "id", id, "v", v, "took", time.Since(begin))
 
 	case "demosubs":
 		category_id := s1
 		v := svc.GetDemoSubCategories(category_id)
-		logger.Log("method", "GetSubCategory", "category_id", category_id, "v", fmt.Sprintf("%v", v), "took", time.Since(begin))
+		logger.Log("method", "GetSubCategory", "category_id", category_id, "v", v, "took", time.Since(begin))
 
 	case "load":
 		path := s1
@@ -113,24 +109,37 @@ func main() {
 
 	case "cats":
 		v := svc.GetCategories()
-		for _, _cat := range v {
+
+		var cats []Category
+		err := json.Unmarshal([]byte(v), &cats)
+		if err != nil {
+			fmt.Println("error:", err)
+		}
+
+		for _, _cat := range cats {
 			fmt.Println(strconv.Itoa(int(_cat.Serialnumber)) + " " + _cat.Name + "(" + _cat.Desc + ")")
 			for _, _sub := range _cat.Subcategories {
 				fmt.Println("    " + strconv.Itoa(int(_sub.Serialnumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
 			}
 		}
 
-		logger.Log("method", "GetCategories", "v", len(v), "took", time.Since(begin))
+		logger.Log("method", "GetCategories", "cats", len(cats), "took", time.Since(begin))
 
 	case "subs":
 		_serialnumber, _ := strconv.Atoi(s1)
 		v := svc.GetSubCategories(int32(_serialnumber))
 
-		for _, _sub := range v {
+		var subs []SubCategory
+		err := json.Unmarshal([]byte(v), &subs)
+		if err != nil {
+			fmt.Println("error:", err)
+		}
+
+		for _, _sub := range subs {
 			fmt.Println("    " + strconv.Itoa(int(_sub.Serialnumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
 		}
 
-		logger.Log("method", "GetSubCategories", "Serialnumber", _serialnumber, "v", len(v), "took", time.Since(begin))
+		logger.Log("method", "GetSubCategories", "Serialnumber", _serialnumber, "subs", len(subs), "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

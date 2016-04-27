@@ -26,29 +26,24 @@ func (c client) SayHi(name string) string {
 	return reply
 }
 
-func (c client) GetDemoSubCategory(id string) thriftcategory.SubCategory {
+func (c client) GetDemoSubCategory(id string) string {
 	reply, err := c.CategoryServiceClient.GetDemoSubCategory(id)
 	if err != nil {
 		c.Logger.Log("err", err)
-		return thriftcategory.SubCategory{}
+		return ""
 	}
-	return *reply
+	return reply
 }
 
-func (c client) GetDemoSubCategories(category_id string) []thriftcategory.SubCategory {
-	var subs []thriftcategory.SubCategory
+func (c client) GetDemoSubCategories(category_id string) string {
 	_subs, err := c.CategoryServiceClient.GetDemoSubCategories(category_id)
 
 	if err != nil {
 		c.Logger.Log("err", err)
-		return nil
+		return ""
 	}
 
-	for _, _sub := range _subs {
-		subs = append(subs, *_sub)
-	}
-
-	return subs
+	return _subs
 }
 
 func (c client) LoadCategory(path string) bool {
@@ -60,12 +55,12 @@ func (c client) LoadCategory(path string) bool {
 	return reply
 }
 
-func (c client) GetCategories() []*thriftcategory.Category {
+func (c client) GetCategories() string {
 	reply, _ := c.CategoryServiceClient.GetCategories()
 	return reply
 }
 
-func (c client) GetSubCategories(serialnumber int32) []*thriftcategory.SubCategory {
+func (c client) GetSubCategories(serialnumber int32) string {
 	_subs, _ := c.CategoryServiceClient.GetSubCategories(serialnumber)
 	return _subs
 }

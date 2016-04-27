@@ -7,7 +7,6 @@ import (
 	"github.com/go-kit/kit/log"
 
 	"github.com/banerwai/micros/query/category/service"
-	thriftcategory "github.com/banerwai/micros/query/category/thrift/gen-go/category"
 )
 
 type loggingMiddleware struct {
@@ -28,7 +27,7 @@ func (m loggingMiddleware) SayHi(name string) (v string) {
 	return
 }
 
-func (m loggingMiddleware) GetDemoSubCategory(id string) (v thriftcategory.SubCategory) {
+func (m loggingMiddleware) GetDemoSubCategory(id string) (v string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetDemoSubCategory",
@@ -41,7 +40,7 @@ func (m loggingMiddleware) GetDemoSubCategory(id string) (v thriftcategory.SubCa
 	return
 }
 
-func (m loggingMiddleware) GetDemoSubCategories(category_id string) (v []thriftcategory.SubCategory) {
+func (m loggingMiddleware) GetDemoSubCategories(category_id string) (v string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetDemoSubCategories",
@@ -67,7 +66,7 @@ func (m loggingMiddleware) LoadCategory(path string) (v bool) {
 	return
 }
 
-func (m loggingMiddleware) GetCategories() (v []*thriftcategory.Category) {
+func (m loggingMiddleware) GetCategories() (v string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetCategories",
@@ -79,7 +78,7 @@ func (m loggingMiddleware) GetCategories() (v []*thriftcategory.Category) {
 	return
 }
 
-func (m loggingMiddleware) GetSubCategories(serialnumber int32) (v []*thriftcategory.SubCategory) {
+func (m loggingMiddleware) GetSubCategories(serialnumber int32) (v string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetSubCategories",

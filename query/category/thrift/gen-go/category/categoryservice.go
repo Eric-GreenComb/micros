@@ -20,17 +20,17 @@ type CategoryService interface {
 	SayHi(name string) (r string, err error)
 	// Parameters:
 	//  - ID
-	GetDemoSubCategory(id string) (r *SubCategory, err error)
+	GetDemoSubCategory(id string) (r string, err error)
 	// Parameters:
 	//  - CategoryID
-	GetDemoSubCategories(category_id string) (r []*SubCategory, err error)
+	GetDemoSubCategories(category_id string) (r string, err error)
 	// Parameters:
 	//  - Path
 	LoadCategory(path string) (r bool, err error)
-	GetCategories() (r []*Category, err error)
+	GetCategories() (r string, err error)
 	// Parameters:
 	//  - Serialnumber
-	GetSubCategories(serialnumber int32) (r []*SubCategory, err error)
+	GetSubCategories(serialnumber int32) (r string, err error)
 }
 
 type CategoryServiceClient struct {
@@ -109,16 +109,16 @@ func (p *CategoryServiceClient) recvSayHi() (value string, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error1 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error2 error
-		error2, err = error1.Read(iprot)
+		error0 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error1 error
+		error1, err = error0.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error2
+		err = error1
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -138,7 +138,7 @@ func (p *CategoryServiceClient) recvSayHi() (value string, err error) {
 
 // Parameters:
 //  - ID
-func (p *CategoryServiceClient) GetDemoSubCategory(id string) (r *SubCategory, err error) {
+func (p *CategoryServiceClient) GetDemoSubCategory(id string) (r string, err error) {
 	if err = p.sendGetDemoSubCategory(id); err != nil {
 		return
 	}
@@ -167,7 +167,7 @@ func (p *CategoryServiceClient) sendGetDemoSubCategory(id string) (err error) {
 	return oprot.Flush()
 }
 
-func (p *CategoryServiceClient) recvGetDemoSubCategory() (value *SubCategory, err error) {
+func (p *CategoryServiceClient) recvGetDemoSubCategory() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -186,16 +186,16 @@ func (p *CategoryServiceClient) recvGetDemoSubCategory() (value *SubCategory, er
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error3 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error4 error
-		error4, err = error3.Read(iprot)
+		error2 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error3 error
+		error3, err = error2.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error4
+		err = error3
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -215,7 +215,7 @@ func (p *CategoryServiceClient) recvGetDemoSubCategory() (value *SubCategory, er
 
 // Parameters:
 //  - CategoryID
-func (p *CategoryServiceClient) GetDemoSubCategories(category_id string) (r []*SubCategory, err error) {
+func (p *CategoryServiceClient) GetDemoSubCategories(category_id string) (r string, err error) {
 	if err = p.sendGetDemoSubCategories(category_id); err != nil {
 		return
 	}
@@ -244,7 +244,7 @@ func (p *CategoryServiceClient) sendGetDemoSubCategories(category_id string) (er
 	return oprot.Flush()
 }
 
-func (p *CategoryServiceClient) recvGetDemoSubCategories() (value []*SubCategory, err error) {
+func (p *CategoryServiceClient) recvGetDemoSubCategories() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -263,16 +263,16 @@ func (p *CategoryServiceClient) recvGetDemoSubCategories() (value []*SubCategory
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error5 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error6 error
-		error6, err = error5.Read(iprot)
+		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error5 error
+		error5, err = error4.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error6
+		err = error5
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -340,16 +340,16 @@ func (p *CategoryServiceClient) recvLoadCategory() (value bool, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error7 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error8 error
-		error8, err = error7.Read(iprot)
+		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error7 error
+		error7, err = error6.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error8
+		err = error7
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -367,7 +367,7 @@ func (p *CategoryServiceClient) recvLoadCategory() (value bool, err error) {
 	return
 }
 
-func (p *CategoryServiceClient) GetCategories() (r []*Category, err error) {
+func (p *CategoryServiceClient) GetCategories() (r string, err error) {
 	if err = p.sendGetCategories(); err != nil {
 		return
 	}
@@ -394,7 +394,7 @@ func (p *CategoryServiceClient) sendGetCategories() (err error) {
 	return oprot.Flush()
 }
 
-func (p *CategoryServiceClient) recvGetCategories() (value []*Category, err error) {
+func (p *CategoryServiceClient) recvGetCategories() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -413,16 +413,16 @@ func (p *CategoryServiceClient) recvGetCategories() (value []*Category, err erro
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error9 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error10 error
-		error10, err = error9.Read(iprot)
+		error8 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error9 error
+		error9, err = error8.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error10
+		err = error9
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -442,7 +442,7 @@ func (p *CategoryServiceClient) recvGetCategories() (value []*Category, err erro
 
 // Parameters:
 //  - Serialnumber
-func (p *CategoryServiceClient) GetSubCategories(serialnumber int32) (r []*SubCategory, err error) {
+func (p *CategoryServiceClient) GetSubCategories(serialnumber int32) (r string, err error) {
 	if err = p.sendGetSubCategories(serialnumber); err != nil {
 		return
 	}
@@ -471,7 +471,7 @@ func (p *CategoryServiceClient) sendGetSubCategories(serialnumber int32) (err er
 	return oprot.Flush()
 }
 
-func (p *CategoryServiceClient) recvGetSubCategories() (value []*SubCategory, err error) {
+func (p *CategoryServiceClient) recvGetSubCategories() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -490,16 +490,16 @@ func (p *CategoryServiceClient) recvGetSubCategories() (value []*SubCategory, er
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error11 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error12 error
-		error12, err = error11.Read(iprot)
+		error10 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error11 error
+		error11, err = error10.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error12
+		err = error11
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -537,14 +537,14 @@ func (p *CategoryServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFu
 
 func NewCategoryServiceProcessor(handler CategoryService) *CategoryServiceProcessor {
 
-	self13 := &CategoryServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self13.processorMap["SayHi"] = &categoryServiceProcessorSayHi{handler: handler}
-	self13.processorMap["GetDemoSubCategory"] = &categoryServiceProcessorGetDemoSubCategory{handler: handler}
-	self13.processorMap["GetDemoSubCategories"] = &categoryServiceProcessorGetDemoSubCategories{handler: handler}
-	self13.processorMap["LoadCategory"] = &categoryServiceProcessorLoadCategory{handler: handler}
-	self13.processorMap["GetCategories"] = &categoryServiceProcessorGetCategories{handler: handler}
-	self13.processorMap["GetSubCategories"] = &categoryServiceProcessorGetSubCategories{handler: handler}
-	return self13
+	self12 := &CategoryServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self12.processorMap["SayHi"] = &categoryServiceProcessorSayHi{handler: handler}
+	self12.processorMap["GetDemoSubCategory"] = &categoryServiceProcessorGetDemoSubCategory{handler: handler}
+	self12.processorMap["GetDemoSubCategories"] = &categoryServiceProcessorGetDemoSubCategories{handler: handler}
+	self12.processorMap["LoadCategory"] = &categoryServiceProcessorLoadCategory{handler: handler}
+	self12.processorMap["GetCategories"] = &categoryServiceProcessorGetCategories{handler: handler}
+	self12.processorMap["GetSubCategories"] = &categoryServiceProcessorGetSubCategories{handler: handler}
+	return self12
 }
 
 func (p *CategoryServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -557,12 +557,12 @@ func (p *CategoryServiceProcessor) Process(iprot, oprot thrift.TProtocol) (succe
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x14 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x13 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x14.Write(oprot)
+	x13.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x14
+	return false, x13
 
 }
 
@@ -632,7 +632,7 @@ func (p *categoryServiceProcessorGetDemoSubCategory) Process(seqId int32, iprot,
 
 	iprot.ReadMessageEnd()
 	result := CategoryServiceGetDemoSubCategoryResult{}
-	var retval *SubCategory
+	var retval string
 	var err2 error
 	if retval, err2 = p.handler.GetDemoSubCategory(args.ID); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetDemoSubCategory: "+err2.Error())
@@ -642,7 +642,7 @@ func (p *categoryServiceProcessorGetDemoSubCategory) Process(seqId int32, iprot,
 		oprot.Flush()
 		return true, err2
 	} else {
-		result.Success = retval
+		result.Success = &retval
 	}
 	if err2 = oprot.WriteMessageBegin("GetDemoSubCategory", thrift.REPLY, seqId); err2 != nil {
 		err = err2
@@ -680,7 +680,7 @@ func (p *categoryServiceProcessorGetDemoSubCategories) Process(seqId int32, ipro
 
 	iprot.ReadMessageEnd()
 	result := CategoryServiceGetDemoSubCategoriesResult{}
-	var retval []*SubCategory
+	var retval string
 	var err2 error
 	if retval, err2 = p.handler.GetDemoSubCategories(args.CategoryID); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetDemoSubCategories: "+err2.Error())
@@ -690,7 +690,7 @@ func (p *categoryServiceProcessorGetDemoSubCategories) Process(seqId int32, ipro
 		oprot.Flush()
 		return true, err2
 	} else {
-		result.Success = retval
+		result.Success = &retval
 	}
 	if err2 = oprot.WriteMessageBegin("GetDemoSubCategories", thrift.REPLY, seqId); err2 != nil {
 		err = err2
@@ -776,7 +776,7 @@ func (p *categoryServiceProcessorGetCategories) Process(seqId int32, iprot, opro
 
 	iprot.ReadMessageEnd()
 	result := CategoryServiceGetCategoriesResult{}
-	var retval []*Category
+	var retval string
 	var err2 error
 	if retval, err2 = p.handler.GetCategories(); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetCategories: "+err2.Error())
@@ -786,7 +786,7 @@ func (p *categoryServiceProcessorGetCategories) Process(seqId int32, iprot, opro
 		oprot.Flush()
 		return true, err2
 	} else {
-		result.Success = retval
+		result.Success = &retval
 	}
 	if err2 = oprot.WriteMessageBegin("GetCategories", thrift.REPLY, seqId); err2 != nil {
 		err = err2
@@ -824,7 +824,7 @@ func (p *categoryServiceProcessorGetSubCategories) Process(seqId int32, iprot, o
 
 	iprot.ReadMessageEnd()
 	result := CategoryServiceGetSubCategoriesResult{}
-	var retval []*SubCategory
+	var retval string
 	var err2 error
 	if retval, err2 = p.handler.GetSubCategories(args.Serialnumber); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetSubCategories: "+err2.Error())
@@ -834,7 +834,7 @@ func (p *categoryServiceProcessorGetSubCategories) Process(seqId int32, iprot, o
 		oprot.Flush()
 		return true, err2
 	} else {
-		result.Success = retval
+		result.Success = &retval
 	}
 	if err2 = oprot.WriteMessageBegin("GetSubCategories", thrift.REPLY, seqId); err2 != nil {
 		err = err2
@@ -1143,20 +1143,20 @@ func (p *CategoryServiceGetDemoSubCategoryArgs) String() string {
 // Attributes:
 //  - Success
 type CategoryServiceGetDemoSubCategoryResult struct {
-	Success *SubCategory `thrift:"success,0" json:"success,omitempty"`
+	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
 func NewCategoryServiceGetDemoSubCategoryResult() *CategoryServiceGetDemoSubCategoryResult {
 	return &CategoryServiceGetDemoSubCategoryResult{}
 }
 
-var CategoryServiceGetDemoSubCategoryResult_Success_DEFAULT *SubCategory
+var CategoryServiceGetDemoSubCategoryResult_Success_DEFAULT string
 
-func (p *CategoryServiceGetDemoSubCategoryResult) GetSuccess() *SubCategory {
+func (p *CategoryServiceGetDemoSubCategoryResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
 		return CategoryServiceGetDemoSubCategoryResult_Success_DEFAULT
 	}
-	return p.Success
+	return *p.Success
 }
 func (p *CategoryServiceGetDemoSubCategoryResult) IsSetSuccess() bool {
 	return p.Success != nil
@@ -1196,9 +1196,10 @@ func (p *CategoryServiceGetDemoSubCategoryResult) Read(iprot thrift.TProtocol) e
 }
 
 func (p *CategoryServiceGetDemoSubCategoryResult) readField0(iprot thrift.TProtocol) error {
-	p.Success = &SubCategory{}
-	if err := p.Success.Read(iprot); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
 	}
 	return nil
 }
@@ -1221,11 +1222,11 @@ func (p *CategoryServiceGetDemoSubCategoryResult) Write(oprot thrift.TProtocol) 
 
 func (p *CategoryServiceGetDemoSubCategoryResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
 		}
-		if err := p.Success.Write(oprot); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", p.Success), err)
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
@@ -1335,17 +1336,20 @@ func (p *CategoryServiceGetDemoSubCategoriesArgs) String() string {
 // Attributes:
 //  - Success
 type CategoryServiceGetDemoSubCategoriesResult struct {
-	Success []*SubCategory `thrift:"success,0" json:"success,omitempty"`
+	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
 func NewCategoryServiceGetDemoSubCategoriesResult() *CategoryServiceGetDemoSubCategoriesResult {
 	return &CategoryServiceGetDemoSubCategoriesResult{}
 }
 
-var CategoryServiceGetDemoSubCategoriesResult_Success_DEFAULT []*SubCategory
+var CategoryServiceGetDemoSubCategoriesResult_Success_DEFAULT string
 
-func (p *CategoryServiceGetDemoSubCategoriesResult) GetSuccess() []*SubCategory {
-	return p.Success
+func (p *CategoryServiceGetDemoSubCategoriesResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return CategoryServiceGetDemoSubCategoriesResult_Success_DEFAULT
+	}
+	return *p.Success
 }
 func (p *CategoryServiceGetDemoSubCategoriesResult) IsSetSuccess() bool {
 	return p.Success != nil
@@ -1385,21 +1389,10 @@ func (p *CategoryServiceGetDemoSubCategoriesResult) Read(iprot thrift.TProtocol)
 }
 
 func (p *CategoryServiceGetDemoSubCategoriesResult) readField0(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return thrift.PrependError("error reading list begin: ", err)
-	}
-	tSlice := make([]*SubCategory, 0, size)
-	p.Success = tSlice
-	for i := 0; i < size; i++ {
-		_elem15 := &SubCategory{}
-		if err := _elem15.Read(iprot); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", _elem15), err)
-		}
-		p.Success = append(p.Success, _elem15)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
-		return thrift.PrependError("error reading list end: ", err)
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
 	}
 	return nil
 }
@@ -1422,19 +1415,11 @@ func (p *CategoryServiceGetDemoSubCategoriesResult) Write(oprot thrift.TProtocol
 
 func (p *CategoryServiceGetDemoSubCategoriesResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.LIST, 0); err != nil {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
 		}
-		if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Success)); err != nil {
-			return thrift.PrependError("error writing list begin: ", err)
-		}
-		for _, v := range p.Success {
-			if err := v.Write(oprot); err != nil {
-				return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", v), err)
-			}
-		}
-		if err := oprot.WriteListEnd(); err != nil {
-			return thrift.PrependError("error writing list end: ", err)
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
@@ -1699,17 +1684,20 @@ func (p *CategoryServiceGetCategoriesArgs) String() string {
 // Attributes:
 //  - Success
 type CategoryServiceGetCategoriesResult struct {
-	Success []*Category `thrift:"success,0" json:"success,omitempty"`
+	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
 func NewCategoryServiceGetCategoriesResult() *CategoryServiceGetCategoriesResult {
 	return &CategoryServiceGetCategoriesResult{}
 }
 
-var CategoryServiceGetCategoriesResult_Success_DEFAULT []*Category
+var CategoryServiceGetCategoriesResult_Success_DEFAULT string
 
-func (p *CategoryServiceGetCategoriesResult) GetSuccess() []*Category {
-	return p.Success
+func (p *CategoryServiceGetCategoriesResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return CategoryServiceGetCategoriesResult_Success_DEFAULT
+	}
+	return *p.Success
 }
 func (p *CategoryServiceGetCategoriesResult) IsSetSuccess() bool {
 	return p.Success != nil
@@ -1749,21 +1737,10 @@ func (p *CategoryServiceGetCategoriesResult) Read(iprot thrift.TProtocol) error 
 }
 
 func (p *CategoryServiceGetCategoriesResult) readField0(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return thrift.PrependError("error reading list begin: ", err)
-	}
-	tSlice := make([]*Category, 0, size)
-	p.Success = tSlice
-	for i := 0; i < size; i++ {
-		_elem16 := &Category{}
-		if err := _elem16.Read(iprot); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", _elem16), err)
-		}
-		p.Success = append(p.Success, _elem16)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
-		return thrift.PrependError("error reading list end: ", err)
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
 	}
 	return nil
 }
@@ -1786,19 +1763,11 @@ func (p *CategoryServiceGetCategoriesResult) Write(oprot thrift.TProtocol) error
 
 func (p *CategoryServiceGetCategoriesResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.LIST, 0); err != nil {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
 		}
-		if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Success)); err != nil {
-			return thrift.PrependError("error writing list begin: ", err)
-		}
-		for _, v := range p.Success {
-			if err := v.Write(oprot); err != nil {
-				return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", v), err)
-			}
-		}
-		if err := oprot.WriteListEnd(); err != nil {
-			return thrift.PrependError("error writing list end: ", err)
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
@@ -1908,17 +1877,20 @@ func (p *CategoryServiceGetSubCategoriesArgs) String() string {
 // Attributes:
 //  - Success
 type CategoryServiceGetSubCategoriesResult struct {
-	Success []*SubCategory `thrift:"success,0" json:"success,omitempty"`
+	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
 func NewCategoryServiceGetSubCategoriesResult() *CategoryServiceGetSubCategoriesResult {
 	return &CategoryServiceGetSubCategoriesResult{}
 }
 
-var CategoryServiceGetSubCategoriesResult_Success_DEFAULT []*SubCategory
+var CategoryServiceGetSubCategoriesResult_Success_DEFAULT string
 
-func (p *CategoryServiceGetSubCategoriesResult) GetSuccess() []*SubCategory {
-	return p.Success
+func (p *CategoryServiceGetSubCategoriesResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return CategoryServiceGetSubCategoriesResult_Success_DEFAULT
+	}
+	return *p.Success
 }
 func (p *CategoryServiceGetSubCategoriesResult) IsSetSuccess() bool {
 	return p.Success != nil
@@ -1958,21 +1930,10 @@ func (p *CategoryServiceGetSubCategoriesResult) Read(iprot thrift.TProtocol) err
 }
 
 func (p *CategoryServiceGetSubCategoriesResult) readField0(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return thrift.PrependError("error reading list begin: ", err)
-	}
-	tSlice := make([]*SubCategory, 0, size)
-	p.Success = tSlice
-	for i := 0; i < size; i++ {
-		_elem17 := &SubCategory{}
-		if err := _elem17.Read(iprot); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", _elem17), err)
-		}
-		p.Success = append(p.Success, _elem17)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
-		return thrift.PrependError("error reading list end: ", err)
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
 	}
 	return nil
 }
@@ -1995,19 +1956,11 @@ func (p *CategoryServiceGetSubCategoriesResult) Write(oprot thrift.TProtocol) er
 
 func (p *CategoryServiceGetSubCategoriesResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.LIST, 0); err != nil {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
 		}
-		if err := oprot.WriteListBegin(thrift.STRUCT, len(p.Success)); err != nil {
-			return thrift.PrependError("error writing list begin: ", err)
-		}
-		for _, v := range p.Success {
-			if err := v.Write(oprot); err != nil {
-				return thrift.PrependError(fmt.Sprintf("%T error writing struct: ", v), err)
-			}
-		}
-		if err := oprot.WriteListEnd(); err != nil {
-			return thrift.PrependError("error writing list end: ", err)
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
 		}
 		if err := oprot.WriteFieldEnd(); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)

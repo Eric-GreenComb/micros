@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/banerwai/micros/query/category/service"
-	thriftcategory "github.com/banerwai/micros/query/category/thrift/gen-go/category"
 )
 
 type thriftBinding struct {
@@ -10,37 +9,25 @@ type thriftBinding struct {
 }
 
 func (tb thriftBinding) SayHi(name string) (string, error) {
-	v := tb.CategoryService.SayHi(name)
-	return v, nil
+	return tb.CategoryService.SayHi(name), nil
 }
 
-func (tb thriftBinding) GetDemoSubCategory(id string) (*thriftcategory.SubCategory, error) {
-	v := tb.CategoryService.GetDemoSubCategory(id)
-	sub := thriftcategory.SubCategory{v.ID, v.Serialnumber, v.Name, v.Desc}
-	return &sub, nil
+func (tb thriftBinding) GetDemoSubCategory(id string) (string, error) {
+	return tb.CategoryService.GetDemoSubCategory(id), nil
 }
 
-func (tb thriftBinding) GetDemoSubCategories(category_id string) ([]*thriftcategory.SubCategory, error) {
-	_subs := tb.CategoryService.GetDemoSubCategories(category_id)
-
-	var subs []*thriftcategory.SubCategory
-
-	for _index, _ := range _subs {
-		subs = append(subs, &_subs[_index])
-	}
-
-	return subs, nil
+func (tb thriftBinding) GetDemoSubCategories(category_id string) (string, error) {
+	return tb.CategoryService.GetDemoSubCategories(category_id), nil
 }
 
 func (tb thriftBinding) LoadCategory(path string) (bool, error) {
-	v := tb.CategoryService.LoadCategory(path)
-	return v, nil
+	return tb.CategoryService.LoadCategory(path), nil
 }
 
-func (tb thriftBinding) GetCategories() ([]*thriftcategory.Category, error) {
+func (tb thriftBinding) GetCategories() (string, error) {
 	return tb.CategoryService.GetCategories(), nil
 }
 
-func (tb thriftBinding) GetSubCategories(serialnumber int32) ([]*thriftcategory.SubCategory, error) {
+func (tb thriftBinding) GetSubCategories(serialnumber int32) (string, error) {
 	return tb.CategoryService.GetSubCategories(serialnumber), nil
 }

@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	"github.com/banerwai/micros/query/category/service"
-	thriftcategory "github.com/banerwai/micros/query/category/thrift/gen-go/category"
 )
 
 var (
@@ -20,30 +19,39 @@ var (
 
 type inmemService struct {
 	mtx     sync.RWMutex
-	m       map[int]thriftcategory.Category
+	m       map[int]Category
 	sortkey []int
 }
 
 func newInmemService() service.CategoryService {
 	return &inmemService{
-		m:       map[int]thriftcategory.Category{},
+		m:       map[int]Category{},
 		sortkey: make([]int, 0),
 	}
 }
 
 func (self *inmemService) SayHi(name string) string { return "hi," + name }
 
-func (self *inmemService) GetDemoSubCategory(id string) thriftcategory.SubCategory {
-	return thriftcategory.SubCategory{"001", 10, "name-001", "desc-001"}
+func (self *inmemService) GetDemoSubCategory(id string) string {
+
+	b, err := json.Marshal(SubCategory{"001", 10, "name-001", "desc-001"})
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
 }
 
-func (self *inmemService) GetDemoSubCategories(category_id string) []thriftcategory.SubCategory {
-	var subs []thriftcategory.SubCategory
+func (self *inmemService) GetDemoSubCategories(category_id string) string {
+	var subs []SubCategory
 
-	subs = append(subs, thriftcategory.SubCategory{"001", 1001, "name-001", "desc-001"})
-	subs = append(subs, thriftcategory.SubCategory{"002", 1002, "name-002", "desc-0012"})
+	subs = append(subs, SubCategory{"001", 1001, "name-001", "desc-001"})
+	subs = append(subs, SubCategory{"002", 1002, "name-002", "desc-0012"})
 
-	return subs
+	b, err := json.Marshal(subs)
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
 }
 
 func (self *inmemService) LoadCategory(path string) bool {
@@ -52,7 +60,7 @@ func (self *inmemService) LoadCategory(path string) bool {
 		fmt.Println("error:", _err)
 		return false
 	}
-	var categories []thriftcategory.Category
+	var categories []Category
 	_err = json.Unmarshal(_f, &categories)
 	if _err != nil {
 		fmt.Println("error:", _err)
@@ -62,7 +70,7 @@ func (self *inmemService) LoadCategory(path string) bool {
 	return self.initCategories(categories)
 }
 
-func (self *inmemService) initCategories(categories []thriftcategory.Category) bool {
+func (self *inmemService) initCategories(categories []Category) bool {
 	self.mtx.Lock()
 	defer self.mtx.Unlock()
 
@@ -86,25 +94,35 @@ func (self *inmemService) initCategories(categories []thriftcategory.Category) b
 	return true
 }
 
-func (self *inmemService) GetCategories() []*thriftcategory.Category {
+func (self *inmemService) GetCategories() string {
 	self.mtx.RLock()
 	defer self.mtx.RUnlock()
 
-	var _categories []*thriftcategory.Category
+	var _categories []Category
 	for _, _k := range self.sortkey {
 		_cat := self.m[_k]
-		_categories = append(_categories, &_cat)
+		_categories = append(_categories, _cat)
 	}
-	return _categories
+
+	b, err := json.Marshal(_categories)
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
 }
 
-func (self *inmemService) GetSubCategories(serialnumber int32) []*thriftcategory.SubCategory {
+func (self *inmemService) GetSubCategories(serialnumber int32) string {
 	self.mtx.RLock()
 	defer self.mtx.RUnlock()
 
 	p, ok := self.m[int(serialnumber)]
 	if !ok {
-		return nil
+		return ""
 	}
-	return p.Subcategories
+
+	b, err := json.Marshal(p.Subcategories)
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
 }

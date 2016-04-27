@@ -6,7 +6,6 @@ import (
 	"github.com/go-kit/kit/metrics"
 
 	"github.com/banerwai/micros/query/category/service"
-	thriftcategory "github.com/banerwai/micros/query/category/thrift/gen-go/category"
 )
 
 type instrumentingMiddleware struct {
@@ -23,7 +22,7 @@ func (m instrumentingMiddleware) SayHi(name string) (v string) {
 	return
 }
 
-func (m instrumentingMiddleware) GetDemoSubCategory(id string) (v thriftcategory.SubCategory) {
+func (m instrumentingMiddleware) GetDemoSubCategory(id string) (v string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GetDemoSubCategory"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
@@ -32,7 +31,7 @@ func (m instrumentingMiddleware) GetDemoSubCategory(id string) (v thriftcategory
 	return
 }
 
-func (m instrumentingMiddleware) GetDemoSubCategories(category_id string) (v []thriftcategory.SubCategory) {
+func (m instrumentingMiddleware) GetDemoSubCategories(category_id string) (v string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GetDemoSubCategories"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
@@ -50,7 +49,7 @@ func (m instrumentingMiddleware) LoadCategory(path string) (v bool) {
 	return
 }
 
-func (m instrumentingMiddleware) GetCategories() (v []*thriftcategory.Category) {
+func (m instrumentingMiddleware) GetCategories() (v string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GetCategories"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
@@ -59,7 +58,7 @@ func (m instrumentingMiddleware) GetCategories() (v []*thriftcategory.Category) 
 	return
 }
 
-func (m instrumentingMiddleware) GetSubCategories(serialnumber int32) (v []*thriftcategory.SubCategory) {
+func (m instrumentingMiddleware) GetSubCategories(serialnumber int32) (v string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GetSubCategories"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
