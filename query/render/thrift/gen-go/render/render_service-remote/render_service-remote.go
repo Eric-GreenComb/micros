@@ -20,6 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
+	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  string RenderHello(string tmpl, string name)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
@@ -115,6 +116,14 @@ func main() {
 	}
 
 	switch cmd {
+	case "Ping":
+		if flag.NArg()-1 != 0 {
+			fmt.Fprintln(os.Stderr, "Ping requires 0 args")
+			flag.Usage()
+		}
+		fmt.Print(client.Ping())
+		fmt.Print("\n")
+		break
 	case "RenderHello":
 		if flag.NArg()-1 != 2 {
 			fmt.Fprintln(os.Stderr, "RenderHello requires 2 args")

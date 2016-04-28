@@ -20,6 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
+	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  i64 VerifyToken(string token, i64 ttype, double overhour)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
@@ -115,6 +116,14 @@ func main() {
 	}
 
 	switch cmd {
+	case "Ping":
+		if flag.NArg()-1 != 0 {
+			fmt.Fprintln(os.Stderr, "Ping requires 0 args")
+			flag.Usage()
+		}
+		fmt.Print(client.Ping())
+		fmt.Print("\n")
+		break
 	case "VerifyToken":
 		if flag.NArg()-1 != 3 {
 			fmt.Fprintln(os.Stderr, "VerifyToken requires 3 args")
@@ -122,14 +131,14 @@ func main() {
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		argvalue1, err5 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err5 != nil {
+		argvalue1, err7 := (strconv.ParseInt(flag.Arg(2), 10, 64))
+		if err7 != nil {
 			Usage()
 			return
 		}
 		value1 := argvalue1
-		argvalue2, err6 := (strconv.ParseFloat(flag.Arg(3), 64))
-		if err6 != nil {
+		argvalue2, err8 := (strconv.ParseFloat(flag.Arg(3), 64))
+		if err8 != nil {
 			Usage()
 			return
 		}

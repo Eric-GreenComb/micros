@@ -30,6 +30,8 @@ func newInmemService() service.CategoryService {
 	}
 }
 
+func (self *inmemService) Ping() string { return "pong" }
+
 func (self *inmemService) SayHi(name string) string { return "hi," + name }
 
 func (self *inmemService) GetDemoSubCategory(id string) string {

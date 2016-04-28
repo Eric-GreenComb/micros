@@ -1,5 +1,6 @@
 
 service CategoryService {
+	string Ping()
 	string SayHi(1: string name)
 	string GetDemoSubCategory(1: string id)	
 	string GetDemoSubCategories(1: string category_id)

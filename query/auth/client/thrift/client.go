@@ -17,6 +17,15 @@ type client struct {
 	log.Logger
 }
 
+func (c client) Ping() string {
+	reply, err := c.AuthServiceClient.Ping()
+	if err != nil {
+		c.Logger.Log("err", err)
+		return ""
+	}
+	return reply
+}
+
 func (c client) Login(emailOrUsername string, pwd string) string {
 	reply, err := c.AuthServiceClient.Login(emailOrUsername, pwd)
 	if err != nil {

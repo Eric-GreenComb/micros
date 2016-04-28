@@ -11,6 +11,11 @@ func newInmemService() service.AuthService {
 	return &inmemService{}
 }
 
+func (self *inmemService) Ping() (r string) {
+	r = "pong"
+	return
+}
+
 func (self *inmemService) Login(emailOrUsername string, pwd string) (r string) {
 	r = emailOrUsername + pwd
 	return

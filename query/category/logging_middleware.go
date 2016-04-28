@@ -14,6 +14,18 @@ type loggingMiddleware struct {
 	log.Logger
 }
 
+func (m loggingMiddleware) Ping() (v string) {
+	defer func(begin time.Time) {
+		m.Logger.Log(
+			"method", "Ping",
+			"v", v,
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+	v = m.CategoryService.Ping()
+	return
+}
+
 func (m loggingMiddleware) SayHi(name string) (v string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(

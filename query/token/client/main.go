@@ -17,7 +17,7 @@ import (
 	"github.com/banerwai/micros/query/token/service"
 	thrifttoken "github.com/banerwai/micros/query/token/thrift/gen-go/token"
 
-	"github.com/banerwai/gather/command/bean"
+	"github.com/banerwai/gather/bean"
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
 )
 
@@ -85,6 +85,11 @@ func main() {
 
 	begin := time.Now()
 	switch method {
+
+	case "ping":
+
+		v := svc.Ping()
+		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
 	case "ver":
 

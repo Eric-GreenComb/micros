@@ -4,6 +4,7 @@ import ()
 
 // Service is the abstract representation of this service.
 type ProfileService interface {
+	Ping() string
 	// Parameters:
 	//  - ID
 	GetProfile(id string) string

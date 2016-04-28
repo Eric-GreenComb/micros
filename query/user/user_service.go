@@ -13,6 +13,10 @@ func newInmemService() service.UserService {
 	return &inmemService{}
 }
 
+func (self *inmemService) Ping() string {
+	return "pong"
+}
+
 func (self *inmemService) GetUser(email string) (r string) {
 	var _bson_m bson.M
 	err := UsersCollection.Find(bson.M{"email": email}).One(&_bson_m)

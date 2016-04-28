@@ -84,6 +84,10 @@ func main() {
 	begin := time.Now()
 	switch method {
 
+	case "ping":
+		v := svc.Ping()
+		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
+
 	case "hello":
 		_tmpl := s1
 		_name := s2

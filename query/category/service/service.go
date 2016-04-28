@@ -4,6 +4,7 @@ import ()
 
 // CategoryService is the abstract representation of this service.
 type CategoryService interface {
+	Ping() string
 	// Parameters:
 	//  - Name
 	SayHi(name string) string

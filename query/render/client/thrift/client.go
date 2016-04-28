@@ -17,6 +17,15 @@ type client struct {
 	log.Logger
 }
 
+func (c client) Ping() string {
+	reply, err := c.RenderServiceClient.Ping()
+	if err != nil {
+		c.Logger.Log("err", err)
+		return ""
+	}
+	return reply
+}
+
 func (c client) RenderHello(tmpl, name string) string {
 	reply, err := c.RenderServiceClient.RenderHello(tmpl, name)
 	if err != nil {

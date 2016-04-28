@@ -13,6 +13,18 @@ type loggingMiddleware struct {
 	log.Logger
 }
 
+func (m loggingMiddleware) Ping() (r string) {
+	defer func(begin time.Time) {
+		m.Logger.Log(
+			"method", "Ping",
+			"r", r,
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+	r = m.AuthService.Ping()
+	return
+}
+
 func (m loggingMiddleware) Login(emailOrUsername string, pwd string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(

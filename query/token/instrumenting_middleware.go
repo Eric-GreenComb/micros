@@ -13,6 +13,15 @@ type instrumentingMiddleware struct {
 	requestDuration metrics.TimeHistogram
 }
 
+func (m instrumentingMiddleware) Ping() (v string) {
+	defer func(begin time.Time) {
+		methodField := metrics.Field{Key: "method", Value: "Ping"}
+		m.requestDuration.With(methodField).Observe(time.Since(begin))
+	}(time.Now())
+	v = m.TokenService.Ping()
+	return
+}
+
 func (m instrumentingMiddleware) VerifyToken(key string, ttype int64, overhour float64) (v int64) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "VerifyToken"}

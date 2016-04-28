@@ -17,6 +17,15 @@ type client struct {
 	log.Logger
 }
 
+func (c client) Ping() string {
+	reply, err := c.UserServiceClient.Ping()
+	if err != nil {
+		c.Logger.Log("err", err)
+		return ""
+	}
+	return reply
+}
+
 func (c client) GetUser(email string) string {
 	reply, err := c.UserServiceClient.GetUser(email)
 	if err != nil {

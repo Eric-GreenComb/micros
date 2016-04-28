@@ -15,6 +15,7 @@ var _ = fmt.Printf
 var _ = bytes.Equal
 
 type ProfileService interface {
+	Ping() (r string, err error)
 	// Parameters:
 	//  - ID
 	GetProfile(id string) (r string, err error)
@@ -53,6 +54,79 @@ func NewProfileServiceClientProtocol(t thrift.TTransport, iprot thrift.TProtocol
 		OutputProtocol:  oprot,
 		SeqId:           0,
 	}
+}
+
+func (p *ProfileServiceClient) Ping() (r string, err error) {
+	if err = p.sendPing(); err != nil {
+		return
+	}
+	return p.recvPing()
+}
+
+func (p *ProfileServiceClient) sendPing() (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("Ping", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ProfileServicePingArgs{}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ProfileServiceClient) recvPing() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "Ping" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "Ping failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "Ping failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error0 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error1 error
+		error1, err = error0.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error1
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "Ping failed: invalid message type")
+		return
+	}
+	result := ProfileServicePingResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
 }
 
 // Parameters:
@@ -105,16 +179,16 @@ func (p *ProfileServiceClient) recvGetProfile() (value string, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error0 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error1 error
-		error1, err = error0.Read(iprot)
+		error2 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error3 error
+		error3, err = error2.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error1
+		err = error3
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -182,16 +256,16 @@ func (p *ProfileServiceClient) recvGetProfilesByEmail() (value string, err error
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error2 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error3 error
-		error3, err = error2.Read(iprot)
+		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error5 error
+		error5, err = error4.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error3
+		err = error5
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -265,16 +339,16 @@ func (p *ProfileServiceClient) recvSearchProfiles() (value string, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error5 error
-		error5, err = error4.Read(iprot)
+		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error7 error
+		error7, err = error6.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error5
+		err = error7
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -312,11 +386,12 @@ func (p *ProfileServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFun
 
 func NewProfileServiceProcessor(handler ProfileService) *ProfileServiceProcessor {
 
-	self6 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self6.processorMap["GetProfile"] = &profileServiceProcessorGetProfile{handler: handler}
-	self6.processorMap["GetProfilesByEmail"] = &profileServiceProcessorGetProfilesByEmail{handler: handler}
-	self6.processorMap["SearchProfiles"] = &profileServiceProcessorSearchProfiles{handler: handler}
-	return self6
+	self8 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self8.processorMap["Ping"] = &profileServiceProcessorPing{handler: handler}
+	self8.processorMap["GetProfile"] = &profileServiceProcessorGetProfile{handler: handler}
+	self8.processorMap["GetProfilesByEmail"] = &profileServiceProcessorGetProfilesByEmail{handler: handler}
+	self8.processorMap["SearchProfiles"] = &profileServiceProcessorSearchProfiles{handler: handler}
+	return self8
 }
 
 func (p *ProfileServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -329,13 +404,61 @@ func (p *ProfileServiceProcessor) Process(iprot, oprot thrift.TProtocol) (succes
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x7 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x9 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x7.Write(oprot)
+	x9.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x7
+	return false, x9
 
+}
+
+type profileServiceProcessorPing struct {
+	handler ProfileService
+}
+
+func (p *profileServiceProcessorPing) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ProfileServicePingArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("Ping", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ProfileServicePingResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.Ping(); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing Ping: "+err2.Error())
+		oprot.WriteMessageBegin("Ping", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("Ping", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
 }
 
 type profileServiceProcessorGetProfile struct {
@@ -483,6 +606,161 @@ func (p *profileServiceProcessorSearchProfiles) Process(seqId int32, iprot, opro
 }
 
 // HELPER FUNCTIONS AND STRUCTURES
+
+type ProfileServicePingArgs struct {
+}
+
+func NewProfileServicePingArgs() *ProfileServicePingArgs {
+	return &ProfileServicePingArgs{}
+}
+
+func (p *ProfileServicePingArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		if err := iprot.Skip(fieldTypeId); err != nil {
+			return err
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileServicePingArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("Ping_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileServicePingArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileServicePingArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ProfileServicePingResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewProfileServicePingResult() *ProfileServicePingResult {
+	return &ProfileServicePingResult{}
+}
+
+var ProfileServicePingResult_Success_DEFAULT string
+
+func (p *ProfileServicePingResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ProfileServicePingResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ProfileServicePingResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ProfileServicePingResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileServicePingResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ProfileServicePingResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("Ping_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileServicePingResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ProfileServicePingResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileServicePingResult(%+v)", *p)
+}
 
 // Attributes:
 //  - ID
@@ -954,19 +1232,19 @@ func (p *ProfileServiceSearchProfilesArgs) readField1(iprot thrift.TProtocol) er
 	tMap := make(map[string]int64, size)
 	p.OptionMmap = tMap
 	for i := 0; i < size; i++ {
-		var _key8 string
+		var _key10 string
 		if v, err := iprot.ReadString(); err != nil {
 			return thrift.PrependError("error reading field 0: ", err)
 		} else {
-			_key8 = v
+			_key10 = v
 		}
-		var _val9 int64
+		var _val11 int64
 		if v, err := iprot.ReadI64(); err != nil {
 			return thrift.PrependError("error reading field 0: ", err)
 		} else {
-			_val9 = v
+			_val11 = v
 		}
-		p.OptionMmap[_key8] = _val9
+		p.OptionMmap[_key10] = _val11
 	}
 	if err := iprot.ReadMapEnd(); err != nil {
 		return thrift.PrependError("error reading map end: ", err)
@@ -982,19 +1260,19 @@ func (p *ProfileServiceSearchProfilesArgs) readField2(iprot thrift.TProtocol) er
 	tMap := make(map[string]string, size)
 	p.KeyMmap = tMap
 	for i := 0; i < size; i++ {
-		var _key10 string
+		var _key12 string
 		if v, err := iprot.ReadString(); err != nil {
 			return thrift.PrependError("error reading field 0: ", err)
 		} else {
-			_key10 = v
+			_key12 = v
 		}
-		var _val11 string
+		var _val13 string
 		if v, err := iprot.ReadString(); err != nil {
 			return thrift.PrependError("error reading field 0: ", err)
 		} else {
-			_val11 = v
+			_val13 = v
 		}
-		p.KeyMmap[_key10] = _val11
+		p.KeyMmap[_key12] = _val13
 	}
 	if err := iprot.ReadMapEnd(); err != nil {
 		return thrift.PrependError("error reading map end: ", err)

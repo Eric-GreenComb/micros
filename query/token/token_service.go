@@ -14,6 +14,10 @@ func newInmemService() service.TokenService {
 	return &inmemService{}
 }
 
+func (self *inmemService) Ping() string {
+	return "pong"
+}
+
 // return -1 不存在
 // return -2 过期
 // return -3 db error

@@ -85,6 +85,10 @@ func main() {
 	begin := time.Now()
 	switch method {
 
+	case "ping":
+		v := svc.Ping()
+		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
+
 	case "prof":
 		profile_id := s1
 		v := svc.GetProfile(profile_id)

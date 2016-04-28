@@ -17,6 +17,15 @@ type client struct {
 	log.Logger
 }
 
+func (c client) Ping() string {
+	reply, err := c.ProfileServiceClient.Ping()
+	if err != nil {
+		c.Logger.Log("err", err)
+		return ""
+	}
+	return reply
+}
+
 func (c client) GetProfile(id string) string {
 	reply, err := c.ProfileServiceClient.GetProfile(id)
 	if err != nil {

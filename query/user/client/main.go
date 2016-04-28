@@ -18,7 +18,7 @@ import (
 
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
 
-	"github.com/banerwai/gather/query/dto"
+	"github.com/banerwai/gather/dto"
 	"labix.org/v2/mgo/bson"
 )
 
@@ -86,6 +86,10 @@ func main() {
 
 	begin := time.Now()
 	switch method {
+
+	case "ping":
+		v := svc.Ping()
+		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
 	case "get":
 		email := s1

@@ -8,6 +8,10 @@ type thriftBinding struct {
 	service.CategoryService
 }
 
+func (tb thriftBinding) Ping() (string, error) {
+	return tb.CategoryService.Ping(), nil
+}
+
 func (tb thriftBinding) SayHi(name string) (string, error) {
 	return tb.CategoryService.SayHi(name), nil
 }

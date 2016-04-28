@@ -26,6 +26,10 @@ type Hello struct {
 	Name string
 }
 
+func (self *inmemService) Ping() string {
+	return "pong"
+}
+
 func (self *inmemService) RenderHello(tmpl, name string) string {
 
 	t, err := self.cachedTmpl(tmpl)

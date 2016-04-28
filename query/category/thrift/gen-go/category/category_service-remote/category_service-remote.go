@@ -20,6 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
+	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  string SayHi(string name)")
 	fmt.Fprintln(os.Stderr, "  string GetDemoSubCategory(string id)")
 	fmt.Fprintln(os.Stderr, "  string GetDemoSubCategories(string category_id)")
@@ -120,6 +121,14 @@ func main() {
 	}
 
 	switch cmd {
+	case "Ping":
+		if flag.NArg()-1 != 0 {
+			fmt.Fprintln(os.Stderr, "Ping requires 0 args")
+			flag.Usage()
+		}
+		fmt.Print(client.Ping())
+		fmt.Print("\n")
+		break
 	case "SayHi":
 		if flag.NArg()-1 != 1 {
 			fmt.Fprintln(os.Stderr, "SayHi requires 1 args")
@@ -173,8 +182,8 @@ func main() {
 			fmt.Fprintln(os.Stderr, "GetSubCategories requires 1 args")
 			flag.Usage()
 		}
-		tmp0, err18 := (strconv.Atoi(flag.Arg(1)))
-		if err18 != nil {
+		tmp0, err20 := (strconv.Atoi(flag.Arg(1)))
+		if err20 != nil {
 			Usage()
 			return
 		}

@@ -14,6 +14,11 @@ func newInmemService() service.ProfileService {
 	return &inmemService{}
 }
 
+func (self *inmemService) Ping() (r string) {
+	r = "pong"
+	return
+}
+
 func (self *inmemService) GetProfile(id string) (r string) {
 	r = id
 	return

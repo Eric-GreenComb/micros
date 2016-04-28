@@ -20,6 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
+	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  string GetProfile(string id)")
 	fmt.Fprintln(os.Stderr, "  string GetProfilesByEmail(string email)")
 	fmt.Fprintln(os.Stderr, "  string SearchProfiles( option_mmap,  key_mmap, i64 timestamp, i64 pagesize)")
@@ -117,6 +118,14 @@ func main() {
 	}
 
 	switch cmd {
+	case "Ping":
+		if flag.NArg()-1 != 0 {
+			fmt.Fprintln(os.Stderr, "Ping requires 0 args")
+			flag.Usage()
+		}
+		fmt.Print(client.Ping())
+		fmt.Print("\n")
+		break
 	case "GetProfile":
 		if flag.NArg()-1 != 1 {
 			fmt.Fprintln(os.Stderr, "GetProfile requires 1 args")
@@ -142,50 +151,50 @@ func main() {
 			fmt.Fprintln(os.Stderr, "SearchProfiles requires 4 args")
 			flag.Usage()
 		}
-		arg14 := flag.Arg(1)
-		mbTrans15 := thrift.NewTMemoryBufferLen(len(arg14))
-		defer mbTrans15.Close()
-		_, err16 := mbTrans15.WriteString(arg14)
-		if err16 != nil {
+		arg16 := flag.Arg(1)
+		mbTrans17 := thrift.NewTMemoryBufferLen(len(arg16))
+		defer mbTrans17.Close()
+		_, err18 := mbTrans17.WriteString(arg16)
+		if err18 != nil {
 			Usage()
 			return
 		}
-		factory17 := thrift.NewTSimpleJSONProtocolFactory()
-		jsProt18 := factory17.GetProtocol(mbTrans15)
+		factory19 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt20 := factory19.GetProtocol(mbTrans17)
 		containerStruct0 := profile.NewProfileServiceSearchProfilesArgs()
-		err19 := containerStruct0.ReadField1(jsProt18)
-		if err19 != nil {
+		err21 := containerStruct0.ReadField1(jsProt20)
+		if err21 != nil {
 			Usage()
 			return
 		}
 		argvalue0 := containerStruct0.OptionMmap
 		value0 := argvalue0
-		arg20 := flag.Arg(2)
-		mbTrans21 := thrift.NewTMemoryBufferLen(len(arg20))
-		defer mbTrans21.Close()
-		_, err22 := mbTrans21.WriteString(arg20)
-		if err22 != nil {
+		arg22 := flag.Arg(2)
+		mbTrans23 := thrift.NewTMemoryBufferLen(len(arg22))
+		defer mbTrans23.Close()
+		_, err24 := mbTrans23.WriteString(arg22)
+		if err24 != nil {
 			Usage()
 			return
 		}
-		factory23 := thrift.NewTSimpleJSONProtocolFactory()
-		jsProt24 := factory23.GetProtocol(mbTrans21)
+		factory25 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt26 := factory25.GetProtocol(mbTrans23)
 		containerStruct1 := profile.NewProfileServiceSearchProfilesArgs()
-		err25 := containerStruct1.ReadField2(jsProt24)
-		if err25 != nil {
+		err27 := containerStruct1.ReadField2(jsProt26)
+		if err27 != nil {
 			Usage()
 			return
 		}
 		argvalue1 := containerStruct1.KeyMmap
 		value1 := argvalue1
-		argvalue2, err26 := (strconv.ParseInt(flag.Arg(3), 10, 64))
-		if err26 != nil {
+		argvalue2, err28 := (strconv.ParseInt(flag.Arg(3), 10, 64))
+		if err28 != nil {
 			Usage()
 			return
 		}
 		value2 := argvalue2
-		argvalue3, err27 := (strconv.ParseInt(flag.Arg(4), 10, 64))
-		if err27 != nil {
+		argvalue3, err29 := (strconv.ParseInt(flag.Arg(4), 10, 64))
+		if err29 != nil {
 			Usage()
 			return
 		}

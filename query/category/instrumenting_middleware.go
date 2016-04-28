@@ -13,9 +13,18 @@ type instrumentingMiddleware struct {
 	requestDuration metrics.TimeHistogram
 }
 
+func (m instrumentingMiddleware) Ping() (v string) {
+	defer func(begin time.Time) {
+		methodField := metrics.Field{Key: "method", Value: "Ping"}
+		m.requestDuration.With(methodField).Observe(time.Since(begin))
+	}(time.Now())
+	v = m.CategoryService.Ping()
+	return
+}
+
 func (m instrumentingMiddleware) SayHi(name string) (v string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "concat"}
+		methodField := metrics.Field{Key: "method", Value: "SayHi"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
 	v = m.CategoryService.SayHi(name)
