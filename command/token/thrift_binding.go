@@ -8,6 +8,10 @@ type thriftBinding struct {
 	service.TokenService
 }
 
+func (tb thriftBinding) Ping() (string, error) {
+	return tb.TokenService.Ping(), nil
+}
+
 func (tb thriftBinding) NewToken_(key string, ttype int64) (string, error) {
 	return tb.TokenService.NewToken_(key, ttype), nil
 }

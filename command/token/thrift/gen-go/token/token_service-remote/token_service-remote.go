@@ -20,6 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
+	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  string NewToken(string key, i64 ttype)")
 	fmt.Fprintln(os.Stderr, "  bool DeleteToken(string key, i64 ttype)")
 	fmt.Fprintln(os.Stderr)
@@ -116,6 +117,14 @@ func main() {
 	}
 
 	switch cmd {
+	case "Ping":
+		if flag.NArg()-1 != 0 {
+			fmt.Fprintln(os.Stderr, "Ping requires 0 args")
+			flag.Usage()
+		}
+		fmt.Print(client.Ping())
+		fmt.Print("\n")
+		break
 	case "NewToken":
 		if flag.NArg()-1 != 2 {
 			fmt.Fprintln(os.Stderr, "NewToken_ requires 2 args")
@@ -123,8 +132,8 @@ func main() {
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		argvalue1, err7 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err7 != nil {
+		argvalue1, err9 := (strconv.ParseInt(flag.Arg(2), 10, 64))
+		if err9 != nil {
 			Usage()
 			return
 		}
@@ -139,8 +148,8 @@ func main() {
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		argvalue1, err9 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err9 != nil {
+		argvalue1, err11 := (strconv.ParseInt(flag.Arg(2), 10, 64))
+		if err11 != nil {
 			Usage()
 			return
 		}

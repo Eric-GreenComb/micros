@@ -8,6 +8,11 @@ type thriftBinding struct {
 	service.ProfileService
 }
 
+func (tb thriftBinding) Ping() (string, error) {
+	r := tb.ProfileService.Ping()
+	return r, nil
+}
+
 func (tb thriftBinding) AddProfile(json_profile string) (string, error) {
 	r := tb.ProfileService.AddProfile(json_profile)
 	return r, nil

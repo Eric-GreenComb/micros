@@ -16,6 +16,10 @@ func newInmemService() service.TokenService {
 	return &inmemService{}
 }
 
+func (self *inmemService) Ping() string {
+	return "pong"
+}
+
 func (self *inmemService) NewToken_(key string, ttype int64) string {
 	_uuid := uuid.UUID()
 

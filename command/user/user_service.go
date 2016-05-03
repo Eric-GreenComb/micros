@@ -13,6 +13,10 @@ func newInmemService() service.UserService {
 	return &inmemService{}
 }
 
+func (self *inmemService) Ping() (r string) {
+	return "pong"
+}
+
 func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	// var _user bean.User
 	// _user.Email = email

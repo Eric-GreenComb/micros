@@ -11,6 +11,11 @@ func newInmemService() service.ProfileService {
 	return &inmemService{}
 }
 
+func (self *inmemService) Ping() (r string) {
+	r = "pong"
+	return
+}
+
 func (self *inmemService) AddProfile(json_profile string) (r string) {
 	r = json_profile
 	return

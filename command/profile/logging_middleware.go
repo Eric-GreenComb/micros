@@ -13,6 +13,18 @@ type loggingMiddleware struct {
 	log.Logger
 }
 
+func (m loggingMiddleware) Ping() (r string) {
+	defer func(begin time.Time) {
+		m.Logger.Log(
+			"method", "Ping",
+			"r", r,
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+	r = m.ProfileService.Ping()
+	return
+}
+
 func (m loggingMiddleware) AddProfile(json_profile string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(

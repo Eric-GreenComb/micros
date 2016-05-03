@@ -4,6 +4,7 @@ import ()
 
 // TokenService is the abstract representation of this service.
 type TokenService interface {
+	Ping() string
 	// Parameters:
 	//  - Key
 	//  - Ttype

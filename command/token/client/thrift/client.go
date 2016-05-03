@@ -17,6 +17,15 @@ type client struct {
 	log.Logger
 }
 
+func (c client) Ping() string {
+	reply, err := c.TokenServiceClient.Ping()
+	if err != nil {
+		c.Logger.Log("err", err)
+		return ""
+	}
+	return reply
+}
+
 func (c client) NewToken_(key string, ttype int64) string {
 	reply, err := c.TokenServiceClient.NewToken_(key, ttype)
 	if err != nil {

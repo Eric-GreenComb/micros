@@ -8,6 +8,11 @@ type thriftBinding struct {
 	service.UserService
 }
 
+func (tb thriftBinding) Ping() (string, error) {
+	r := tb.UserService.Ping()
+	return r, nil
+}
+
 func (tb thriftBinding) CreateUser(mmap map[string]string) (string, error) {
 	r := tb.UserService.CreateUser(mmap)
 	return r, nil

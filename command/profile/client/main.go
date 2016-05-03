@@ -83,6 +83,9 @@ func main() {
 
 	begin := time.Now()
 	switch method {
+	case "ping":
+		v := svc.Ping()
+		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
 	case "add":
 		json_profile := s1

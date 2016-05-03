@@ -20,6 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
+	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  string CreateUser( mmap)")
 	fmt.Fprintln(os.Stderr, "  bool ResetPwd(string email, string newpwd)")
 	fmt.Fprintln(os.Stderr, "  bool ActiveUser(string email)")
@@ -117,24 +118,32 @@ func main() {
 	}
 
 	switch cmd {
+	case "Ping":
+		if flag.NArg()-1 != 0 {
+			fmt.Fprintln(os.Stderr, "Ping requires 0 args")
+			flag.Usage()
+		}
+		fmt.Print(client.Ping())
+		fmt.Print("\n")
+		break
 	case "CreateUser":
 		if flag.NArg()-1 != 1 {
 			fmt.Fprintln(os.Stderr, "CreateUser requires 1 args")
 			flag.Usage()
 		}
-		arg10 := flag.Arg(1)
-		mbTrans11 := thrift.NewTMemoryBufferLen(len(arg10))
-		defer mbTrans11.Close()
-		_, err12 := mbTrans11.WriteString(arg10)
-		if err12 != nil {
+		arg12 := flag.Arg(1)
+		mbTrans13 := thrift.NewTMemoryBufferLen(len(arg12))
+		defer mbTrans13.Close()
+		_, err14 := mbTrans13.WriteString(arg12)
+		if err14 != nil {
 			Usage()
 			return
 		}
-		factory13 := thrift.NewTSimpleJSONProtocolFactory()
-		jsProt14 := factory13.GetProtocol(mbTrans11)
+		factory15 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt16 := factory15.GetProtocol(mbTrans13)
 		containerStruct0 := user.NewUserServiceCreateUserArgs()
-		err15 := containerStruct0.ReadField1(jsProt14)
-		if err15 != nil {
+		err17 := containerStruct0.ReadField1(jsProt16)
+		if err17 != nil {
 			Usage()
 			return
 		}
