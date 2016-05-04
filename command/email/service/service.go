@@ -5,16 +5,25 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 
-	gatherbean "github.com/banerwai/gather/command/bean"
 	gatherredis "github.com/banerwai/gather/common/redis"
 	"github.com/banerwai/gommon/net/smtp"
 )
+
+type Email struct {
+	Host     string `json:"host"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	To       string `json:"to"`
+	Subject  string `json:"subject"`
+	Body     string `json:"body"`
+	Mailtype string `json:"type"`
+}
 
 type EmailService struct {
 }
 
 func (self *EmailService) SendEmail(json string) bool {
-	var _email gatherbean.Email
+	var _email Email
 	_err := self.Unmarshal(json, &_email)
 	if _err != nil {
 		return false
@@ -25,7 +34,7 @@ func (self *EmailService) SendEmail(json string) bool {
 	return true
 }
 
-func (self *EmailService) goSendEmail(_email gatherbean.Email) {
+func (self *EmailService) goSendEmail(_email Email) {
 	var _server smtp.Email
 	_server.Server(_email.Host, _email.User, _email.Password)
 	_server.Send(_email.To, _email.Subject, _email.Body, _email.Mailtype)

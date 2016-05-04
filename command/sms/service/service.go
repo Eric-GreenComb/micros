@@ -5,16 +5,22 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 
-	gatherbean "github.com/banerwai/gather/command/bean"
 	gatherredis "github.com/banerwai/gather/common/redis"
-	"github.com/banerwai/gommon/net/sms"
+	"github.com/banerwai/gommon/openapi/alidayu"
 )
+
+type SMS struct {
+	RecNum          string `json:"rec_num"`
+	SmsFreeSignName string `json:"sms_free_sign_name"`
+	SmsTemplateCode string `json:"sms_template_code"`
+	SmsParam        string `json:"sms_param"`
+}
 
 type SmsService struct {
 }
 
 func (self *SmsService) SendSms(json string) bool {
-	var _sms gatherbean.Sms
+	var _sms SMS
 	_err := self.Unmarshal(json, &_sms)
 	if _err != nil {
 		return false
@@ -25,10 +31,8 @@ func (self *SmsService) SendSms(json string) bool {
 	return true
 }
 
-func (self *SmsService) goSendSms(_sms gatherbean.Sms) {
-	var _api_service sms.SmsApiBean
-	_api_service.Server(_sms.Name, _sms.Pwd, _sms.Content, _sms.Mobile, _sms.Sign, _sms.Extno)
-	_api_service.SendSms("http://web.cr6868.com/asmx/smsservice.aspx")
+func (self *SmsService) goSendSms(sms SMS) {
+	alidayu.SendSMS(sms.RecNum, sms.SmsFreeSignName, sms.SmsTemplateCode, sms.SmsParam)
 }
 
 func (self *SmsService) LPOP4Redis(key string) error {

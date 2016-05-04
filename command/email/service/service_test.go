@@ -2,15 +2,12 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
-
-	"github.com/banerwai/gather/bean"
 )
 
 func TestUnmarshal(t *testing.T) {
 
-	_email_bean := bean.Email{}
+	_email_bean := Email{}
 	// change email
 	_email_bean.Host = "smtp.126.com:25"
 	_email_bean.User = "xxx@126.com"
@@ -25,11 +22,12 @@ func TestUnmarshal(t *testing.T) {
 		t.Errorf("TestUnmarshal error")
 	}
 
-	var _email_out bean.Email
+	var _email_out Email
 	var _service EmailService
 	_service.Unmarshal(string(b), &_email_out)
-	fmt.Println(_email_out.Host)
-	fmt.Println(_email_out.User)
+	if _email_out.Host != "smtp.126.com:25" {
+		t.Errorf("Unmarshal error")
+	}
 }
 
 func TestLPOP4Redis(t *testing.T) {
