@@ -21,7 +21,7 @@ import (
 
 func main() {
 	var (
-		thriftAddr       = flag.String("thrift.addr", "localhost:6060", "Address for Thrift server")
+		thriftAddr       = flag.String("thrift.addr", "localhost:36060", "Address for Thrift server")
 		thriftProtocol   = flag.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
@@ -89,7 +89,6 @@ func main() {
 	case "ping":
 		v := svc.Ping()
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
-
 
 	case "create":
 

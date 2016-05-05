@@ -39,7 +39,7 @@ func main() {
 	// of glog. So, we define a new flag set, to keep those domains distinct.
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	var (
-		thriftAddr       = fs.String("thrift.addr", ":9040", "Address for Thrift server")
+		thriftAddr       = fs.String("thrift.addr", ":39040", "Address for Thrift server")
 		thriftProtocol   = fs.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = fs.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = fs.Bool("thrift.framed", false, "true to enable framing")
