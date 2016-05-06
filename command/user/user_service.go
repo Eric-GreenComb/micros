@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/banerwai/gommon/crypto"
 	"github.com/banerwai/micros/command/user/service"
 	"labix.org/v2/mgo/bson"
 	"time"
@@ -35,6 +36,11 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	// email is a index, if email has ,insert is err
 	_mongo_m := bson.M{}
 
+	if _, ok := mmap["pwd"]; ok {
+		_b, _ := crypto.GenerateHash(mmap["pwd"])
+		mmap["pwd"] = string(_b)
+	}
+
 	for k, v := range mmap {
 		_mongo_m[k] = v
 	}
@@ -49,12 +55,13 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	if err != nil {
 		return err.Error()
 	}
-	return ""
+	return "OK"
 }
 
 func (self *inmemService) ResetPwd(email string, newpwd string) (r bool) {
 	r = true
-	err := UsersCollection.Update(bson.M{"email": email}, bson.M{"$set": bson.M{"pwd": newpwd}})
+	_b, _ := crypto.GenerateHash(newpwd)
+	err := UsersCollection.Update(bson.M{"email": email}, bson.M{"$set": bson.M{"pwd": string(_b)}})
 	if nil != err {
 		r = false
 	}
