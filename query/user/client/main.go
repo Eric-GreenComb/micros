@@ -18,7 +18,7 @@ import (
 
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
 
-	"github.com/banerwai/gather/dto"
+	"github.com/banerwai/gather/bean"
 	"labix.org/v2/mgo/bson"
 )
 
@@ -94,7 +94,7 @@ func main() {
 	case "get":
 		email := s1
 		_v := svc.GetUser(email)
-		_user := dto.UserDto{}
+		_user := bean.UserDto{}
 		if len(_v) == 0 {
 			return
 		}
