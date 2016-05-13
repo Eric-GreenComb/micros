@@ -12,19 +12,16 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	thriftclient "github.com/banerwai/micros/query/user/client/thrift"
-	"github.com/banerwai/micros/query/user/service"
-	thriftuser "github.com/banerwai/micros/query/user/thrift/gen-go/user"
+	thriftclient "github.com/banerwai/micros/command/workhistory/client/thrift"
+	"github.com/banerwai/micros/command/workhistory/service"
+	thriftworkhistory "github.com/banerwai/micros/command/workhistory/thrift/gen-go/workhistory"
 
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
-
-	"github.com/banerwai/global/bean"
-	"labix.org/v2/mgo/bson"
 )
 
 func main() {
 	var (
-		thriftAddr       = flag.String("thrift.addr", "localhost:39060", "Address for Thrift server")
+		thriftAddr       = flag.String("thrift.addr", "localhost:36080", "Address for Thrift server")
 		thriftProtocol   = flag.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
@@ -45,7 +42,7 @@ func main() {
 	logger = log.NewLogfmtLogger(os.Stdout)
 	logger = log.NewContext(logger).With("caller", log.DefaultCaller)
 
-	var svc service.UserService
+	var svc service.WorkHistoryService
 
 	var protocolFactory thrift.TProtocolFactory
 	switch *thriftProtocol {
@@ -81,29 +78,24 @@ func main() {
 		logger.Log("during", "thrift transport.Open", "err", err)
 		os.Exit(1)
 	}
-	cli := thriftuser.NewUserServiceClientFactory(trans, protocolFactory)
+	cli := thriftworkhistory.NewWorkHistoryServiceClientFactory(trans, protocolFactory)
 	svc = thriftclient.New(cli, logger)
 
 	begin := time.Now()
 	switch method {
-
 	case "ping":
 		v := svc.Ping()
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
-	case "get":
-		email := s1
-		_v := svc.GetUser(email)
-		_user := bean.UserDto{}
-		if len(_v) == 0 {
-			return
-		}
-		bson.Unmarshal([]byte(_v), &_user)
-		logger.Log("method", "GetUser", "email", email, "v", _user.Email, "took", time.Since(begin))
+	case "add":
+		_json := s1
+		v := svc.AddWorkHistory(_json)
+		logger.Log("method", "AddWorkHistory", "_json", _json, "v", v, "took", time.Since(begin))
 
-	case "count":
-		v := svc.CountUser()
-		logger.Log("method", "CountUser", "v", v, "took", time.Since(begin))
+	case "update":
+		_json := s1
+		v := svc.UpdateWorkHistory(_json)
+		logger.Log("method", "UpdateWorkHistory", "_json", _json, "v", v, "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

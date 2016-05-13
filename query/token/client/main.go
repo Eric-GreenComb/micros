@@ -17,7 +17,7 @@ import (
 	"github.com/banerwai/micros/query/token/service"
 	thrifttoken "github.com/banerwai/micros/query/token/thrift/gen-go/token"
 
-	"github.com/banerwai/gather/bean"
+	"github.com/banerwai/global/bean"
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
 )
 
