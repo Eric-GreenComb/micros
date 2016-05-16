@@ -38,7 +38,7 @@ func main() {
 	_instances := strings.Split(*thriftAddr, ",")
 	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
 
-	method, s1, s2 := flag.Arg(0), flag.Arg(1), flag.Arg(2)
+	methodz := flag.Arg(0), flag.Arg(1), flag.Arg(2)
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(os.Stdout)

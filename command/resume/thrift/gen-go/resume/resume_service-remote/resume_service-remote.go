@@ -21,8 +21,15 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string AddResume(string json_resume)")
-	fmt.Fprintln(os.Stderr, "  string UpdateResume(string json_resume)")
+	fmt.Fprintln(os.Stderr, "  string AddResume(string resume)")
+	fmt.Fprintln(os.Stderr, "  string UpdateResume(string userid, string resume)")
+	fmt.Fprintln(os.Stderr, "  string UpdateResumeBase(string userid,  mmap)")
+	fmt.Fprintln(os.Stderr, "  string UpdateResumeSkillExperience(string userid, string experience_levels)")
+	fmt.Fprintln(os.Stderr, "  string UpdateResumeToolandArchs(string userid, string tool_archs)")
+	fmt.Fprintln(os.Stderr, "  string UpdateResumePortfolioes(string userid, string portfolioes)")
+	fmt.Fprintln(os.Stderr, "  string UpdateResumeEmploymentHistories(string userid, string employment_histories)")
+	fmt.Fprintln(os.Stderr, "  string UpdateResumeEducations(string userid, string educations)")
+	fmt.Fprintln(os.Stderr, "  string UpdateResumeOtherExperiences(string userid, string other_experiences)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -136,13 +143,115 @@ func main() {
 		fmt.Print("\n")
 		break
 	case "UpdateResume":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "UpdateResume requires 1 args")
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateResume requires 2 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.UpdateResume(value0))
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateResume(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateResumeBase":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateResumeBase requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		arg28 := flag.Arg(2)
+		mbTrans29 := thrift.NewTMemoryBufferLen(len(arg28))
+		defer mbTrans29.Close()
+		_, err30 := mbTrans29.WriteString(arg28)
+		if err30 != nil {
+			Usage()
+			return
+		}
+		factory31 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt32 := factory31.GetProtocol(mbTrans29)
+		containerStruct1 := resume.NewResumeServiceUpdateResumeBaseArgs()
+		err33 := containerStruct1.ReadField2(jsProt32)
+		if err33 != nil {
+			Usage()
+			return
+		}
+		argvalue1 := containerStruct1.Mmap
+		value1 := argvalue1
+		fmt.Print(client.UpdateResumeBase(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateResumeSkillExperience":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateResumeSkillExperience requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateResumeSkillExperience(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateResumeToolandArchs":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateResumeToolandArchs requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateResumeToolandArchs(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateResumePortfolioes":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateResumePortfolioes requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateResumePortfolioes(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateResumeEmploymentHistories":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateResumeEmploymentHistories requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateResumeEmploymentHistories(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateResumeEducations":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateResumeEducations requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateResumeEducations(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateResumeOtherExperiences":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateResumeOtherExperiences requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateResumeOtherExperiences(value0, value1))
 		fmt.Print("\n")
 		break
 	case "":

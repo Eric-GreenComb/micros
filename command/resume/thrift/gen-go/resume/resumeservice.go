@@ -17,11 +17,40 @@ var _ = bytes.Equal
 type ResumeService interface {
 	Ping() (r string, err error)
 	// Parameters:
-	//  - JSONResume
-	AddResume(json_resume string) (r string, err error)
+	//  - Resume
+	AddResume(resume string) (r string, err error)
 	// Parameters:
-	//  - JSONResume
-	UpdateResume(json_resume string) (r string, err error)
+	//  - Userid
+	//  - Resume
+	UpdateResume(userid string, resume string) (r string, err error)
+	// Parameters:
+	//  - Userid
+	//  - Mmap
+	UpdateResumeBase(userid string, mmap map[string]string) (r string, err error)
+	// Parameters:
+	//  - Userid
+	//  - ExperienceLevels
+	UpdateResumeSkillExperience(userid string, experience_levels string) (r string, err error)
+	// Parameters:
+	//  - Userid
+	//  - ToolArchs
+	UpdateResumeToolandArchs(userid string, tool_archs string) (r string, err error)
+	// Parameters:
+	//  - Userid
+	//  - Portfolioes
+	UpdateResumePortfolioes(userid string, portfolioes string) (r string, err error)
+	// Parameters:
+	//  - Userid
+	//  - EmploymentHistories
+	UpdateResumeEmploymentHistories(userid string, employment_histories string) (r string, err error)
+	// Parameters:
+	//  - Userid
+	//  - Educations
+	UpdateResumeEducations(userid string, educations string) (r string, err error)
+	// Parameters:
+	//  - Userid
+	//  - OtherExperiences
+	UpdateResumeOtherExperiences(userid string, other_experiences string) (r string, err error)
 }
 
 type ResumeServiceClient struct {
@@ -124,15 +153,15 @@ func (p *ResumeServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
-//  - JSONResume
-func (p *ResumeServiceClient) AddResume(json_resume string) (r string, err error) {
-	if err = p.sendAddResume(json_resume); err != nil {
+//  - Resume
+func (p *ResumeServiceClient) AddResume(resume string) (r string, err error) {
+	if err = p.sendAddResume(resume); err != nil {
 		return
 	}
 	return p.recvAddResume()
 }
 
-func (p *ResumeServiceClient) sendAddResume(json_resume string) (err error) {
+func (p *ResumeServiceClient) sendAddResume(resume string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -143,7 +172,7 @@ func (p *ResumeServiceClient) sendAddResume(json_resume string) (err error) {
 		return
 	}
 	args := ResumeServiceAddResumeArgs{
-		JSONResume: json_resume,
+		Resume: resume,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -201,15 +230,16 @@ func (p *ResumeServiceClient) recvAddResume() (value string, err error) {
 }
 
 // Parameters:
-//  - JSONResume
-func (p *ResumeServiceClient) UpdateResume(json_resume string) (r string, err error) {
-	if err = p.sendUpdateResume(json_resume); err != nil {
+//  - Userid
+//  - Resume
+func (p *ResumeServiceClient) UpdateResume(userid string, resume string) (r string, err error) {
+	if err = p.sendUpdateResume(userid, resume); err != nil {
 		return
 	}
 	return p.recvUpdateResume()
 }
 
-func (p *ResumeServiceClient) sendUpdateResume(json_resume string) (err error) {
+func (p *ResumeServiceClient) sendUpdateResume(userid string, resume string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -220,7 +250,8 @@ func (p *ResumeServiceClient) sendUpdateResume(json_resume string) (err error) {
 		return
 	}
 	args := ResumeServiceUpdateResumeArgs{
-		JSONResume: json_resume,
+		Userid: userid,
+		Resume: resume,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -277,6 +308,559 @@ func (p *ResumeServiceClient) recvUpdateResume() (value string, err error) {
 	return
 }
 
+// Parameters:
+//  - Userid
+//  - Mmap
+func (p *ResumeServiceClient) UpdateResumeBase(userid string, mmap map[string]string) (r string, err error) {
+	if err = p.sendUpdateResumeBase(userid, mmap); err != nil {
+		return
+	}
+	return p.recvUpdateResumeBase()
+}
+
+func (p *ResumeServiceClient) sendUpdateResumeBase(userid string, mmap map[string]string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("UpdateResumeBase", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ResumeServiceUpdateResumeBaseArgs{
+		Userid: userid,
+		Mmap:   mmap,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ResumeServiceClient) recvUpdateResumeBase() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "UpdateResumeBase" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "UpdateResumeBase failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "UpdateResumeBase failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error7 error
+		error7, err = error6.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error7
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "UpdateResumeBase failed: invalid message type")
+		return
+	}
+	result := ResumeServiceUpdateResumeBaseResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - Userid
+//  - ExperienceLevels
+func (p *ResumeServiceClient) UpdateResumeSkillExperience(userid string, experience_levels string) (r string, err error) {
+	if err = p.sendUpdateResumeSkillExperience(userid, experience_levels); err != nil {
+		return
+	}
+	return p.recvUpdateResumeSkillExperience()
+}
+
+func (p *ResumeServiceClient) sendUpdateResumeSkillExperience(userid string, experience_levels string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("UpdateResumeSkillExperience", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ResumeServiceUpdateResumeSkillExperienceArgs{
+		Userid:           userid,
+		ExperienceLevels: experience_levels,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ResumeServiceClient) recvUpdateResumeSkillExperience() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "UpdateResumeSkillExperience" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "UpdateResumeSkillExperience failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "UpdateResumeSkillExperience failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error8 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error9 error
+		error9, err = error8.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error9
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "UpdateResumeSkillExperience failed: invalid message type")
+		return
+	}
+	result := ResumeServiceUpdateResumeSkillExperienceResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - Userid
+//  - ToolArchs
+func (p *ResumeServiceClient) UpdateResumeToolandArchs(userid string, tool_archs string) (r string, err error) {
+	if err = p.sendUpdateResumeToolandArchs(userid, tool_archs); err != nil {
+		return
+	}
+	return p.recvUpdateResumeToolandArchs()
+}
+
+func (p *ResumeServiceClient) sendUpdateResumeToolandArchs(userid string, tool_archs string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("UpdateResumeToolandArchs", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ResumeServiceUpdateResumeToolandArchsArgs{
+		Userid:    userid,
+		ToolArchs: tool_archs,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ResumeServiceClient) recvUpdateResumeToolandArchs() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "UpdateResumeToolandArchs" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "UpdateResumeToolandArchs failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "UpdateResumeToolandArchs failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error10 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error11 error
+		error11, err = error10.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error11
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "UpdateResumeToolandArchs failed: invalid message type")
+		return
+	}
+	result := ResumeServiceUpdateResumeToolandArchsResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - Userid
+//  - Portfolioes
+func (p *ResumeServiceClient) UpdateResumePortfolioes(userid string, portfolioes string) (r string, err error) {
+	if err = p.sendUpdateResumePortfolioes(userid, portfolioes); err != nil {
+		return
+	}
+	return p.recvUpdateResumePortfolioes()
+}
+
+func (p *ResumeServiceClient) sendUpdateResumePortfolioes(userid string, portfolioes string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("UpdateResumePortfolioes", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ResumeServiceUpdateResumePortfolioesArgs{
+		Userid:      userid,
+		Portfolioes: portfolioes,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ResumeServiceClient) recvUpdateResumePortfolioes() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "UpdateResumePortfolioes" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "UpdateResumePortfolioes failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "UpdateResumePortfolioes failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error12 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error13 error
+		error13, err = error12.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error13
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "UpdateResumePortfolioes failed: invalid message type")
+		return
+	}
+	result := ResumeServiceUpdateResumePortfolioesResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - Userid
+//  - EmploymentHistories
+func (p *ResumeServiceClient) UpdateResumeEmploymentHistories(userid string, employment_histories string) (r string, err error) {
+	if err = p.sendUpdateResumeEmploymentHistories(userid, employment_histories); err != nil {
+		return
+	}
+	return p.recvUpdateResumeEmploymentHistories()
+}
+
+func (p *ResumeServiceClient) sendUpdateResumeEmploymentHistories(userid string, employment_histories string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("UpdateResumeEmploymentHistories", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ResumeServiceUpdateResumeEmploymentHistoriesArgs{
+		Userid:              userid,
+		EmploymentHistories: employment_histories,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ResumeServiceClient) recvUpdateResumeEmploymentHistories() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "UpdateResumeEmploymentHistories" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "UpdateResumeEmploymentHistories failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "UpdateResumeEmploymentHistories failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error14 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error15 error
+		error15, err = error14.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error15
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "UpdateResumeEmploymentHistories failed: invalid message type")
+		return
+	}
+	result := ResumeServiceUpdateResumeEmploymentHistoriesResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - Userid
+//  - Educations
+func (p *ResumeServiceClient) UpdateResumeEducations(userid string, educations string) (r string, err error) {
+	if err = p.sendUpdateResumeEducations(userid, educations); err != nil {
+		return
+	}
+	return p.recvUpdateResumeEducations()
+}
+
+func (p *ResumeServiceClient) sendUpdateResumeEducations(userid string, educations string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("UpdateResumeEducations", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ResumeServiceUpdateResumeEducationsArgs{
+		Userid:     userid,
+		Educations: educations,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ResumeServiceClient) recvUpdateResumeEducations() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "UpdateResumeEducations" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "UpdateResumeEducations failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "UpdateResumeEducations failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error16 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error17 error
+		error17, err = error16.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error17
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "UpdateResumeEducations failed: invalid message type")
+		return
+	}
+	result := ResumeServiceUpdateResumeEducationsResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - Userid
+//  - OtherExperiences
+func (p *ResumeServiceClient) UpdateResumeOtherExperiences(userid string, other_experiences string) (r string, err error) {
+	if err = p.sendUpdateResumeOtherExperiences(userid, other_experiences); err != nil {
+		return
+	}
+	return p.recvUpdateResumeOtherExperiences()
+}
+
+func (p *ResumeServiceClient) sendUpdateResumeOtherExperiences(userid string, other_experiences string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("UpdateResumeOtherExperiences", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ResumeServiceUpdateResumeOtherExperiencesArgs{
+		Userid:           userid,
+		OtherExperiences: other_experiences,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ResumeServiceClient) recvUpdateResumeOtherExperiences() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "UpdateResumeOtherExperiences" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "UpdateResumeOtherExperiences failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "UpdateResumeOtherExperiences failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error18 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error19 error
+		error19, err = error18.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error19
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "UpdateResumeOtherExperiences failed: invalid message type")
+		return
+	}
+	result := ResumeServiceUpdateResumeOtherExperiencesResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
 type ResumeServiceProcessor struct {
 	processorMap map[string]thrift.TProcessorFunction
 	handler      ResumeService
@@ -297,11 +881,18 @@ func (p *ResumeServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFunc
 
 func NewResumeServiceProcessor(handler ResumeService) *ResumeServiceProcessor {
 
-	self6 := &ResumeServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self6.processorMap["Ping"] = &resumeServiceProcessorPing{handler: handler}
-	self6.processorMap["AddResume"] = &resumeServiceProcessorAddResume{handler: handler}
-	self6.processorMap["UpdateResume"] = &resumeServiceProcessorUpdateResume{handler: handler}
-	return self6
+	self20 := &ResumeServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self20.processorMap["Ping"] = &resumeServiceProcessorPing{handler: handler}
+	self20.processorMap["AddResume"] = &resumeServiceProcessorAddResume{handler: handler}
+	self20.processorMap["UpdateResume"] = &resumeServiceProcessorUpdateResume{handler: handler}
+	self20.processorMap["UpdateResumeBase"] = &resumeServiceProcessorUpdateResumeBase{handler: handler}
+	self20.processorMap["UpdateResumeSkillExperience"] = &resumeServiceProcessorUpdateResumeSkillExperience{handler: handler}
+	self20.processorMap["UpdateResumeToolandArchs"] = &resumeServiceProcessorUpdateResumeToolandArchs{handler: handler}
+	self20.processorMap["UpdateResumePortfolioes"] = &resumeServiceProcessorUpdateResumePortfolioes{handler: handler}
+	self20.processorMap["UpdateResumeEmploymentHistories"] = &resumeServiceProcessorUpdateResumeEmploymentHistories{handler: handler}
+	self20.processorMap["UpdateResumeEducations"] = &resumeServiceProcessorUpdateResumeEducations{handler: handler}
+	self20.processorMap["UpdateResumeOtherExperiences"] = &resumeServiceProcessorUpdateResumeOtherExperiences{handler: handler}
+	return self20
 }
 
 func (p *ResumeServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -314,12 +905,12 @@ func (p *ResumeServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x7 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x21 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x7.Write(oprot)
+	x21.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x7
+	return false, x21
 
 }
 
@@ -391,7 +982,7 @@ func (p *resumeServiceProcessorAddResume) Process(seqId int32, iprot, oprot thri
 	result := ResumeServiceAddResumeResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.AddResume(args.JSONResume); err2 != nil {
+	if retval, err2 = p.handler.AddResume(args.Resume); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing AddResume: "+err2.Error())
 		oprot.WriteMessageBegin("AddResume", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -439,7 +1030,7 @@ func (p *resumeServiceProcessorUpdateResume) Process(seqId int32, iprot, oprot t
 	result := ResumeServiceUpdateResumeResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.UpdateResume(args.JSONResume); err2 != nil {
+	if retval, err2 = p.handler.UpdateResume(args.Userid, args.Resume); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateResume: "+err2.Error())
 		oprot.WriteMessageBegin("UpdateResume", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -450,6 +1041,342 @@ func (p *resumeServiceProcessorUpdateResume) Process(seqId int32, iprot, oprot t
 		result.Success = &retval
 	}
 	if err2 = oprot.WriteMessageBegin("UpdateResume", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type resumeServiceProcessorUpdateResumeBase struct {
+	handler ResumeService
+}
+
+func (p *resumeServiceProcessorUpdateResumeBase) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ResumeServiceUpdateResumeBaseArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("UpdateResumeBase", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ResumeServiceUpdateResumeBaseResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.UpdateResumeBase(args.Userid, args.Mmap); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateResumeBase: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateResumeBase", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("UpdateResumeBase", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type resumeServiceProcessorUpdateResumeSkillExperience struct {
+	handler ResumeService
+}
+
+func (p *resumeServiceProcessorUpdateResumeSkillExperience) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ResumeServiceUpdateResumeSkillExperienceArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("UpdateResumeSkillExperience", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ResumeServiceUpdateResumeSkillExperienceResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.UpdateResumeSkillExperience(args.Userid, args.ExperienceLevels); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateResumeSkillExperience: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateResumeSkillExperience", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("UpdateResumeSkillExperience", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type resumeServiceProcessorUpdateResumeToolandArchs struct {
+	handler ResumeService
+}
+
+func (p *resumeServiceProcessorUpdateResumeToolandArchs) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ResumeServiceUpdateResumeToolandArchsArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("UpdateResumeToolandArchs", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ResumeServiceUpdateResumeToolandArchsResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.UpdateResumeToolandArchs(args.Userid, args.ToolArchs); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateResumeToolandArchs: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateResumeToolandArchs", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("UpdateResumeToolandArchs", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type resumeServiceProcessorUpdateResumePortfolioes struct {
+	handler ResumeService
+}
+
+func (p *resumeServiceProcessorUpdateResumePortfolioes) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ResumeServiceUpdateResumePortfolioesArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("UpdateResumePortfolioes", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ResumeServiceUpdateResumePortfolioesResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.UpdateResumePortfolioes(args.Userid, args.Portfolioes); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateResumePortfolioes: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateResumePortfolioes", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("UpdateResumePortfolioes", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type resumeServiceProcessorUpdateResumeEmploymentHistories struct {
+	handler ResumeService
+}
+
+func (p *resumeServiceProcessorUpdateResumeEmploymentHistories) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ResumeServiceUpdateResumeEmploymentHistoriesArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("UpdateResumeEmploymentHistories", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ResumeServiceUpdateResumeEmploymentHistoriesResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.UpdateResumeEmploymentHistories(args.Userid, args.EmploymentHistories); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateResumeEmploymentHistories: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateResumeEmploymentHistories", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("UpdateResumeEmploymentHistories", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type resumeServiceProcessorUpdateResumeEducations struct {
+	handler ResumeService
+}
+
+func (p *resumeServiceProcessorUpdateResumeEducations) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ResumeServiceUpdateResumeEducationsArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("UpdateResumeEducations", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ResumeServiceUpdateResumeEducationsResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.UpdateResumeEducations(args.Userid, args.Educations); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateResumeEducations: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateResumeEducations", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("UpdateResumeEducations", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type resumeServiceProcessorUpdateResumeOtherExperiences struct {
+	handler ResumeService
+}
+
+func (p *resumeServiceProcessorUpdateResumeOtherExperiences) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ResumeServiceUpdateResumeOtherExperiencesArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("UpdateResumeOtherExperiences", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ResumeServiceUpdateResumeOtherExperiencesResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.UpdateResumeOtherExperiences(args.Userid, args.OtherExperiences); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateResumeOtherExperiences: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateResumeOtherExperiences", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("UpdateResumeOtherExperiences", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -625,17 +1552,17 @@ func (p *ResumeServicePingResult) String() string {
 }
 
 // Attributes:
-//  - JSONResume
+//  - Resume
 type ResumeServiceAddResumeArgs struct {
-	JSONResume string `thrift:"json_resume,1" json:"json_resume"`
+	Resume string `thrift:"resume,1" json:"resume"`
 }
 
 func NewResumeServiceAddResumeArgs() *ResumeServiceAddResumeArgs {
 	return &ResumeServiceAddResumeArgs{}
 }
 
-func (p *ResumeServiceAddResumeArgs) GetJSONResume() string {
-	return p.JSONResume
+func (p *ResumeServiceAddResumeArgs) GetResume() string {
+	return p.Resume
 }
 func (p *ResumeServiceAddResumeArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -674,7 +1601,7 @@ func (p *ResumeServiceAddResumeArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.JSONResume = v
+		p.Resume = v
 	}
 	return nil
 }
@@ -696,14 +1623,14 @@ func (p *ResumeServiceAddResumeArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ResumeServiceAddResumeArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_resume", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_resume: ", p), err)
+	if err := oprot.WriteFieldBegin("resume", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:resume: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.JSONResume)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_resume (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.Resume)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.resume (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_resume: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:resume: ", p), err)
 	}
 	return err
 }
@@ -818,17 +1745,23 @@ func (p *ResumeServiceAddResumeResult) String() string {
 }
 
 // Attributes:
-//  - JSONResume
+//  - Userid
+//  - Resume
 type ResumeServiceUpdateResumeArgs struct {
-	JSONResume string `thrift:"json_resume,1" json:"json_resume"`
+	Userid string `thrift:"userid,1" json:"userid"`
+	Resume string `thrift:"resume,2" json:"resume"`
 }
 
 func NewResumeServiceUpdateResumeArgs() *ResumeServiceUpdateResumeArgs {
 	return &ResumeServiceUpdateResumeArgs{}
 }
 
-func (p *ResumeServiceUpdateResumeArgs) GetJSONResume() string {
-	return p.JSONResume
+func (p *ResumeServiceUpdateResumeArgs) GetUserid() string {
+	return p.Userid
+}
+
+func (p *ResumeServiceUpdateResumeArgs) GetResume() string {
+	return p.Resume
 }
 func (p *ResumeServiceUpdateResumeArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -846,6 +1779,10 @@ func (p *ResumeServiceUpdateResumeArgs) Read(iprot thrift.TProtocol) error {
 		switch fieldId {
 		case 1:
 			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
 				return err
 			}
 		default:
@@ -867,7 +1804,16 @@ func (p *ResumeServiceUpdateResumeArgs) readField1(iprot thrift.TProtocol) error
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.JSONResume = v
+		p.Userid = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.Resume = v
 	}
 	return nil
 }
@@ -877,6 +1823,9 @@ func (p *ResumeServiceUpdateResumeArgs) Write(oprot thrift.TProtocol) error {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
 		return err
 	}
 	if err := oprot.WriteFieldStop(); err != nil {
@@ -889,14 +1838,27 @@ func (p *ResumeServiceUpdateResumeArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ResumeServiceUpdateResumeArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_resume", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_resume: ", p), err)
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.JSONResume)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_resume (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_resume: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("resume", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:resume: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Resume)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.resume (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:resume: ", p), err)
 	}
 	return err
 }
@@ -1008,4 +1970,1630 @@ func (p *ResumeServiceUpdateResumeResult) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("ResumeServiceUpdateResumeResult(%+v)", *p)
+}
+
+// Attributes:
+//  - Userid
+//  - Mmap
+type ResumeServiceUpdateResumeBaseArgs struct {
+	Userid string            `thrift:"userid,1" json:"userid"`
+	Mmap   map[string]string `thrift:"mmap,2" json:"mmap"`
+}
+
+func NewResumeServiceUpdateResumeBaseArgs() *ResumeServiceUpdateResumeBaseArgs {
+	return &ResumeServiceUpdateResumeBaseArgs{}
+}
+
+func (p *ResumeServiceUpdateResumeBaseArgs) GetUserid() string {
+	return p.Userid
+}
+
+func (p *ResumeServiceUpdateResumeBaseArgs) GetMmap() map[string]string {
+	return p.Mmap
+}
+func (p *ResumeServiceUpdateResumeBaseArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeBaseArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.Userid = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeBaseArgs) readField2(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
+	if err != nil {
+		return thrift.PrependError("error reading map begin: ", err)
+	}
+	tMap := make(map[string]string, size)
+	p.Mmap = tMap
+	for i := 0; i < size; i++ {
+		var _key22 string
+		if v, err := iprot.ReadString(); err != nil {
+			return thrift.PrependError("error reading field 0: ", err)
+		} else {
+			_key22 = v
+		}
+		var _val23 string
+		if v, err := iprot.ReadString(); err != nil {
+			return thrift.PrependError("error reading field 0: ", err)
+		} else {
+			_val23 = v
+		}
+		p.Mmap[_key22] = _val23
+	}
+	if err := iprot.ReadMapEnd(); err != nil {
+		return thrift.PrependError("error reading map end: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeBaseArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeBase_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeBaseArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeBaseArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("mmap", thrift.MAP, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:mmap: ", p), err)
+	}
+	if err := oprot.WriteMapBegin(thrift.STRING, thrift.STRING, len(p.Mmap)); err != nil {
+		return thrift.PrependError("error writing map begin: ", err)
+	}
+	for k, v := range p.Mmap {
+		if err := oprot.WriteString(string(k)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteString(string(v)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err)
+		}
+	}
+	if err := oprot.WriteMapEnd(); err != nil {
+		return thrift.PrependError("error writing map end: ", err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:mmap: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeBaseArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeBaseArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ResumeServiceUpdateResumeBaseResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewResumeServiceUpdateResumeBaseResult() *ResumeServiceUpdateResumeBaseResult {
+	return &ResumeServiceUpdateResumeBaseResult{}
+}
+
+var ResumeServiceUpdateResumeBaseResult_Success_DEFAULT string
+
+func (p *ResumeServiceUpdateResumeBaseResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ResumeServiceUpdateResumeBaseResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ResumeServiceUpdateResumeBaseResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ResumeServiceUpdateResumeBaseResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeBaseResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeBaseResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeBase_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeBaseResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeBaseResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeBaseResult(%+v)", *p)
+}
+
+// Attributes:
+//  - Userid
+//  - ExperienceLevels
+type ResumeServiceUpdateResumeSkillExperienceArgs struct {
+	Userid           string `thrift:"userid,1" json:"userid"`
+	ExperienceLevels string `thrift:"experience_levels,2" json:"experience_levels"`
+}
+
+func NewResumeServiceUpdateResumeSkillExperienceArgs() *ResumeServiceUpdateResumeSkillExperienceArgs {
+	return &ResumeServiceUpdateResumeSkillExperienceArgs{}
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) GetUserid() string {
+	return p.Userid
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) GetExperienceLevels() string {
+	return p.ExperienceLevels
+}
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.Userid = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.ExperienceLevels = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeSkillExperience_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("experience_levels", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:experience_levels: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.ExperienceLevels)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.experience_levels (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:experience_levels: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeSkillExperienceArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ResumeServiceUpdateResumeSkillExperienceResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewResumeServiceUpdateResumeSkillExperienceResult() *ResumeServiceUpdateResumeSkillExperienceResult {
+	return &ResumeServiceUpdateResumeSkillExperienceResult{}
+}
+
+var ResumeServiceUpdateResumeSkillExperienceResult_Success_DEFAULT string
+
+func (p *ResumeServiceUpdateResumeSkillExperienceResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ResumeServiceUpdateResumeSkillExperienceResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ResumeServiceUpdateResumeSkillExperienceResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeSkillExperience_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeSkillExperienceResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeSkillExperienceResult(%+v)", *p)
+}
+
+// Attributes:
+//  - Userid
+//  - ToolArchs
+type ResumeServiceUpdateResumeToolandArchsArgs struct {
+	Userid    string `thrift:"userid,1" json:"userid"`
+	ToolArchs string `thrift:"tool_archs,2" json:"tool_archs"`
+}
+
+func NewResumeServiceUpdateResumeToolandArchsArgs() *ResumeServiceUpdateResumeToolandArchsArgs {
+	return &ResumeServiceUpdateResumeToolandArchsArgs{}
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) GetUserid() string {
+	return p.Userid
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) GetToolArchs() string {
+	return p.ToolArchs
+}
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.Userid = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.ToolArchs = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeToolandArchs_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("tool_archs", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:tool_archs: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.ToolArchs)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.tool_archs (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:tool_archs: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeToolandArchsArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ResumeServiceUpdateResumeToolandArchsResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewResumeServiceUpdateResumeToolandArchsResult() *ResumeServiceUpdateResumeToolandArchsResult {
+	return &ResumeServiceUpdateResumeToolandArchsResult{}
+}
+
+var ResumeServiceUpdateResumeToolandArchsResult_Success_DEFAULT string
+
+func (p *ResumeServiceUpdateResumeToolandArchsResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ResumeServiceUpdateResumeToolandArchsResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ResumeServiceUpdateResumeToolandArchsResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeToolandArchs_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeToolandArchsResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeToolandArchsResult(%+v)", *p)
+}
+
+// Attributes:
+//  - Userid
+//  - Portfolioes
+type ResumeServiceUpdateResumePortfolioesArgs struct {
+	Userid      string `thrift:"userid,1" json:"userid"`
+	Portfolioes string `thrift:"portfolioes,2" json:"portfolioes"`
+}
+
+func NewResumeServiceUpdateResumePortfolioesArgs() *ResumeServiceUpdateResumePortfolioesArgs {
+	return &ResumeServiceUpdateResumePortfolioesArgs{}
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesArgs) GetUserid() string {
+	return p.Userid
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesArgs) GetPortfolioes() string {
+	return p.Portfolioes
+}
+func (p *ResumeServiceUpdateResumePortfolioesArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.Userid = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.Portfolioes = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumePortfolioes_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("portfolioes", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:portfolioes: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Portfolioes)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.portfolioes (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:portfolioes: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumePortfolioesArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ResumeServiceUpdateResumePortfolioesResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewResumeServiceUpdateResumePortfolioesResult() *ResumeServiceUpdateResumePortfolioesResult {
+	return &ResumeServiceUpdateResumePortfolioesResult{}
+}
+
+var ResumeServiceUpdateResumePortfolioesResult_Success_DEFAULT string
+
+func (p *ResumeServiceUpdateResumePortfolioesResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ResumeServiceUpdateResumePortfolioesResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ResumeServiceUpdateResumePortfolioesResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumePortfolioes_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumePortfolioesResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumePortfolioesResult(%+v)", *p)
+}
+
+// Attributes:
+//  - Userid
+//  - EmploymentHistories
+type ResumeServiceUpdateResumeEmploymentHistoriesArgs struct {
+	Userid              string `thrift:"userid,1" json:"userid"`
+	EmploymentHistories string `thrift:"employment_histories,2" json:"employment_histories"`
+}
+
+func NewResumeServiceUpdateResumeEmploymentHistoriesArgs() *ResumeServiceUpdateResumeEmploymentHistoriesArgs {
+	return &ResumeServiceUpdateResumeEmploymentHistoriesArgs{}
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) GetUserid() string {
+	return p.Userid
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) GetEmploymentHistories() string {
+	return p.EmploymentHistories
+}
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.Userid = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.EmploymentHistories = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeEmploymentHistories_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("employment_histories", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:employment_histories: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.EmploymentHistories)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.employment_histories (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:employment_histories: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeEmploymentHistoriesArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ResumeServiceUpdateResumeEmploymentHistoriesResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewResumeServiceUpdateResumeEmploymentHistoriesResult() *ResumeServiceUpdateResumeEmploymentHistoriesResult {
+	return &ResumeServiceUpdateResumeEmploymentHistoriesResult{}
+}
+
+var ResumeServiceUpdateResumeEmploymentHistoriesResult_Success_DEFAULT string
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ResumeServiceUpdateResumeEmploymentHistoriesResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeEmploymentHistories_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeEmploymentHistoriesResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeEmploymentHistoriesResult(%+v)", *p)
+}
+
+// Attributes:
+//  - Userid
+//  - Educations
+type ResumeServiceUpdateResumeEducationsArgs struct {
+	Userid     string `thrift:"userid,1" json:"userid"`
+	Educations string `thrift:"educations,2" json:"educations"`
+}
+
+func NewResumeServiceUpdateResumeEducationsArgs() *ResumeServiceUpdateResumeEducationsArgs {
+	return &ResumeServiceUpdateResumeEducationsArgs{}
+}
+
+func (p *ResumeServiceUpdateResumeEducationsArgs) GetUserid() string {
+	return p.Userid
+}
+
+func (p *ResumeServiceUpdateResumeEducationsArgs) GetEducations() string {
+	return p.Educations
+}
+func (p *ResumeServiceUpdateResumeEducationsArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEducationsArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.Userid = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEducationsArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.Educations = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEducationsArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeEducations_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEducationsArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeEducationsArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("educations", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:educations: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Educations)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.educations (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:educations: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeEducationsArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeEducationsArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ResumeServiceUpdateResumeEducationsResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewResumeServiceUpdateResumeEducationsResult() *ResumeServiceUpdateResumeEducationsResult {
+	return &ResumeServiceUpdateResumeEducationsResult{}
+}
+
+var ResumeServiceUpdateResumeEducationsResult_Success_DEFAULT string
+
+func (p *ResumeServiceUpdateResumeEducationsResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ResumeServiceUpdateResumeEducationsResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ResumeServiceUpdateResumeEducationsResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ResumeServiceUpdateResumeEducationsResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEducationsResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEducationsResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeEducations_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeEducationsResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeEducationsResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeEducationsResult(%+v)", *p)
+}
+
+// Attributes:
+//  - Userid
+//  - OtherExperiences
+type ResumeServiceUpdateResumeOtherExperiencesArgs struct {
+	Userid           string `thrift:"userid,1" json:"userid"`
+	OtherExperiences string `thrift:"other_experiences,2" json:"other_experiences"`
+}
+
+func NewResumeServiceUpdateResumeOtherExperiencesArgs() *ResumeServiceUpdateResumeOtherExperiencesArgs {
+	return &ResumeServiceUpdateResumeOtherExperiencesArgs{}
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) GetUserid() string {
+	return p.Userid
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) GetOtherExperiences() string {
+	return p.OtherExperiences
+}
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.Userid = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.OtherExperiences = v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeOtherExperiences_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("other_experiences", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:other_experiences: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.OtherExperiences)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.other_experiences (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:other_experiences: ", p), err)
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeOtherExperiencesArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ResumeServiceUpdateResumeOtherExperiencesResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewResumeServiceUpdateResumeOtherExperiencesResult() *ResumeServiceUpdateResumeOtherExperiencesResult {
+	return &ResumeServiceUpdateResumeOtherExperiencesResult{}
+}
+
+var ResumeServiceUpdateResumeOtherExperiencesResult_Success_DEFAULT string
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ResumeServiceUpdateResumeOtherExperiencesResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ResumeServiceUpdateResumeOtherExperiencesResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("UpdateResumeOtherExperiences_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ResumeServiceUpdateResumeOtherExperiencesResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ResumeServiceUpdateResumeOtherExperiencesResult(%+v)", *p)
 }
