@@ -22,11 +22,11 @@ func (m instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) GetResume(id string) (r string) {
+func (m instrumentingMiddleware) GetResume(userid string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GetResume"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ResumeService.GetResume(id)
+	r = m.ResumeService.GetResume(userid)
 	return
 }

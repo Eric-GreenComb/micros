@@ -6,6 +6,6 @@ import ()
 type ResumeService interface {
 	Ping() string
 	// Parameters:
-	//  - ID
-	GetResume(id string) string
+	//  - Userid
+	GetResume(userid string) string
 }

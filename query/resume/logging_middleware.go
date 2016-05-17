@@ -25,15 +25,15 @@ func (m loggingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m loggingMiddleware) GetResume(id string) (r string) {
+func (m loggingMiddleware) GetResume(userid string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetResume",
-			"id", id,
+			"userid", userid,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ResumeService.GetResume(id)
+	r = m.ResumeService.GetResume(userid)
 	return
 }

@@ -17,8 +17,8 @@ var _ = bytes.Equal
 type ResumeService interface {
 	Ping() (r string, err error)
 	// Parameters:
-	//  - ID
-	GetResume(id string) (r string, err error)
+	//  - Userid
+	GetResume(userid string) (r string, err error)
 }
 
 type ResumeServiceClient struct {
@@ -121,15 +121,15 @@ func (p *ResumeServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
-//  - ID
-func (p *ResumeServiceClient) GetResume(id string) (r string, err error) {
-	if err = p.sendGetResume(id); err != nil {
+//  - Userid
+func (p *ResumeServiceClient) GetResume(userid string) (r string, err error) {
+	if err = p.sendGetResume(userid); err != nil {
 		return
 	}
 	return p.recvGetResume()
 }
 
-func (p *ResumeServiceClient) sendGetResume(id string) (err error) {
+func (p *ResumeServiceClient) sendGetResume(userid string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -140,7 +140,7 @@ func (p *ResumeServiceClient) sendGetResume(id string) (err error) {
 		return
 	}
 	args := ResumeServiceGetResumeArgs{
-		ID: id,
+		Userid: userid,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -310,7 +310,7 @@ func (p *resumeServiceProcessorGetResume) Process(seqId int32, iprot, oprot thri
 	result := ResumeServiceGetResumeResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetResume(args.ID); err2 != nil {
+	if retval, err2 = p.handler.GetResume(args.Userid); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetResume: "+err2.Error())
 		oprot.WriteMessageBegin("GetResume", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -496,17 +496,17 @@ func (p *ResumeServicePingResult) String() string {
 }
 
 // Attributes:
-//  - ID
+//  - Userid
 type ResumeServiceGetResumeArgs struct {
-	ID string `thrift:"id,1" json:"id"`
+	Userid string `thrift:"userid,1" json:"userid"`
 }
 
 func NewResumeServiceGetResumeArgs() *ResumeServiceGetResumeArgs {
 	return &ResumeServiceGetResumeArgs{}
 }
 
-func (p *ResumeServiceGetResumeArgs) GetID() string {
-	return p.ID
+func (p *ResumeServiceGetResumeArgs) GetUserid() string {
+	return p.Userid
 }
 func (p *ResumeServiceGetResumeArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -545,7 +545,7 @@ func (p *ResumeServiceGetResumeArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.ID = v
+		p.Userid = v
 	}
 	return nil
 }
@@ -567,14 +567,14 @@ func (p *ResumeServiceGetResumeArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ResumeServiceGetResumeArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:id: ", p), err)
+	if err := oprot.WriteFieldBegin("userid", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userid: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.ID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.id (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.Userid)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.userid (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userid: ", p), err)
 	}
 	return err
 }
