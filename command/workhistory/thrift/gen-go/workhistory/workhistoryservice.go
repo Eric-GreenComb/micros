@@ -17,11 +17,9 @@ var _ = bytes.Equal
 type WorkHistoryService interface {
 	Ping() (r string, err error)
 	// Parameters:
+	//  - ProfileID
 	//  - JSONWorkhistory
-	AddWorkHistory(json_workhistory string) (r string, err error)
-	// Parameters:
-	//  - JSONWorkhistory
-	UpdateWorkHistory(json_workhistory string) (r string, err error)
+	UpdateWorkHistory(profile_id string, json_workhistory string) (r string, err error)
 }
 
 type WorkHistoryServiceClient struct {
@@ -124,92 +122,16 @@ func (p *WorkHistoryServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
+//  - ProfileID
 //  - JSONWorkhistory
-func (p *WorkHistoryServiceClient) AddWorkHistory(json_workhistory string) (r string, err error) {
-	if err = p.sendAddWorkHistory(json_workhistory); err != nil {
-		return
-	}
-	return p.recvAddWorkHistory()
-}
-
-func (p *WorkHistoryServiceClient) sendAddWorkHistory(json_workhistory string) (err error) {
-	oprot := p.OutputProtocol
-	if oprot == nil {
-		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
-		p.OutputProtocol = oprot
-	}
-	p.SeqId++
-	if err = oprot.WriteMessageBegin("AddWorkHistory", thrift.CALL, p.SeqId); err != nil {
-		return
-	}
-	args := WorkHistoryServiceAddWorkHistoryArgs{
-		JSONWorkhistory: json_workhistory,
-	}
-	if err = args.Write(oprot); err != nil {
-		return
-	}
-	if err = oprot.WriteMessageEnd(); err != nil {
-		return
-	}
-	return oprot.Flush()
-}
-
-func (p *WorkHistoryServiceClient) recvAddWorkHistory() (value string, err error) {
-	iprot := p.InputProtocol
-	if iprot == nil {
-		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
-		p.InputProtocol = iprot
-	}
-	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
-	if err != nil {
-		return
-	}
-	if method != "AddWorkHistory" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "AddWorkHistory failed: wrong method name")
-		return
-	}
-	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "AddWorkHistory failed: out of sequence response")
-		return
-	}
-	if mTypeId == thrift.EXCEPTION {
-		error2 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error3 error
-		error3, err = error2.Read(iprot)
-		if err != nil {
-			return
-		}
-		if err = iprot.ReadMessageEnd(); err != nil {
-			return
-		}
-		err = error3
-		return
-	}
-	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "AddWorkHistory failed: invalid message type")
-		return
-	}
-	result := WorkHistoryServiceAddWorkHistoryResult{}
-	if err = result.Read(iprot); err != nil {
-		return
-	}
-	if err = iprot.ReadMessageEnd(); err != nil {
-		return
-	}
-	value = result.GetSuccess()
-	return
-}
-
-// Parameters:
-//  - JSONWorkhistory
-func (p *WorkHistoryServiceClient) UpdateWorkHistory(json_workhistory string) (r string, err error) {
-	if err = p.sendUpdateWorkHistory(json_workhistory); err != nil {
+func (p *WorkHistoryServiceClient) UpdateWorkHistory(profile_id string, json_workhistory string) (r string, err error) {
+	if err = p.sendUpdateWorkHistory(profile_id, json_workhistory); err != nil {
 		return
 	}
 	return p.recvUpdateWorkHistory()
 }
 
-func (p *WorkHistoryServiceClient) sendUpdateWorkHistory(json_workhistory string) (err error) {
+func (p *WorkHistoryServiceClient) sendUpdateWorkHistory(profile_id string, json_workhistory string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -220,6 +142,7 @@ func (p *WorkHistoryServiceClient) sendUpdateWorkHistory(json_workhistory string
 		return
 	}
 	args := WorkHistoryServiceUpdateWorkHistoryArgs{
+		ProfileID:       profile_id,
 		JSONWorkhistory: json_workhistory,
 	}
 	if err = args.Write(oprot); err != nil {
@@ -250,16 +173,16 @@ func (p *WorkHistoryServiceClient) recvUpdateWorkHistory() (value string, err er
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error5 error
-		error5, err = error4.Read(iprot)
+		error2 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error3 error
+		error3, err = error2.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error5
+		err = error3
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -297,11 +220,10 @@ func (p *WorkHistoryServiceProcessor) ProcessorMap() map[string]thrift.TProcesso
 
 func NewWorkHistoryServiceProcessor(handler WorkHistoryService) *WorkHistoryServiceProcessor {
 
-	self6 := &WorkHistoryServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self6.processorMap["Ping"] = &workHistoryServiceProcessorPing{handler: handler}
-	self6.processorMap["AddWorkHistory"] = &workHistoryServiceProcessorAddWorkHistory{handler: handler}
-	self6.processorMap["UpdateWorkHistory"] = &workHistoryServiceProcessorUpdateWorkHistory{handler: handler}
-	return self6
+	self4 := &WorkHistoryServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self4.processorMap["Ping"] = &workHistoryServiceProcessorPing{handler: handler}
+	self4.processorMap["UpdateWorkHistory"] = &workHistoryServiceProcessorUpdateWorkHistory{handler: handler}
+	return self4
 }
 
 func (p *WorkHistoryServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -314,12 +236,12 @@ func (p *WorkHistoryServiceProcessor) Process(iprot, oprot thrift.TProtocol) (su
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x7 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x5 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x7.Write(oprot)
+	x5.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x7
+	return false, x5
 
 }
 
@@ -371,54 +293,6 @@ func (p *workHistoryServiceProcessorPing) Process(seqId int32, iprot, oprot thri
 	return true, err
 }
 
-type workHistoryServiceProcessorAddWorkHistory struct {
-	handler WorkHistoryService
-}
-
-func (p *workHistoryServiceProcessorAddWorkHistory) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := WorkHistoryServiceAddWorkHistoryArgs{}
-	if err = args.Read(iprot); err != nil {
-		iprot.ReadMessageEnd()
-		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("AddWorkHistory", thrift.EXCEPTION, seqId)
-		x.Write(oprot)
-		oprot.WriteMessageEnd()
-		oprot.Flush()
-		return false, err
-	}
-
-	iprot.ReadMessageEnd()
-	result := WorkHistoryServiceAddWorkHistoryResult{}
-	var retval string
-	var err2 error
-	if retval, err2 = p.handler.AddWorkHistory(args.JSONWorkhistory); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing AddWorkHistory: "+err2.Error())
-		oprot.WriteMessageBegin("AddWorkHistory", thrift.EXCEPTION, seqId)
-		x.Write(oprot)
-		oprot.WriteMessageEnd()
-		oprot.Flush()
-		return true, err2
-	} else {
-		result.Success = &retval
-	}
-	if err2 = oprot.WriteMessageBegin("AddWorkHistory", thrift.REPLY, seqId); err2 != nil {
-		err = err2
-	}
-	if err2 = result.Write(oprot); err == nil && err2 != nil {
-		err = err2
-	}
-	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
-		err = err2
-	}
-	if err2 = oprot.Flush(); err == nil && err2 != nil {
-		err = err2
-	}
-	if err != nil {
-		return
-	}
-	return true, err
-}
-
 type workHistoryServiceProcessorUpdateWorkHistory struct {
 	handler WorkHistoryService
 }
@@ -439,7 +313,7 @@ func (p *workHistoryServiceProcessorUpdateWorkHistory) Process(seqId int32, ipro
 	result := WorkHistoryServiceUpdateWorkHistoryResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.UpdateWorkHistory(args.JSONWorkhistory); err2 != nil {
+	if retval, err2 = p.handler.UpdateWorkHistory(args.ProfileID, args.JSONWorkhistory); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateWorkHistory: "+err2.Error())
 		oprot.WriteMessageBegin("UpdateWorkHistory", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -625,206 +499,19 @@ func (p *WorkHistoryServicePingResult) String() string {
 }
 
 // Attributes:
-//  - JSONWorkhistory
-type WorkHistoryServiceAddWorkHistoryArgs struct {
-	JSONWorkhistory string `thrift:"json_workhistory,1" json:"json_workhistory"`
-}
-
-func NewWorkHistoryServiceAddWorkHistoryArgs() *WorkHistoryServiceAddWorkHistoryArgs {
-	return &WorkHistoryServiceAddWorkHistoryArgs{}
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryArgs) GetJSONWorkhistory() string {
-	return p.JSONWorkhistory
-}
-func (p *WorkHistoryServiceAddWorkHistoryArgs) Read(iprot thrift.TProtocol) error {
-	if _, err := iprot.ReadStructBegin(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
-		if err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-		switch fieldId {
-		case 1:
-			if err := p.readField1(iprot); err != nil {
-				return err
-			}
-		default:
-			if err := iprot.Skip(fieldTypeId); err != nil {
-				return err
-			}
-		}
-		if err := iprot.ReadFieldEnd(); err != nil {
-			return err
-		}
-	}
-	if err := iprot.ReadStructEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-	}
-	return nil
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryArgs) readField1(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return thrift.PrependError("error reading field 1: ", err)
-	} else {
-		p.JSONWorkhistory = v
-	}
-	return nil
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("AddWorkHistory_args"); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-	}
-	if err := p.writeField1(oprot); err != nil {
-		return err
-	}
-	if err := oprot.WriteFieldStop(); err != nil {
-		return thrift.PrependError("write field stop error: ", err)
-	}
-	if err := oprot.WriteStructEnd(); err != nil {
-		return thrift.PrependError("write struct stop error: ", err)
-	}
-	return nil
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_workhistory", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_workhistory: ", p), err)
-	}
-	if err := oprot.WriteString(string(p.JSONWorkhistory)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_workhistory (1) field write error: ", p), err)
-	}
-	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_workhistory: ", p), err)
-	}
-	return err
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryArgs) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("WorkHistoryServiceAddWorkHistoryArgs(%+v)", *p)
-}
-
-// Attributes:
-//  - Success
-type WorkHistoryServiceAddWorkHistoryResult struct {
-	Success *string `thrift:"success,0" json:"success,omitempty"`
-}
-
-func NewWorkHistoryServiceAddWorkHistoryResult() *WorkHistoryServiceAddWorkHistoryResult {
-	return &WorkHistoryServiceAddWorkHistoryResult{}
-}
-
-var WorkHistoryServiceAddWorkHistoryResult_Success_DEFAULT string
-
-func (p *WorkHistoryServiceAddWorkHistoryResult) GetSuccess() string {
-	if !p.IsSetSuccess() {
-		return WorkHistoryServiceAddWorkHistoryResult_Success_DEFAULT
-	}
-	return *p.Success
-}
-func (p *WorkHistoryServiceAddWorkHistoryResult) IsSetSuccess() bool {
-	return p.Success != nil
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryResult) Read(iprot thrift.TProtocol) error {
-	if _, err := iprot.ReadStructBegin(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
-		if err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-		switch fieldId {
-		case 0:
-			if err := p.readField0(iprot); err != nil {
-				return err
-			}
-		default:
-			if err := iprot.Skip(fieldTypeId); err != nil {
-				return err
-			}
-		}
-		if err := iprot.ReadFieldEnd(); err != nil {
-			return err
-		}
-	}
-	if err := iprot.ReadStructEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-	}
-	return nil
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryResult) readField0(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return thrift.PrependError("error reading field 0: ", err)
-	} else {
-		p.Success = &v
-	}
-	return nil
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("AddWorkHistory_result"); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-	}
-	if err := p.writeField0(oprot); err != nil {
-		return err
-	}
-	if err := oprot.WriteFieldStop(); err != nil {
-		return thrift.PrependError("write field stop error: ", err)
-	}
-	if err := oprot.WriteStructEnd(); err != nil {
-		return thrift.PrependError("write struct stop error: ", err)
-	}
-	return nil
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryResult) writeField0(oprot thrift.TProtocol) (err error) {
-	if p.IsSetSuccess() {
-		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
-		}
-		if err := oprot.WriteString(string(*p.Success)); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
-		}
-		if err := oprot.WriteFieldEnd(); err != nil {
-			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
-		}
-	}
-	return err
-}
-
-func (p *WorkHistoryServiceAddWorkHistoryResult) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("WorkHistoryServiceAddWorkHistoryResult(%+v)", *p)
-}
-
-// Attributes:
+//  - ProfileID
 //  - JSONWorkhistory
 type WorkHistoryServiceUpdateWorkHistoryArgs struct {
-	JSONWorkhistory string `thrift:"json_workhistory,1" json:"json_workhistory"`
+	ProfileID       string `thrift:"profile_id,1" json:"profile_id"`
+	JSONWorkhistory string `thrift:"json_workhistory,2" json:"json_workhistory"`
 }
 
 func NewWorkHistoryServiceUpdateWorkHistoryArgs() *WorkHistoryServiceUpdateWorkHistoryArgs {
 	return &WorkHistoryServiceUpdateWorkHistoryArgs{}
+}
+
+func (p *WorkHistoryServiceUpdateWorkHistoryArgs) GetProfileID() string {
+	return p.ProfileID
 }
 
 func (p *WorkHistoryServiceUpdateWorkHistoryArgs) GetJSONWorkhistory() string {
@@ -848,6 +535,10 @@ func (p *WorkHistoryServiceUpdateWorkHistoryArgs) Read(iprot thrift.TProtocol) e
 			if err := p.readField1(iprot); err != nil {
 				return err
 			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
 		default:
 			if err := iprot.Skip(fieldTypeId); err != nil {
 				return err
@@ -867,6 +558,15 @@ func (p *WorkHistoryServiceUpdateWorkHistoryArgs) readField1(iprot thrift.TProto
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
+		p.ProfileID = v
+	}
+	return nil
+}
+
+func (p *WorkHistoryServiceUpdateWorkHistoryArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
 		p.JSONWorkhistory = v
 	}
 	return nil
@@ -879,6 +579,9 @@ func (p *WorkHistoryServiceUpdateWorkHistoryArgs) Write(oprot thrift.TProtocol) 
 	if err := p.writeField1(oprot); err != nil {
 		return err
 	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
 	if err := oprot.WriteFieldStop(); err != nil {
 		return thrift.PrependError("write field stop error: ", err)
 	}
@@ -889,14 +592,27 @@ func (p *WorkHistoryServiceUpdateWorkHistoryArgs) Write(oprot thrift.TProtocol) 
 }
 
 func (p *WorkHistoryServiceUpdateWorkHistoryArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_workhistory", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_workhistory: ", p), err)
+	if err := oprot.WriteFieldBegin("profile_id", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_id: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.JSONWorkhistory)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_workhistory (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.ProfileID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.profile_id (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_workhistory: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_id: ", p), err)
+	}
+	return err
+}
+
+func (p *WorkHistoryServiceUpdateWorkHistoryArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("json_workhistory", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:json_workhistory: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.JSONWorkhistory)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.json_workhistory (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:json_workhistory: ", p), err)
 	}
 	return err
 }

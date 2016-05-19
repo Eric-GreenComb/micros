@@ -21,8 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string AddWorkHistory(string json_workhistory)")
-	fmt.Fprintln(os.Stderr, "  string UpdateWorkHistory(string json_workhistory)")
+	fmt.Fprintln(os.Stderr, "  string UpdateWorkHistory(string profile_id, string json_workhistory)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -125,24 +124,16 @@ func main() {
 		fmt.Print(client.Ping())
 		fmt.Print("\n")
 		break
-	case "AddWorkHistory":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "AddWorkHistory requires 1 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		fmt.Print(client.AddWorkHistory(value0))
-		fmt.Print("\n")
-		break
 	case "UpdateWorkHistory":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "UpdateWorkHistory requires 1 args")
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateWorkHistory requires 2 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.UpdateWorkHistory(value0))
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateWorkHistory(value0, value1))
 		fmt.Print("\n")
 		break
 	case "":

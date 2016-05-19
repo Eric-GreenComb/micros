@@ -6,9 +6,7 @@ import ()
 type WorkHistoryService interface {
 	Ping() string
 	// Parameters:
+	//  - ProfileID
 	//  - JSONWorkhistory
-	AddWorkHistory(json_workhistory string) string
-	// Parameters:
-	//  - JSONWorkhistory
-	UpdateWorkHistory(json_workhistory string) string
+	UpdateWorkHistory(profile_id string, json_workhistory string) string
 }

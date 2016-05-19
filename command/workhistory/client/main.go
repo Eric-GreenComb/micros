@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"labix.org/v2/mgo/bson"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,6 +19,8 @@ import (
 	thriftworkhistory "github.com/banerwai/micros/command/workhistory/thrift/gen-go/workhistory"
 
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
+
+	"github.com/banerwai/global/bean"
 )
 
 func main() {
@@ -25,6 +29,8 @@ func main() {
 		thriftProtocol   = flag.String("thrift.protocol", "binary", "binary, compact, json, simplejson")
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
+
+		_defaultObjectId = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
 	)
 	flag.Parse()
 	if len(os.Args) < 2 {
@@ -36,7 +42,7 @@ func main() {
 	_instances := strings.Split(*thriftAddr, ",")
 	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
 
-	method, s1 := flag.Arg(0), flag.Arg(1)
+	method := flag.Arg(0)
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(os.Stdout)
@@ -87,15 +93,42 @@ func main() {
 		v := svc.Ping()
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
-	case "add":
-		_json := s1
-		v := svc.AddWorkHistory(_json)
-		logger.Log("method", "AddWorkHistory", "_json", _json, "v", v, "took", time.Since(begin))
+	case "upsert":
 
-	case "update":
-		_json := s1
-		v := svc.UpdateWorkHistory(_json)
-		logger.Log("method", "UpdateWorkHistory", "_json", _json, "v", v, "took", time.Since(begin))
+		var _obj bean.WorkHistory
+		_obj.Id = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.ProfileID = bson.ObjectIdHex(*_defaultObjectId)
+
+		var lsWorkHistoryAndFeedbacks []bean.WorkHistoryAndFeedback
+
+		var _WorkHistoryAndFeedback1 bean.WorkHistoryAndFeedback
+		_WorkHistoryAndFeedback1.Title = "ceshi"
+		_WorkHistoryAndFeedback1.WorkPeriod = "2016.01-2016.04"
+		_WorkHistoryAndFeedback1.WorkHours = 40
+
+		var lsWorkFeedbacks []bean.WorkFeedback
+
+		var _WorkFeedback1 bean.WorkFeedback
+		_WorkFeedback1.WorkRate = 5
+		_WorkFeedback1.Feedback = "perfect"
+		lsWorkFeedbacks = append(lsWorkFeedbacks, _WorkFeedback1)
+
+		var _WorkFeedback2 bean.WorkFeedback
+		_WorkFeedback2.WorkRate = 5
+		_WorkFeedback2.Feedback = "good job"
+
+		lsWorkFeedbacks = append(lsWorkFeedbacks, _WorkFeedback2)
+
+		_WorkHistoryAndFeedback1.WorkFeedbacks = lsWorkFeedbacks
+
+		lsWorkHistoryAndFeedbacks = append(lsWorkHistoryAndFeedbacks, _WorkHistoryAndFeedback1)
+
+		_obj.HistoryAndFeedbacks = lsWorkHistoryAndFeedbacks
+
+		b, _ := json.Marshal(_obj)
+
+		v := svc.UpdateWorkHistory(*_defaultObjectId, string(b))
+		logger.Log("method", "UpdateWorkHistory", "v", v, "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

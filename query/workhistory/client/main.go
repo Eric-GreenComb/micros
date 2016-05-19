@@ -36,7 +36,7 @@ func main() {
 	_instances := strings.Split(*thriftAddr, ",")
 	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
 
-	method, s1 := flag.Arg(0), flag.Arg(1)
+	method := flag.Arg(0)
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(os.Stdout)
@@ -89,9 +89,8 @@ func main() {
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
 	case "get":
-		_id := s1
-		v := svc.GetWorkHistory(_id)
-		logger.Log("method", "GetWorkHistory", "_id", _id, "v", v, "took", time.Since(begin))
+		v := svc.GetWorkHistory("5707cb10ae6faa1d1071a189")
+		logger.Log("method", "GetWorkHistory", "v", v, "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

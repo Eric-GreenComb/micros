@@ -22,20 +22,11 @@ func (m instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) AddWorkHistory(json_workhistory string) (r string) {
-	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "AddWorkHistory"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
-	}(time.Now())
-	r = m.WorkHistoryService.AddWorkHistory(json_workhistory)
-	return
-}
-
-func (m instrumentingMiddleware) UpdateWorkHistory(json_workhistory string) (r string) {
+func (m instrumentingMiddleware) UpdateWorkHistory(profile_id, json_workhistory string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "UpdateWorkHistory"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.WorkHistoryService.UpdateWorkHistory(json_workhistory)
+	r = m.WorkHistoryService.UpdateWorkHistory(profile_id, json_workhistory)
 	return
 }

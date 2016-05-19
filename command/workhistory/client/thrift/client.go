@@ -26,17 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) AddWorkHistory(json_workhistory string) string {
-	reply, err := c.WorkHistoryServiceClient.AddWorkHistory(json_workhistory)
-	if err != nil {
-		c.Logger.Log("err", err)
-		return ""
-	}
-	return reply
-}
-
-func (c client) UpdateWorkHistory(json_workhistory string) string {
-	reply, err := c.WorkHistoryServiceClient.UpdateWorkHistory(json_workhistory)
+func (c client) UpdateWorkHistory(profile_id, json_workhistory string) string {
+	reply, err := c.WorkHistoryServiceClient.UpdateWorkHistory(profile_id, json_workhistory)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
