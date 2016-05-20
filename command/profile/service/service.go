@@ -9,9 +9,19 @@ type ProfileService interface {
 	//  - JSONProfile
 	AddProfile(json_profile string) string
 	// Parameters:
+	//  - ProfileID
 	//  - JSONProfile
-	UpdateProfile(json_profile string) string
+	UpdateProfile(profile_id string, json_profile string) string
 	// Parameters:
-	//  - ID
-	DeleteProfile(id string) string
+	//  - ProfileID
+	//  - Status
+	UpdateProfileStatus(profile_id string, status bool) string
+	// Parameters:
+	//  - ProfileID
+	//  - Mmap
+	UpdateProfileBase(profile_id string, mmap map[string]string) string
+	// Parameters:
+	//  - ProfileID
+	//  - AgencyMembers
+	UpdateProfileAgencyMembers(profile_id string, agency_members string) string
 }

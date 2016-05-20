@@ -22,8 +22,10 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  string AddProfile(string json_profile)")
-	fmt.Fprintln(os.Stderr, "  string UpdateProfile(string json_profile)")
-	fmt.Fprintln(os.Stderr, "  string DeleteProfile(string id)")
+	fmt.Fprintln(os.Stderr, "  string UpdateProfile(string profile_id, string json_profile)")
+	fmt.Fprintln(os.Stderr, "  string UpdateProfileStatus(string profile_id, bool status)")
+	fmt.Fprintln(os.Stderr, "  string UpdateProfileBase(string profile_id,  mmap)")
+	fmt.Fprintln(os.Stderr, "  string UpdateProfileAgencyMembers(string profile_id, string agency_members)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -137,23 +139,67 @@ func main() {
 		fmt.Print("\n")
 		break
 	case "UpdateProfile":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "UpdateProfile requires 1 args")
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateProfile requires 2 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.UpdateProfile(value0))
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateProfile(value0, value1))
 		fmt.Print("\n")
 		break
-	case "DeleteProfile":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "DeleteProfile requires 1 args")
+	case "UpdateProfileStatus":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateProfileStatus requires 2 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.DeleteProfile(value0))
+		argvalue1 := flag.Arg(2) == "true"
+		value1 := argvalue1
+		fmt.Print(client.UpdateProfileStatus(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateProfileBase":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateProfileBase requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		arg22 := flag.Arg(2)
+		mbTrans23 := thrift.NewTMemoryBufferLen(len(arg22))
+		defer mbTrans23.Close()
+		_, err24 := mbTrans23.WriteString(arg22)
+		if err24 != nil {
+			Usage()
+			return
+		}
+		factory25 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt26 := factory25.GetProtocol(mbTrans23)
+		containerStruct1 := profile.NewProfileServiceUpdateProfileBaseArgs()
+		err27 := containerStruct1.ReadField2(jsProt26)
+		if err27 != nil {
+			Usage()
+			return
+		}
+		argvalue1 := containerStruct1.Mmap
+		value1 := argvalue1
+		fmt.Print(client.UpdateProfileBase(value0, value1))
+		fmt.Print("\n")
+		break
+	case "UpdateProfileAgencyMembers":
+		if flag.NArg()-1 != 2 {
+			fmt.Fprintln(os.Stderr, "UpdateProfileAgencyMembers requires 2 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		argvalue1 := flag.Arg(2)
+		value1 := argvalue1
+		fmt.Print(client.UpdateProfileAgencyMembers(value0, value1))
 		fmt.Print("\n")
 		break
 	case "":

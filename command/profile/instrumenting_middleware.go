@@ -31,20 +31,38 @@ func (m instrumentingMiddleware) AddProfile(json_profile string) (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) UpdateProfile(json_profile string) (r string) {
+func (m instrumentingMiddleware) UpdateProfile(profile_id string, json_profile string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "UpdateProfile"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ProfileService.UpdateProfile(json_profile)
+	r = m.ProfileService.UpdateProfile(profile_id, json_profile)
 	return
 }
 
-func (m instrumentingMiddleware) DeleteProfile(id string) (r string) {
+func (m instrumentingMiddleware) UpdateProfileStatus(profile_id string, status bool) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "DeleteProfile"}
+		methodField := metrics.Field{Key: "method", Value: "UpdateProfileStatus"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ProfileService.DeleteProfile(id)
+	r = m.ProfileService.UpdateProfileStatus(profile_id, status)
+	return
+}
+
+func (m instrumentingMiddleware) UpdateProfileBase(profile_id string, mmap map[string]string) (r string) {
+	defer func(begin time.Time) {
+		methodField := metrics.Field{Key: "method", Value: "UpdateProfileBase"}
+		m.requestDuration.With(methodField).Observe(time.Since(begin))
+	}(time.Now())
+	r = m.ProfileService.UpdateProfileBase(profile_id, mmap)
+	return
+}
+
+func (m instrumentingMiddleware) UpdateProfileAgencyMembers(profile_id string, agency_members string) (r string) {
+	defer func(begin time.Time) {
+		methodField := metrics.Field{Key: "method", Value: "UpdateProfileAgencyMembers"}
+		m.requestDuration.With(methodField).Observe(time.Since(begin))
+	}(time.Now())
+	r = m.ProfileService.UpdateProfileAgencyMembers(profile_id, agency_members)
 	return
 }
