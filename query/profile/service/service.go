@@ -6,13 +6,13 @@ import ()
 type ProfileService interface {
 	Ping() string
 	// Parameters:
-	//  - ID
-	GetProfile(id string) string
+	//  - ProfileID
+	GetProfile(profile_id string) string
 	// Parameters:
-	//  - Email
-	GetProfilesByEmail(email string) string
+	//  - UserID
+	GetProfilesByUserId(user_id string) string
 	// Parameters:
-	//  - option_mmap
+	//  - OptionMmap
 	//  - KeyMmap
 	//  - Timestamp
 	//  - Pagesize

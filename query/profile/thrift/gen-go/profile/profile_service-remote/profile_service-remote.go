@@ -21,8 +21,8 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string GetProfile(string id)")
-	fmt.Fprintln(os.Stderr, "  string GetProfilesByEmail(string email)")
+	fmt.Fprintln(os.Stderr, "  string GetProfile(string profile_id)")
+	fmt.Fprintln(os.Stderr, "  string GetProfilesByUserId(string user_id)")
 	fmt.Fprintln(os.Stderr, "  string SearchProfiles( option_mmap,  key_mmap, i64 timestamp, i64 pagesize)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
@@ -136,14 +136,14 @@ func main() {
 		fmt.Print(client.GetProfile(value0))
 		fmt.Print("\n")
 		break
-	case "GetProfilesByEmail":
+	case "GetProfilesByUserId":
 		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetProfilesByEmail requires 1 args")
+			fmt.Fprintln(os.Stderr, "GetProfilesByUserId requires 1 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.GetProfilesByEmail(value0))
+		fmt.Print(client.GetProfilesByUserId(value0))
 		fmt.Print("\n")
 		break
 	case "SearchProfiles":

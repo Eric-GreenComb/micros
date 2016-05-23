@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -17,6 +18,7 @@ import (
 	"github.com/banerwai/micros/query/profile/service"
 	thriftprofile "github.com/banerwai/micros/query/profile/thrift/gen-go/profile"
 
+	"github.com/banerwai/global/bean"
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
 )
 
@@ -92,26 +94,37 @@ func main() {
 	case "prof":
 		profile_id := s1
 		v := svc.GetProfile(profile_id)
+		var _profile bean.Profile
+		json.Unmarshal([]byte(v), &_profile)
+		fmt.Println(_profile)
 		logger.Log("method", "GetProfile", "profile_id", profile_id, "v", v, "took", time.Since(begin))
 
 	case "profs":
-		_email := s1
-		v := svc.GetProfilesByEmail(_email)
-		logger.Log("method", "GetProfilesByEmail", "email", _email, "v", v, "took", time.Since(begin))
+		_userid := s1
+		v := svc.GetProfilesByUserId(_userid)
+		var _profiles []bean.Profile
+		json.Unmarshal([]byte(v), &_profiles)
+		fmt.Println(_profiles)
+		logger.Log("method", "GetProfilesByUserId", "v", v, "took", time.Since(begin))
 
 	case "search":
 		_key := s1
+		fmt.Println(_key)
 
 		option_mmap := make(map[string]int64)
 
-		option_mmap["available_hours"] = 0
-		option_mmap["job_success"] = 1
-		option_mmap["freelancer_type"] = 1
+		option_mmap["freelancer_type"] = 0
+		option_mmap["job_success"] = 0
 
 		key_mmap := make(map[string]string)
-		key_mmap["overview"] = _key
+		key_mmap["job_title"] = _key
 
 		v := svc.SearchProfiles(option_mmap, key_mmap, time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
+
+		var _profiles []bean.Profile
+		json.Unmarshal([]byte(v), &_profiles)
+		fmt.Println(_profiles)
+
 		logger.Log("method", "SearchProfiles", "v", v, "took", time.Since(begin))
 
 	default:

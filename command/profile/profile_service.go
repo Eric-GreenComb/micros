@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/banerwai/global/bean"
 	"github.com/banerwai/micros/command/profile/service"
 	"labix.org/v2/mgo/bson"
@@ -30,6 +31,7 @@ func (self *inmemService) AddProfile(json_profile string) (r string) {
 	_profile.Id = ""
 
 	_time := time.Now()
+	fmt.Println(_time)
 
 	_profile.CreatedTime = _time
 	_profile.LastActiveTime = _time
@@ -48,9 +50,6 @@ func (self *inmemService) UpdateProfile(profile_id string, json_profile string) 
 	if err != nil {
 		return err.Error()
 	}
-
-	_time := time.Now()
-	_profile.LastActiveTime = _time
 
 	_profile.Id = ""
 	_err := ProfileCollection.Update(bson.M{"_id": bson.ObjectIdHex(profile_id)}, bson.M{"$set": _profile})
@@ -87,9 +86,6 @@ func (self *inmemService) UpdateProfileBase(profile_id string, mmap map[string]s
 			_mongo_m[k] = v
 		}
 	}
-
-	_time := time.Now()
-	_mongo_m["last_activetime"] = _time
 
 	_err := ProfileCollection.Update(bson.M{"_id": bson.ObjectIdHex(profile_id)}, bson.M{"$set": _mongo_m})
 	if nil != _err {

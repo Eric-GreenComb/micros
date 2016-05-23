@@ -13,13 +13,13 @@ func (tb thriftBinding) Ping() (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) GetProfile(id string) (string, error) {
-	r := tb.ProfileService.GetProfile(id)
+func (tb thriftBinding) GetProfile(profile_id string) (string, error) {
+	r := tb.ProfileService.GetProfile(profile_id)
 	return r, nil
 }
 
-func (tb thriftBinding) GetProfilesByEmail(email string) (string, error) {
-	r := tb.ProfileService.GetProfilesByEmail(email)
+func (tb thriftBinding) GetProfilesByUserId(user_id string) (string, error) {
+	r := tb.ProfileService.GetProfilesByUserId(user_id)
 	return r, nil
 }
 

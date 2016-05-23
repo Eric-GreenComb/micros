@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) GetProfile(id string) string {
-	reply, err := c.ProfileServiceClient.GetProfile(id)
+func (c client) GetProfile(profile_id string) string {
+	reply, err := c.ProfileServiceClient.GetProfile(profile_id)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -35,8 +35,8 @@ func (c client) GetProfile(id string) string {
 	return reply
 }
 
-func (c client) GetProfilesByEmail(email string) string {
-	reply, err := c.ProfileServiceClient.GetProfilesByEmail(email)
+func (c client) GetProfilesByUserId(user_id string) string {
+	reply, err := c.ProfileServiceClient.GetProfilesByUserId(user_id)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

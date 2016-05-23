@@ -25,29 +25,29 @@ func (m loggingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m loggingMiddleware) GetProfile(id string) (r string) {
+func (m loggingMiddleware) GetProfile(profile_id string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetProfile",
-			"id", id,
+			"profile_id", profile_id,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.GetProfile(id)
+	r = m.ProfileService.GetProfile(profile_id)
 	return
 }
 
-func (m loggingMiddleware) GetProfilesByEmail(email string) (r string) {
+func (m loggingMiddleware) GetProfilesByUserId(user_id string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "GetProfilesByEmail",
-			"email", email,
+			"method", "GetProfilesByUserId",
+			"user_id", user_id,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.GetProfilesByEmail(email)
+	r = m.ProfileService.GetProfilesByUserId(user_id)
 	return
 }
 

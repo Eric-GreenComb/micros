@@ -99,6 +99,7 @@ func main() {
 		_obj.UserID = bson.ObjectIdHex(*_defaultObjectId)
 		_obj.Name = "Test"
 		_obj.JobTitle = "this is a title"
+		_obj.Overview = "this is a overview go"
 		_obj.Serialnumber = 531770282584862733
 		_obj.HourRate = 15000
 		_obj.WorkHours = 40

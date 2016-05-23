@@ -22,21 +22,21 @@ func (m instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) GetProfile(id string) (r string) {
+func (m instrumentingMiddleware) GetProfile(profile_id string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GetProfile"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ProfileService.GetProfile(id)
+	r = m.ProfileService.GetProfile(profile_id)
 	return
 }
 
-func (m instrumentingMiddleware) GetProfilesByEmail(email string) (r string) {
+func (m instrumentingMiddleware) GetProfilesByUserId(user_id string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetProfilesByEmail"}
+		methodField := metrics.Field{Key: "method", Value: "GetProfilesByUserId"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ProfileService.GetProfilesByEmail(email)
+	r = m.ProfileService.GetProfilesByUserId(user_id)
 	return
 }
 

@@ -17,11 +17,11 @@ var _ = bytes.Equal
 type ProfileService interface {
 	Ping() (r string, err error)
 	// Parameters:
-	//  - ID
-	GetProfile(id string) (r string, err error)
+	//  - ProfileID
+	GetProfile(profile_id string) (r string, err error)
 	// Parameters:
-	//  - Email
-	GetProfilesByEmail(email string) (r string, err error)
+	//  - UserID
+	GetProfilesByUserId(user_id string) (r string, err error)
 	// Parameters:
 	//  - OptionMmap
 	//  - KeyMmap
@@ -130,15 +130,15 @@ func (p *ProfileServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
-//  - ID
-func (p *ProfileServiceClient) GetProfile(id string) (r string, err error) {
-	if err = p.sendGetProfile(id); err != nil {
+//  - ProfileID
+func (p *ProfileServiceClient) GetProfile(profile_id string) (r string, err error) {
+	if err = p.sendGetProfile(profile_id); err != nil {
 		return
 	}
 	return p.recvGetProfile()
 }
 
-func (p *ProfileServiceClient) sendGetProfile(id string) (err error) {
+func (p *ProfileServiceClient) sendGetProfile(profile_id string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -149,7 +149,7 @@ func (p *ProfileServiceClient) sendGetProfile(id string) (err error) {
 		return
 	}
 	args := ProfileServiceGetProfileArgs{
-		ID: id,
+		ProfileID: profile_id,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -207,26 +207,26 @@ func (p *ProfileServiceClient) recvGetProfile() (value string, err error) {
 }
 
 // Parameters:
-//  - Email
-func (p *ProfileServiceClient) GetProfilesByEmail(email string) (r string, err error) {
-	if err = p.sendGetProfilesByEmail(email); err != nil {
+//  - UserID
+func (p *ProfileServiceClient) GetProfilesByUserId(user_id string) (r string, err error) {
+	if err = p.sendGetProfilesByUserId(user_id); err != nil {
 		return
 	}
-	return p.recvGetProfilesByEmail()
+	return p.recvGetProfilesByUserId()
 }
 
-func (p *ProfileServiceClient) sendGetProfilesByEmail(email string) (err error) {
+func (p *ProfileServiceClient) sendGetProfilesByUserId(user_id string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetProfilesByEmail", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("GetProfilesByUserId", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := ProfileServiceGetProfilesByEmailArgs{
-		Email: email,
+	args := ProfileServiceGetProfilesByUserIdArgs{
+		UserID: user_id,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -237,7 +237,7 @@ func (p *ProfileServiceClient) sendGetProfilesByEmail(email string) (err error) 
 	return oprot.Flush()
 }
 
-func (p *ProfileServiceClient) recvGetProfilesByEmail() (value string, err error) {
+func (p *ProfileServiceClient) recvGetProfilesByUserId() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -247,12 +247,12 @@ func (p *ProfileServiceClient) recvGetProfilesByEmail() (value string, err error
 	if err != nil {
 		return
 	}
-	if method != "GetProfilesByEmail" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetProfilesByEmail failed: wrong method name")
+	if method != "GetProfilesByUserId" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetProfilesByUserId failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetProfilesByEmail failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetProfilesByUserId failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -269,10 +269,10 @@ func (p *ProfileServiceClient) recvGetProfilesByEmail() (value string, err error
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetProfilesByEmail failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetProfilesByUserId failed: invalid message type")
 		return
 	}
-	result := ProfileServiceGetProfilesByEmailResult{}
+	result := ProfileServiceGetProfilesByUserIdResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -389,7 +389,7 @@ func NewProfileServiceProcessor(handler ProfileService) *ProfileServiceProcessor
 	self8 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
 	self8.processorMap["Ping"] = &profileServiceProcessorPing{handler: handler}
 	self8.processorMap["GetProfile"] = &profileServiceProcessorGetProfile{handler: handler}
-	self8.processorMap["GetProfilesByEmail"] = &profileServiceProcessorGetProfilesByEmail{handler: handler}
+	self8.processorMap["GetProfilesByUserId"] = &profileServiceProcessorGetProfilesByUserId{handler: handler}
 	self8.processorMap["SearchProfiles"] = &profileServiceProcessorSearchProfiles{handler: handler}
 	return self8
 }
@@ -481,7 +481,7 @@ func (p *profileServiceProcessorGetProfile) Process(seqId int32, iprot, oprot th
 	result := ProfileServiceGetProfileResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetProfile(args.ID); err2 != nil {
+	if retval, err2 = p.handler.GetProfile(args.ProfileID); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetProfile: "+err2.Error())
 		oprot.WriteMessageBegin("GetProfile", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -509,16 +509,16 @@ func (p *profileServiceProcessorGetProfile) Process(seqId int32, iprot, oprot th
 	return true, err
 }
 
-type profileServiceProcessorGetProfilesByEmail struct {
+type profileServiceProcessorGetProfilesByUserId struct {
 	handler ProfileService
 }
 
-func (p *profileServiceProcessorGetProfilesByEmail) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := ProfileServiceGetProfilesByEmailArgs{}
+func (p *profileServiceProcessorGetProfilesByUserId) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ProfileServiceGetProfilesByUserIdArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetProfilesByEmail", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("GetProfilesByUserId", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -526,12 +526,12 @@ func (p *profileServiceProcessorGetProfilesByEmail) Process(seqId int32, iprot, 
 	}
 
 	iprot.ReadMessageEnd()
-	result := ProfileServiceGetProfilesByEmailResult{}
+	result := ProfileServiceGetProfilesByUserIdResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetProfilesByEmail(args.Email); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetProfilesByEmail: "+err2.Error())
-		oprot.WriteMessageBegin("GetProfilesByEmail", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.GetProfilesByUserId(args.UserID); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetProfilesByUserId: "+err2.Error())
+		oprot.WriteMessageBegin("GetProfilesByUserId", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -539,7 +539,7 @@ func (p *profileServiceProcessorGetProfilesByEmail) Process(seqId int32, iprot, 
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetProfilesByEmail", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("GetProfilesByUserId", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -763,17 +763,17 @@ func (p *ProfileServicePingResult) String() string {
 }
 
 // Attributes:
-//  - ID
+//  - ProfileID
 type ProfileServiceGetProfileArgs struct {
-	ID string `thrift:"id,1" json:"id"`
+	ProfileID string `thrift:"profile_id,1" json:"profile_id"`
 }
 
 func NewProfileServiceGetProfileArgs() *ProfileServiceGetProfileArgs {
 	return &ProfileServiceGetProfileArgs{}
 }
 
-func (p *ProfileServiceGetProfileArgs) GetID() string {
-	return p.ID
+func (p *ProfileServiceGetProfileArgs) GetProfileID() string {
+	return p.ProfileID
 }
 func (p *ProfileServiceGetProfileArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -812,7 +812,7 @@ func (p *ProfileServiceGetProfileArgs) readField1(iprot thrift.TProtocol) error 
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.ID = v
+		p.ProfileID = v
 	}
 	return nil
 }
@@ -834,14 +834,14 @@ func (p *ProfileServiceGetProfileArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ProfileServiceGetProfileArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:id: ", p), err)
+	if err := oprot.WriteFieldBegin("profile_id", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_id: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.ID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.id (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.ProfileID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.profile_id (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_id: ", p), err)
 	}
 	return err
 }
@@ -956,19 +956,19 @@ func (p *ProfileServiceGetProfileResult) String() string {
 }
 
 // Attributes:
-//  - Email
-type ProfileServiceGetProfilesByEmailArgs struct {
-	Email string `thrift:"email,1" json:"email"`
+//  - UserID
+type ProfileServiceGetProfilesByUserIdArgs struct {
+	UserID string `thrift:"user_id,1" json:"user_id"`
 }
 
-func NewProfileServiceGetProfilesByEmailArgs() *ProfileServiceGetProfilesByEmailArgs {
-	return &ProfileServiceGetProfilesByEmailArgs{}
+func NewProfileServiceGetProfilesByUserIdArgs() *ProfileServiceGetProfilesByUserIdArgs {
+	return &ProfileServiceGetProfilesByUserIdArgs{}
 }
 
-func (p *ProfileServiceGetProfilesByEmailArgs) GetEmail() string {
-	return p.Email
+func (p *ProfileServiceGetProfilesByUserIdArgs) GetUserID() string {
+	return p.UserID
 }
-func (p *ProfileServiceGetProfilesByEmailArgs) Read(iprot thrift.TProtocol) error {
+func (p *ProfileServiceGetProfilesByUserIdArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1001,17 +1001,17 @@ func (p *ProfileServiceGetProfilesByEmailArgs) Read(iprot thrift.TProtocol) erro
 	return nil
 }
 
-func (p *ProfileServiceGetProfilesByEmailArgs) readField1(iprot thrift.TProtocol) error {
+func (p *ProfileServiceGetProfilesByUserIdArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.Email = v
+		p.UserID = v
 	}
 	return nil
 }
 
-func (p *ProfileServiceGetProfilesByEmailArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetProfilesByEmail_args"); err != nil {
+func (p *ProfileServiceGetProfilesByUserIdArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetProfilesByUserId_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -1026,49 +1026,49 @@ func (p *ProfileServiceGetProfilesByEmailArgs) Write(oprot thrift.TProtocol) err
 	return nil
 }
 
-func (p *ProfileServiceGetProfilesByEmailArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("email", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:email: ", p), err)
+func (p *ProfileServiceGetProfilesByUserIdArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:user_id: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.Email)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.email (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.UserID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.user_id (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:email: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:user_id: ", p), err)
 	}
 	return err
 }
 
-func (p *ProfileServiceGetProfilesByEmailArgs) String() string {
+func (p *ProfileServiceGetProfilesByUserIdArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ProfileServiceGetProfilesByEmailArgs(%+v)", *p)
+	return fmt.Sprintf("ProfileServiceGetProfilesByUserIdArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type ProfileServiceGetProfilesByEmailResult struct {
+type ProfileServiceGetProfilesByUserIdResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewProfileServiceGetProfilesByEmailResult() *ProfileServiceGetProfilesByEmailResult {
-	return &ProfileServiceGetProfilesByEmailResult{}
+func NewProfileServiceGetProfilesByUserIdResult() *ProfileServiceGetProfilesByUserIdResult {
+	return &ProfileServiceGetProfilesByUserIdResult{}
 }
 
-var ProfileServiceGetProfilesByEmailResult_Success_DEFAULT string
+var ProfileServiceGetProfilesByUserIdResult_Success_DEFAULT string
 
-func (p *ProfileServiceGetProfilesByEmailResult) GetSuccess() string {
+func (p *ProfileServiceGetProfilesByUserIdResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return ProfileServiceGetProfilesByEmailResult_Success_DEFAULT
+		return ProfileServiceGetProfilesByUserIdResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *ProfileServiceGetProfilesByEmailResult) IsSetSuccess() bool {
+func (p *ProfileServiceGetProfilesByUserIdResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ProfileServiceGetProfilesByEmailResult) Read(iprot thrift.TProtocol) error {
+func (p *ProfileServiceGetProfilesByUserIdResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1101,7 +1101,7 @@ func (p *ProfileServiceGetProfilesByEmailResult) Read(iprot thrift.TProtocol) er
 	return nil
 }
 
-func (p *ProfileServiceGetProfilesByEmailResult) readField0(iprot thrift.TProtocol) error {
+func (p *ProfileServiceGetProfilesByUserIdResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -1110,8 +1110,8 @@ func (p *ProfileServiceGetProfilesByEmailResult) readField0(iprot thrift.TProtoc
 	return nil
 }
 
-func (p *ProfileServiceGetProfilesByEmailResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetProfilesByEmail_result"); err != nil {
+func (p *ProfileServiceGetProfilesByUserIdResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetProfilesByUserId_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -1126,7 +1126,7 @@ func (p *ProfileServiceGetProfilesByEmailResult) Write(oprot thrift.TProtocol) e
 	return nil
 }
 
-func (p *ProfileServiceGetProfilesByEmailResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *ProfileServiceGetProfilesByUserIdResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -1141,11 +1141,11 @@ func (p *ProfileServiceGetProfilesByEmailResult) writeField0(oprot thrift.TProto
 	return err
 }
 
-func (p *ProfileServiceGetProfilesByEmailResult) String() string {
+func (p *ProfileServiceGetProfilesByUserIdResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ProfileServiceGetProfilesByEmailResult(%+v)", *p)
+	return fmt.Sprintf("ProfileServiceGetProfilesByUserIdResult(%+v)", *p)
 }
 
 // Attributes:

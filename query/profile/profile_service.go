@@ -1,9 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"labix.org/v2/mgo/bson"
+	"strings"
+	"time"
 
+	"github.com/banerwai/global/bean"
 	"github.com/banerwai/micros/query/profile/service"
 )
 
@@ -19,13 +23,29 @@ func (self *inmemService) Ping() (r string) {
 	return
 }
 
-func (self *inmemService) GetProfile(id string) (r string) {
-	r = id
+func (self *inmemService) GetProfile(profile_id string) (r string) {
+	var _profile bean.Profile
+	err := ProfileCollection.Find(bson.M{"_id": bson.ObjectIdHex(profile_id)}).One(&_profile)
+
+	if err != nil {
+		return ""
+	}
+
+	b, _ := json.Marshal(_profile)
+	r = string(b)
 	return
 }
 
-func (self *inmemService) GetProfilesByEmail(email string) (r string) {
-	r = email
+func (self *inmemService) GetProfilesByUserId(user_id string) (r string) {
+	var _profiles []bean.Profile
+	err := ProfileCollection.Find(bson.M{"user_id": bson.ObjectIdHex(user_id)}).All(&_profiles)
+
+	if err != nil {
+		return ""
+	}
+
+	b, _ := json.Marshal(_profiles)
+	r = string(b)
 	return
 }
 
@@ -33,14 +53,27 @@ func (self *inmemService) GetProfilesByEmail(email string) (r string) {
 func (self *inmemService) SearchProfiles(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64, pagesize int64) (r string) {
 	// db.profile.find(self.genQuery(profile_search_condition, timestamp)).sort({"createdtime":1}).limit(pagesize)
 	_query := self.genQuery(option_mmap, key_mmap, timestamp)
-	fmt.Println("%q", _query)
-	r = "OK"
+	r = self.searchProfile(_query, pagesize)
+	return
+}
+
+func (self *inmemService) searchProfile(q interface{}, pagesize int64) (r string) {
+	var _profiles []bean.Profile
+	fmt.Println(q)
+	err := ProfileCollection.Find(q).Sort("-last_activetime").Limit(int(pagesize)).All(&_profiles)
+	if err != nil {
+		return err.Error()
+	}
+
+	b, _ := json.Marshal(_profiles)
+	r = string(b)
 	return
 }
 
 //	query := bson.M{"serial_number": ...}
 func (self *inmemService) genQuery(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64) interface{} {
-	query := bson.M{"createdtime": bson.M{"$gt": timestamp}}
+	query := bson.M{"last_activetime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	// query := bson.M{}
 
 	// search option by search options
 	if serial_number, ok := option_mmap["serial_number"]; ok {
@@ -75,10 +108,26 @@ func (self *inmemService) genQuery(option_mmap map[string]int64, key_mmap map[st
 		query["region_id"] = region_id
 	}
 
-	// search overview by key
-	if overview, ok := key_mmap["overview"]; ok {
-		query["overview"] = overview
+	if len(key_mmap) == 0 {
+		return query
 	}
+
+	// search overview by key
+	var _bsons []bson.M
+
+	for k, v := range key_mmap {
+		_bson := bson.M{}
+		_regex := bson.RegEx{v, "i"}
+		_split := strings.Split(k, "/")
+		if len(_split) > 1 {
+			_bson[_split[0]] = _regex
+		} else {
+			_bson[k] = _regex
+		}
+
+		_bsons = append(_bsons, _bson)
+	}
+	query["$and"] = _bsons
 
 	return query
 }
