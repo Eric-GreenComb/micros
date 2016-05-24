@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"labix.org/v2/mgo/bson"
 	"strings"
 	"time"
@@ -24,6 +23,9 @@ func (self *inmemService) Ping() (r string) {
 }
 
 func (self *inmemService) GetProfile(profile_id string) (r string) {
+	if !bson.IsObjectIdHex(profile_id) {
+		return ""
+	}
 	var _profile bean.Profile
 	err := ProfileCollection.Find(bson.M{"_id": bson.ObjectIdHex(profile_id)}).One(&_profile)
 
@@ -37,7 +39,12 @@ func (self *inmemService) GetProfile(profile_id string) (r string) {
 }
 
 func (self *inmemService) GetProfilesByUserId(user_id string) (r string) {
+	if !bson.IsObjectIdHex(user_id) {
+		return ""
+	}
+
 	var _profiles []bean.Profile
+
 	err := ProfileCollection.Find(bson.M{"user_id": bson.ObjectIdHex(user_id)}).All(&_profiles)
 
 	if err != nil {
@@ -59,10 +66,9 @@ func (self *inmemService) SearchProfiles(option_mmap map[string]int64, key_mmap 
 
 func (self *inmemService) searchProfile(q interface{}, pagesize int64) (r string) {
 	var _profiles []bean.Profile
-	fmt.Println(q)
 	err := ProfileCollection.Find(q).Sort("-last_activetime").Limit(int(pagesize)).All(&_profiles)
 	if err != nil {
-		return err.Error()
+		return ""
 	}
 
 	b, _ := json.Marshal(_profiles)
@@ -73,6 +79,7 @@ func (self *inmemService) searchProfile(q interface{}, pagesize int64) (r string
 //	query := bson.M{"serial_number": ...}
 func (self *inmemService) genQuery(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64) interface{} {
 	query := bson.M{"last_activetime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	query["status"] = true
 	// query := bson.M{}
 
 	// search option by search options

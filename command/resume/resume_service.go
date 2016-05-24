@@ -25,12 +25,12 @@ func (self *inmemService) AddResume(resume string) (r string) {
 	if err != nil {
 		return err.Error()
 	}
-	_resume.Id = ""
+	_resume.Id = bson.NewObjectId()
 	_err := ResumeCollection.Insert(_resume)
 	if _err != nil {
 		return _err.Error()
 	}
-	return "OK"
+	return _resume.Id.Hex()
 }
 
 func (self *inmemService) UpdateResume(userid string, resume string) (r string) {

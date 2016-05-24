@@ -47,6 +47,8 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 
 	_time := time.Now()
 
+	_id := bson.NewObjectId()
+	_mongo_m["_id"] = _id
 	_mongo_m["createdtime"] = _time
 	_mongo_m["lastactivity"] = _time
 	_mongo_m["actived"] = false
@@ -55,7 +57,7 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	if err != nil {
 		return err.Error()
 	}
-	return "OK"
+	return _id
 }
 
 func (self *inmemService) ResetPwd(email string, newpwd string) (r bool) {

@@ -19,6 +19,9 @@ func (self *inmemService) Ping() (r string) {
 }
 
 func (self *inmemService) GetResume(userid string) (r string) {
+	if !bson.IsObjectIdHex(userid) {
+		return ""
+	}
 	var _bson_m bson.M
 	err := ResumeCollection.Find(bson.M{"userid": bson.ObjectIdHex(userid)}).One(&_bson_m)
 
