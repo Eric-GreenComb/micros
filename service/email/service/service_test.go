@@ -29,9 +29,3 @@ func TestUnmarshal(t *testing.T) {
 		t.Errorf("Unmarshal error")
 	}
 }
-
-func TestLPOP4Redis(t *testing.T) {
-
-	var _service EmailService
-	_service.LPOP4Redis("banerwai:email:activeuser")
-}
