@@ -94,7 +94,6 @@ func (self *EmailService) GenBodyByTpl(tplname string, parse map[string]string) 
 
 func (self *EmailService) getTplFromEtcd(tplname string) (string, error) {
 	_key := global.ETCD_KEY_TPL_EMAIL + tplname
-	fmt.Println(_key)
 	_tpl, _err := etcd.GetValue(_key)
 	if _err != nil {
 		return "", _err

@@ -9,7 +9,7 @@ import (
 	"github.com/banerwai/gommon/openapi/alidayu"
 )
 
-type SMS struct {
+type Sms struct {
 	RecNum          string `json:"rec_num"`
 	SmsFreeSignName string `json:"sms_free_sign_name"`
 	SmsTemplateCode string `json:"sms_template_code"`
@@ -20,37 +20,20 @@ type SmsService struct {
 }
 
 func (self *SmsService) SendSms(json string) bool {
-	var _sms SMS
+	var _sms Sms
 	_err := self.Unmarshal(json, &_sms)
 	if _err != nil {
 		return false
 	}
 
-	self.goSendSms(_sms)
+	self.SendSmsBean(_sms)
 
 	return true
 }
 
-func (self *SmsService) goSendSms(sms SMS) {
-	alidayu.SendSMS(sms.RecNum, sms.SmsFreeSignName, sms.SmsTemplateCode, sms.SmsParam)
-}
-
-func (self *SmsService) LPOP4Redis(key string) error {
-
-	conn := gatherredis.RedisPool.Get()
-	defer conn.Close()
-
-	var _pop_err error
-	var _sms string
-	for _pop_err == nil {
-		_sms, _pop_err = redis.String(conn.Do("LPOP", key))
-		if _pop_err != nil {
-			continue
-		}
-		self.SendSms(_sms)
-	}
-
-	return nil
+// success, resp := alidayu.SendSMS("18888888888", "身份验证", "SMS_4000328", `{"code":"1234","product":"alidayu"}`)
+func (self *SmsService) SendSmsBean(sms Sms) (success bool, response string) {
+	return alidayu.SendSMS(sms.RecNum, sms.SmsFreeSignName, sms.SmsTemplateCode, sms.SmsParam)
 }
 
 func (self *SmsService) Unmarshal(_json string, bean interface{}) error {
