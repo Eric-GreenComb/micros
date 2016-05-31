@@ -17,9 +17,9 @@ var _ = bytes.Equal
 type RenderService interface {
 	Ping() (r string, err error)
 	// Parameters:
-	//  - Tmpl
-	//  - Name
-	RenderHello(tmpl string, name string) (r string, err error)
+	//  - Tplname
+	//  - KeyMmap
+	RenderTpl(tplname string, key_mmap map[string]string) (r string, err error)
 }
 
 type RenderServiceClient struct {
@@ -122,28 +122,28 @@ func (p *RenderServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
-//  - Tmpl
-//  - Name
-func (p *RenderServiceClient) RenderHello(tmpl string, name string) (r string, err error) {
-	if err = p.sendRenderHello(tmpl, name); err != nil {
+//  - Tplname
+//  - KeyMmap
+func (p *RenderServiceClient) RenderTpl(tplname string, key_mmap map[string]string) (r string, err error) {
+	if err = p.sendRenderTpl(tplname, key_mmap); err != nil {
 		return
 	}
-	return p.recvRenderHello()
+	return p.recvRenderTpl()
 }
 
-func (p *RenderServiceClient) sendRenderHello(tmpl string, name string) (err error) {
+func (p *RenderServiceClient) sendRenderTpl(tplname string, key_mmap map[string]string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("RenderHello", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("RenderTpl", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := RenderServiceRenderHelloArgs{
-		Tmpl: tmpl,
-		Name: name,
+	args := RenderServiceRenderTplArgs{
+		Tplname: tplname,
+		KeyMmap: key_mmap,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -154,7 +154,7 @@ func (p *RenderServiceClient) sendRenderHello(tmpl string, name string) (err err
 	return oprot.Flush()
 }
 
-func (p *RenderServiceClient) recvRenderHello() (value string, err error) {
+func (p *RenderServiceClient) recvRenderTpl() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -164,12 +164,12 @@ func (p *RenderServiceClient) recvRenderHello() (value string, err error) {
 	if err != nil {
 		return
 	}
-	if method != "RenderHello" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "RenderHello failed: wrong method name")
+	if method != "RenderTpl" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "RenderTpl failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "RenderHello failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "RenderTpl failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -186,10 +186,10 @@ func (p *RenderServiceClient) recvRenderHello() (value string, err error) {
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "RenderHello failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "RenderTpl failed: invalid message type")
 		return
 	}
-	result := RenderServiceRenderHelloResult{}
+	result := RenderServiceRenderTplResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -222,7 +222,7 @@ func NewRenderServiceProcessor(handler RenderService) *RenderServiceProcessor {
 
 	self4 := &RenderServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
 	self4.processorMap["Ping"] = &renderServiceProcessorPing{handler: handler}
-	self4.processorMap["RenderHello"] = &renderServiceProcessorRenderHello{handler: handler}
+	self4.processorMap["RenderTpl"] = &renderServiceProcessorRenderTpl{handler: handler}
 	return self4
 }
 
@@ -293,16 +293,16 @@ func (p *renderServiceProcessorPing) Process(seqId int32, iprot, oprot thrift.TP
 	return true, err
 }
 
-type renderServiceProcessorRenderHello struct {
+type renderServiceProcessorRenderTpl struct {
 	handler RenderService
 }
 
-func (p *renderServiceProcessorRenderHello) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := RenderServiceRenderHelloArgs{}
+func (p *renderServiceProcessorRenderTpl) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := RenderServiceRenderTplArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("RenderHello", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("RenderTpl", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -310,12 +310,12 @@ func (p *renderServiceProcessorRenderHello) Process(seqId int32, iprot, oprot th
 	}
 
 	iprot.ReadMessageEnd()
-	result := RenderServiceRenderHelloResult{}
+	result := RenderServiceRenderTplResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.RenderHello(args.Tmpl, args.Name); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing RenderHello: "+err2.Error())
-		oprot.WriteMessageBegin("RenderHello", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.RenderTpl(args.Tplname, args.KeyMmap); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing RenderTpl: "+err2.Error())
+		oprot.WriteMessageBegin("RenderTpl", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -323,7 +323,7 @@ func (p *renderServiceProcessorRenderHello) Process(seqId int32, iprot, oprot th
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("RenderHello", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("RenderTpl", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -499,25 +499,25 @@ func (p *RenderServicePingResult) String() string {
 }
 
 // Attributes:
-//  - Tmpl
-//  - Name
-type RenderServiceRenderHelloArgs struct {
-	Tmpl string `thrift:"tmpl,1" json:"tmpl"`
-	Name string `thrift:"name,2" json:"name"`
+//  - Tplname
+//  - KeyMmap
+type RenderServiceRenderTplArgs struct {
+	Tplname string            `thrift:"tplname,1" json:"tplname"`
+	KeyMmap map[string]string `thrift:"key_mmap,2" json:"key_mmap"`
 }
 
-func NewRenderServiceRenderHelloArgs() *RenderServiceRenderHelloArgs {
-	return &RenderServiceRenderHelloArgs{}
+func NewRenderServiceRenderTplArgs() *RenderServiceRenderTplArgs {
+	return &RenderServiceRenderTplArgs{}
 }
 
-func (p *RenderServiceRenderHelloArgs) GetTmpl() string {
-	return p.Tmpl
+func (p *RenderServiceRenderTplArgs) GetTplname() string {
+	return p.Tplname
 }
 
-func (p *RenderServiceRenderHelloArgs) GetName() string {
-	return p.Name
+func (p *RenderServiceRenderTplArgs) GetKeyMmap() map[string]string {
+	return p.KeyMmap
 }
-func (p *RenderServiceRenderHelloArgs) Read(iprot thrift.TProtocol) error {
+func (p *RenderServiceRenderTplArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -554,26 +554,45 @@ func (p *RenderServiceRenderHelloArgs) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *RenderServiceRenderHelloArgs) readField1(iprot thrift.TProtocol) error {
+func (p *RenderServiceRenderTplArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.Tmpl = v
+		p.Tplname = v
 	}
 	return nil
 }
 
-func (p *RenderServiceRenderHelloArgs) readField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return thrift.PrependError("error reading field 2: ", err)
-	} else {
-		p.Name = v
+func (p *RenderServiceRenderTplArgs) readField2(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
+	if err != nil {
+		return thrift.PrependError("error reading map begin: ", err)
+	}
+	tMap := make(map[string]string, size)
+	p.KeyMmap = tMap
+	for i := 0; i < size; i++ {
+		var _key6 string
+		if v, err := iprot.ReadString(); err != nil {
+			return thrift.PrependError("error reading field 0: ", err)
+		} else {
+			_key6 = v
+		}
+		var _val7 string
+		if v, err := iprot.ReadString(); err != nil {
+			return thrift.PrependError("error reading field 0: ", err)
+		} else {
+			_val7 = v
+		}
+		p.KeyMmap[_key6] = _val7
+	}
+	if err := iprot.ReadMapEnd(); err != nil {
+		return thrift.PrependError("error reading map end: ", err)
 	}
 	return nil
 }
 
-func (p *RenderServiceRenderHelloArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("RenderHello_args"); err != nil {
+func (p *RenderServiceRenderTplArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("RenderTpl_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -591,62 +610,73 @@ func (p *RenderServiceRenderHelloArgs) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *RenderServiceRenderHelloArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("tmpl", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:tmpl: ", p), err)
+func (p *RenderServiceRenderTplArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("tplname", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:tplname: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.Tmpl)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.tmpl (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.Tplname)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.tplname (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:tmpl: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:tplname: ", p), err)
 	}
 	return err
 }
 
-func (p *RenderServiceRenderHelloArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("name", thrift.STRING, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:name: ", p), err)
+func (p *RenderServiceRenderTplArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("key_mmap", thrift.MAP, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:key_mmap: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.Name)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.name (2) field write error: ", p), err)
+	if err := oprot.WriteMapBegin(thrift.STRING, thrift.STRING, len(p.KeyMmap)); err != nil {
+		return thrift.PrependError("error writing map begin: ", err)
+	}
+	for k, v := range p.KeyMmap {
+		if err := oprot.WriteString(string(k)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteString(string(v)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err)
+		}
+	}
+	if err := oprot.WriteMapEnd(); err != nil {
+		return thrift.PrependError("error writing map end: ", err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:name: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:key_mmap: ", p), err)
 	}
 	return err
 }
 
-func (p *RenderServiceRenderHelloArgs) String() string {
+func (p *RenderServiceRenderTplArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("RenderServiceRenderHelloArgs(%+v)", *p)
+	return fmt.Sprintf("RenderServiceRenderTplArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type RenderServiceRenderHelloResult struct {
+type RenderServiceRenderTplResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewRenderServiceRenderHelloResult() *RenderServiceRenderHelloResult {
-	return &RenderServiceRenderHelloResult{}
+func NewRenderServiceRenderTplResult() *RenderServiceRenderTplResult {
+	return &RenderServiceRenderTplResult{}
 }
 
-var RenderServiceRenderHelloResult_Success_DEFAULT string
+var RenderServiceRenderTplResult_Success_DEFAULT string
 
-func (p *RenderServiceRenderHelloResult) GetSuccess() string {
+func (p *RenderServiceRenderTplResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return RenderServiceRenderHelloResult_Success_DEFAULT
+		return RenderServiceRenderTplResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *RenderServiceRenderHelloResult) IsSetSuccess() bool {
+func (p *RenderServiceRenderTplResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *RenderServiceRenderHelloResult) Read(iprot thrift.TProtocol) error {
+func (p *RenderServiceRenderTplResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -679,7 +709,7 @@ func (p *RenderServiceRenderHelloResult) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *RenderServiceRenderHelloResult) readField0(iprot thrift.TProtocol) error {
+func (p *RenderServiceRenderTplResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -688,8 +718,8 @@ func (p *RenderServiceRenderHelloResult) readField0(iprot thrift.TProtocol) erro
 	return nil
 }
 
-func (p *RenderServiceRenderHelloResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("RenderHello_result"); err != nil {
+func (p *RenderServiceRenderTplResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("RenderTpl_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -704,7 +734,7 @@ func (p *RenderServiceRenderHelloResult) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *RenderServiceRenderHelloResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *RenderServiceRenderTplResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -719,9 +749,9 @@ func (p *RenderServiceRenderHelloResult) writeField0(oprot thrift.TProtocol) (er
 	return err
 }
 
-func (p *RenderServiceRenderHelloResult) String() string {
+func (p *RenderServiceRenderTplResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("RenderServiceRenderHelloResult(%+v)", *p)
+	return fmt.Sprintf("RenderServiceRenderTplResult(%+v)", *p)
 }

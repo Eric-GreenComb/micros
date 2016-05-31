@@ -1,5 +1,5 @@
 
 service RenderService {
     string Ping()
-	string RenderHello(1: string tmpl,2: string name)
+	string RenderTpl(1: string tplname, 2: map<string,string> key_mmap)
 }

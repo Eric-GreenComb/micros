@@ -25,16 +25,16 @@ func (m loggingMiddleware) Ping() (v string) {
 	return
 }
 
-func (m loggingMiddleware) RenderHello(tmpl, name string) (v string) {
+func (m loggingMiddleware) RenderTpl(tplname string, key_mmap map[string]string) (v string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "RenderHello",
-			"tmpl", tmpl,
-			"name", name,
+			"method", "RenderTpl",
+			"tplname", tplname,
+			"key_mmap", key_mmap,
 			"v", v,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	v = m.RenderService.RenderHello(tmpl, name)
+	v = m.RenderService.RenderTpl(tplname, key_mmap)
 	return
 }

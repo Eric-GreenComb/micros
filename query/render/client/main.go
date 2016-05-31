@@ -27,7 +27,7 @@ func main() {
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
 	)
 	flag.Parse()
-	if len(os.Args) < 3 {
+	if len(os.Args) < 2 {
 		fmt.Fprintf(os.Stderr, "\n%s [flags] method arg1 arg2\n\n", filepath.Base(os.Args[0]))
 		flag.Usage()
 		os.Exit(1)
@@ -36,7 +36,7 @@ func main() {
 	_instances := strings.Split(*thriftAddr, ",")
 	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
 
-	method, s1, s2 := flag.Arg(0), flag.Arg(1), flag.Arg(2)
+	method, s1 := flag.Arg(0), flag.Arg(1)
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(os.Stdout)
@@ -88,11 +88,14 @@ func main() {
 		v := svc.Ping()
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
-	case "hello":
-		_tmpl := s1
-		_name := s2
-		v := svc.RenderHello(_tmpl, _name)
-		logger.Log("method", "RenderHello", "tmpl", _tmpl, "name", _name, "v", v, "took", time.Since(begin))
+	case "render":
+		_tplname := s1
+		_map_parse := make(map[string]string)
+		_map_parse["Hi"] = "Hello"
+		_map_parse["Name"] = "Eric"
+		v := svc.RenderTpl(_tplname, _map_parse)
+		fmt.Println(v)
+		logger.Log("method", "Render", "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

@@ -22,11 +22,11 @@ func (m instrumentingMiddleware) Ping() (v string) {
 	return
 }
 
-func (m instrumentingMiddleware) RenderHello(tmpl, name string) (v string) {
+func (m instrumentingMiddleware) RenderTpl(tplname string, key_mmap map[string]string) (v string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "RenderHello"}
+		methodField := metrics.Field{Key: "method", Value: "RenderTpl"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	v = m.RenderService.RenderHello(tmpl, name)
+	v = m.RenderService.RenderTpl(tplname, key_mmap)
 	return
 }

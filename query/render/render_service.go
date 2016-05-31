@@ -2,69 +2,71 @@ package main
 
 import (
 	"bytes"
-	"fmt"
+	"html/template"
 	"sync"
 
-	"html/template"
-
-	gfile "github.com/banerwai/gommon/file"
+	"github.com/banerwai/global"
+	"github.com/banerwai/gommon/etcd"
 	"github.com/banerwai/micros/query/render/service"
 )
 
 type inmemService struct {
 	mtx sync.RWMutex
-	m   map[string]template.Template
+	m   map[string]string
 }
 
 func newInmemService() service.RenderService {
 	return &inmemService{
-		m: map[string]template.Template{},
+		m: map[string]string{},
 	}
-}
-
-type Hello struct {
-	Name string
 }
 
 func (self *inmemService) Ping() string {
 	return "pong"
 }
 
-func (self *inmemService) RenderHello(tmpl, name string) string {
+func (self *inmemService) RenderTpl(tplname string, key_mmap map[string]string) string {
 
-	t, err := self.cachedTmpl(tmpl)
-
+	_tpl, err := self.cachedTpl(tplname)
 	if err != nil {
 		return ""
 	}
 
+	tpl, _ := template.New(tplname).Parse(_tpl)
+
 	b := bytes.NewBuffer(make([]byte, 0))
-	_hello := Hello{Name: name}
-	t.Execute(b, _hello)
+
+	err = tpl.Execute(b, key_mmap)
+	if err != nil {
+		return ""
+	}
 	return b.String()
 }
 
-func (self *inmemService) cachedTmpl(tmpl string) (*template.Template, error) {
+func (self *inmemService) cachedTpl(tplname string) (string, error) {
 	self.mtx.RLock()
 	defer self.mtx.RUnlock()
 
-	fmt.Println(tmpl)
-	v, ok := self.m[tmpl]
+	v, ok := self.m[tplname]
 	if ok {
-		fmt.Println("cachedTmpl")
-		return &v, nil
+		return v, nil
 	}
 
-	_file := gfile.GetCurrentDirectory() + "/tmpl/" + tmpl + ".tmpl"
-	fmt.Println(_file)
-
-	t, err := template.ParseFiles(_file)
-	if err != nil {
-		fmt.Println(err.Error())
-		return nil, err
+	_tpl, _err := self.getTplFromEtcd(tplname)
+	if _err != nil {
+		return "", _err
 	}
 
-	self.m[tmpl] = *t
+	self.m[tplname] = _tpl
 
-	return t, nil
+	return _tpl, nil
+}
+
+func (self *inmemService) getTplFromEtcd(tplname string) (string, error) {
+	_key := global.ETCD_KEY_TPL_WEB + tplname
+	_tpl, _err := etcd.GetValue(_key)
+	if _err != nil {
+		return "", _err
+	}
+	return _tpl, nil
 }

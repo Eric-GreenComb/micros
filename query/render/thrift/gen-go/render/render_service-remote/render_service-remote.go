@@ -21,7 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string RenderHello(string tmpl, string name)")
+	fmt.Fprintln(os.Stderr, "  string RenderTpl(string tplname,  key_mmap)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -124,16 +124,32 @@ func main() {
 		fmt.Print(client.Ping())
 		fmt.Print("\n")
 		break
-	case "RenderHello":
+	case "RenderTpl":
 		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "RenderHello requires 2 args")
+			fmt.Fprintln(os.Stderr, "RenderTpl requires 2 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		argvalue1 := flag.Arg(2)
+		arg9 := flag.Arg(2)
+		mbTrans10 := thrift.NewTMemoryBufferLen(len(arg9))
+		defer mbTrans10.Close()
+		_, err11 := mbTrans10.WriteString(arg9)
+		if err11 != nil {
+			Usage()
+			return
+		}
+		factory12 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt13 := factory12.GetProtocol(mbTrans10)
+		containerStruct1 := render.NewRenderServiceRenderTplArgs()
+		err14 := containerStruct1.ReadField2(jsProt13)
+		if err14 != nil {
+			Usage()
+			return
+		}
+		argvalue1 := containerStruct1.KeyMmap
 		value1 := argvalue1
-		fmt.Print(client.RenderHello(value0, value1))
+		fmt.Print(client.RenderTpl(value0, value1))
 		fmt.Print("\n")
 		break
 	case "":
