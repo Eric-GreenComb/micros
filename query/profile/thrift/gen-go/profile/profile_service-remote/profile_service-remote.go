@@ -23,6 +23,8 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  string GetProfile(string profile_id)")
 	fmt.Fprintln(os.Stderr, "  string GetProfilesByUserId(string user_id)")
+	fmt.Fprintln(os.Stderr, "  string GetProfilesByCategory(i64 category_id, i64 timestamp, i64 pagesize)")
+	fmt.Fprintln(os.Stderr, "  string GetProfilesBySubCategory(i64 subcategory_id, i64 timestamp, i64 pagesize)")
 	fmt.Fprintln(os.Stderr, "  string SearchProfiles( option_mmap,  key_mmap, i64 timestamp, i64 pagesize)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
@@ -146,55 +148,107 @@ func main() {
 		fmt.Print(client.GetProfilesByUserId(value0))
 		fmt.Print("\n")
 		break
+	case "GetProfilesByCategory":
+		if flag.NArg()-1 != 3 {
+			fmt.Fprintln(os.Stderr, "GetProfilesByCategory requires 3 args")
+			flag.Usage()
+		}
+		argvalue0, err20 := (strconv.ParseInt(flag.Arg(1), 10, 64))
+		if err20 != nil {
+			Usage()
+			return
+		}
+		value0 := argvalue0
+		argvalue1, err21 := (strconv.ParseInt(flag.Arg(2), 10, 64))
+		if err21 != nil {
+			Usage()
+			return
+		}
+		value1 := argvalue1
+		argvalue2, err22 := (strconv.ParseInt(flag.Arg(3), 10, 64))
+		if err22 != nil {
+			Usage()
+			return
+		}
+		value2 := argvalue2
+		fmt.Print(client.GetProfilesByCategory(value0, value1, value2))
+		fmt.Print("\n")
+		break
+	case "GetProfilesBySubCategory":
+		if flag.NArg()-1 != 3 {
+			fmt.Fprintln(os.Stderr, "GetProfilesBySubCategory requires 3 args")
+			flag.Usage()
+		}
+		argvalue0, err23 := (strconv.ParseInt(flag.Arg(1), 10, 64))
+		if err23 != nil {
+			Usage()
+			return
+		}
+		value0 := argvalue0
+		argvalue1, err24 := (strconv.ParseInt(flag.Arg(2), 10, 64))
+		if err24 != nil {
+			Usage()
+			return
+		}
+		value1 := argvalue1
+		argvalue2, err25 := (strconv.ParseInt(flag.Arg(3), 10, 64))
+		if err25 != nil {
+			Usage()
+			return
+		}
+		value2 := argvalue2
+		fmt.Print(client.GetProfilesBySubCategory(value0, value1, value2))
+		fmt.Print("\n")
+		break
 	case "SearchProfiles":
 		if flag.NArg()-1 != 4 {
 			fmt.Fprintln(os.Stderr, "SearchProfiles requires 4 args")
 			flag.Usage()
 		}
-		arg16 := flag.Arg(1)
-		mbTrans17 := thrift.NewTMemoryBufferLen(len(arg16))
-		defer mbTrans17.Close()
-		_, err18 := mbTrans17.WriteString(arg16)
-		if err18 != nil {
+		arg26 := flag.Arg(1)
+		mbTrans27 := thrift.NewTMemoryBufferLen(len(arg26))
+		defer mbTrans27.Close()
+		_, err28 := mbTrans27.WriteString(arg26)
+		if err28 != nil {
 			Usage()
 			return
 		}
-		factory19 := thrift.NewTSimpleJSONProtocolFactory()
-		jsProt20 := factory19.GetProtocol(mbTrans17)
+		factory29 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt30 := factory29.GetProtocol(mbTrans27)
 		containerStruct0 := profile.NewProfileServiceSearchProfilesArgs()
-		err21 := containerStruct0.ReadField1(jsProt20)
-		if err21 != nil {
+		err31 := containerStruct0.ReadField1(jsProt30)
+		if err31 != nil {
 			Usage()
 			return
 		}
 		argvalue0 := containerStruct0.OptionMmap
 		value0 := argvalue0
-		arg22 := flag.Arg(2)
-		mbTrans23 := thrift.NewTMemoryBufferLen(len(arg22))
-		defer mbTrans23.Close()
-		_, err24 := mbTrans23.WriteString(arg22)
-		if err24 != nil {
+		arg32 := flag.Arg(2)
+		mbTrans33 := thrift.NewTMemoryBufferLen(len(arg32))
+		defer mbTrans33.Close()
+		_, err34 := mbTrans33.WriteString(arg32)
+		if err34 != nil {
 			Usage()
 			return
 		}
-		factory25 := thrift.NewTSimpleJSONProtocolFactory()
-		jsProt26 := factory25.GetProtocol(mbTrans23)
+		factory35 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt36 := factory35.GetProtocol(mbTrans33)
 		containerStruct1 := profile.NewProfileServiceSearchProfilesArgs()
-		err27 := containerStruct1.ReadField2(jsProt26)
-		if err27 != nil {
+		err37 := containerStruct1.ReadField2(jsProt36)
+		if err37 != nil {
 			Usage()
 			return
 		}
 		argvalue1 := containerStruct1.KeyMmap
 		value1 := argvalue1
-		argvalue2, err28 := (strconv.ParseInt(flag.Arg(3), 10, 64))
-		if err28 != nil {
+		argvalue2, err38 := (strconv.ParseInt(flag.Arg(3), 10, 64))
+		if err38 != nil {
 			Usage()
 			return
 		}
 		value2 := argvalue2
-		argvalue3, err29 := (strconv.ParseInt(flag.Arg(4), 10, 64))
-		if err29 != nil {
+		argvalue3, err39 := (strconv.ParseInt(flag.Arg(4), 10, 64))
+		if err39 != nil {
 			Usage()
 			return
 		}

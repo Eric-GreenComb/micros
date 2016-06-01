@@ -56,6 +56,42 @@ func (self *inmemService) GetProfilesByUserId(user_id string) (r string) {
 	return
 }
 
+func (self *inmemService) GetProfilesByCategory(category_id int64, timestamp int64, pagesize int64) (r string) {
+	var _profiles []bean.Profile
+
+	query := bson.M{"last_activetime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	query["status"] = true
+	query["category_number"] = category_id
+
+	err := ProfileCollection.Find(query).Sort("-last_activetime").Limit(int(pagesize)).All(&_profiles)
+
+	if err != nil {
+		return ""
+	}
+
+	b, _ := json.Marshal(_profiles)
+	r = string(b)
+	return
+}
+
+func (self *inmemService) GetProfilesBySubCategory(subcategory_id int64, timestamp int64, pagesize int64) (r string) {
+	var _profiles []bean.Profile
+
+	query := bson.M{"last_activetime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	query["status"] = true
+	query["serial_number"] = subcategory_id
+
+	err := ProfileCollection.Find(query).Sort("-last_activetime").Limit(int(pagesize)).All(&_profiles)
+
+	if err != nil {
+		return ""
+	}
+
+	b, _ := json.Marshal(_profiles)
+	r = string(b)
+	return
+}
+
 //  db.profile.find({createdtime:{$gt:timestamp}}).sort({"createdtime":1}).limit(10)
 func (self *inmemService) SearchProfiles(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64, pagesize int64) (r string) {
 	// db.profile.find(self.genQuery(profile_search_condition, timestamp)).sort({"createdtime":1}).limit(pagesize)

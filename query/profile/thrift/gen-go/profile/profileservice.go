@@ -23,6 +23,16 @@ type ProfileService interface {
 	//  - UserID
 	GetProfilesByUserId(user_id string) (r string, err error)
 	// Parameters:
+	//  - CategoryID
+	//  - Timestamp
+	//  - Pagesize
+	GetProfilesByCategory(category_id int64, timestamp int64, pagesize int64) (r string, err error)
+	// Parameters:
+	//  - SubcategoryID
+	//  - Timestamp
+	//  - Pagesize
+	GetProfilesBySubCategory(subcategory_id int64, timestamp int64, pagesize int64) (r string, err error)
+	// Parameters:
 	//  - OptionMmap
 	//  - KeyMmap
 	//  - Timestamp
@@ -284,6 +294,168 @@ func (p *ProfileServiceClient) recvGetProfilesByUserId() (value string, err erro
 }
 
 // Parameters:
+//  - CategoryID
+//  - Timestamp
+//  - Pagesize
+func (p *ProfileServiceClient) GetProfilesByCategory(category_id int64, timestamp int64, pagesize int64) (r string, err error) {
+	if err = p.sendGetProfilesByCategory(category_id, timestamp, pagesize); err != nil {
+		return
+	}
+	return p.recvGetProfilesByCategory()
+}
+
+func (p *ProfileServiceClient) sendGetProfilesByCategory(category_id int64, timestamp int64, pagesize int64) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("GetProfilesByCategory", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ProfileServiceGetProfilesByCategoryArgs{
+		CategoryID: category_id,
+		Timestamp:  timestamp,
+		Pagesize:   pagesize,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ProfileServiceClient) recvGetProfilesByCategory() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "GetProfilesByCategory" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetProfilesByCategory failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetProfilesByCategory failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error7 error
+		error7, err = error6.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error7
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetProfilesByCategory failed: invalid message type")
+		return
+	}
+	result := ProfileServiceGetProfilesByCategoryResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - SubcategoryID
+//  - Timestamp
+//  - Pagesize
+func (p *ProfileServiceClient) GetProfilesBySubCategory(subcategory_id int64, timestamp int64, pagesize int64) (r string, err error) {
+	if err = p.sendGetProfilesBySubCategory(subcategory_id, timestamp, pagesize); err != nil {
+		return
+	}
+	return p.recvGetProfilesBySubCategory()
+}
+
+func (p *ProfileServiceClient) sendGetProfilesBySubCategory(subcategory_id int64, timestamp int64, pagesize int64) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("GetProfilesBySubCategory", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := ProfileServiceGetProfilesBySubCategoryArgs{
+		SubcategoryID: subcategory_id,
+		Timestamp:     timestamp,
+		Pagesize:      pagesize,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *ProfileServiceClient) recvGetProfilesBySubCategory() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "GetProfilesBySubCategory" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetProfilesBySubCategory failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetProfilesBySubCategory failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error8 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error9 error
+		error9, err = error8.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error9
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetProfilesBySubCategory failed: invalid message type")
+		return
+	}
+	result := ProfileServiceGetProfilesBySubCategoryResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
 //  - OptionMmap
 //  - KeyMmap
 //  - Timestamp
@@ -339,16 +511,16 @@ func (p *ProfileServiceClient) recvSearchProfiles() (value string, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error7 error
-		error7, err = error6.Read(iprot)
+		error10 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error11 error
+		error11, err = error10.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error7
+		err = error11
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -386,12 +558,14 @@ func (p *ProfileServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFun
 
 func NewProfileServiceProcessor(handler ProfileService) *ProfileServiceProcessor {
 
-	self8 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self8.processorMap["Ping"] = &profileServiceProcessorPing{handler: handler}
-	self8.processorMap["GetProfile"] = &profileServiceProcessorGetProfile{handler: handler}
-	self8.processorMap["GetProfilesByUserId"] = &profileServiceProcessorGetProfilesByUserId{handler: handler}
-	self8.processorMap["SearchProfiles"] = &profileServiceProcessorSearchProfiles{handler: handler}
-	return self8
+	self12 := &ProfileServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self12.processorMap["Ping"] = &profileServiceProcessorPing{handler: handler}
+	self12.processorMap["GetProfile"] = &profileServiceProcessorGetProfile{handler: handler}
+	self12.processorMap["GetProfilesByUserId"] = &profileServiceProcessorGetProfilesByUserId{handler: handler}
+	self12.processorMap["GetProfilesByCategory"] = &profileServiceProcessorGetProfilesByCategory{handler: handler}
+	self12.processorMap["GetProfilesBySubCategory"] = &profileServiceProcessorGetProfilesBySubCategory{handler: handler}
+	self12.processorMap["SearchProfiles"] = &profileServiceProcessorSearchProfiles{handler: handler}
+	return self12
 }
 
 func (p *ProfileServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -404,12 +578,12 @@ func (p *ProfileServiceProcessor) Process(iprot, oprot thrift.TProtocol) (succes
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x9 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x13 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x9.Write(oprot)
+	x13.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x9
+	return false, x13
 
 }
 
@@ -540,6 +714,102 @@ func (p *profileServiceProcessorGetProfilesByUserId) Process(seqId int32, iprot,
 		result.Success = &retval
 	}
 	if err2 = oprot.WriteMessageBegin("GetProfilesByUserId", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type profileServiceProcessorGetProfilesByCategory struct {
+	handler ProfileService
+}
+
+func (p *profileServiceProcessorGetProfilesByCategory) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ProfileServiceGetProfilesByCategoryArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("GetProfilesByCategory", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ProfileServiceGetProfilesByCategoryResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.GetProfilesByCategory(args.CategoryID, args.Timestamp, args.Pagesize); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetProfilesByCategory: "+err2.Error())
+		oprot.WriteMessageBegin("GetProfilesByCategory", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("GetProfilesByCategory", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type profileServiceProcessorGetProfilesBySubCategory struct {
+	handler ProfileService
+}
+
+func (p *profileServiceProcessorGetProfilesBySubCategory) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ProfileServiceGetProfilesBySubCategoryArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("GetProfilesBySubCategory", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := ProfileServiceGetProfilesBySubCategoryResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.GetProfilesBySubCategory(args.SubcategoryID, args.Timestamp, args.Pagesize); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetProfilesBySubCategory: "+err2.Error())
+		oprot.WriteMessageBegin("GetProfilesBySubCategory", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("GetProfilesBySubCategory", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -1149,6 +1419,532 @@ func (p *ProfileServiceGetProfilesByUserIdResult) String() string {
 }
 
 // Attributes:
+//  - CategoryID
+//  - Timestamp
+//  - Pagesize
+type ProfileServiceGetProfilesByCategoryArgs struct {
+	CategoryID int64 `thrift:"category_id,1" json:"category_id"`
+	Timestamp  int64 `thrift:"timestamp,2" json:"timestamp"`
+	Pagesize   int64 `thrift:"pagesize,3" json:"pagesize"`
+}
+
+func NewProfileServiceGetProfilesByCategoryArgs() *ProfileServiceGetProfilesByCategoryArgs {
+	return &ProfileServiceGetProfilesByCategoryArgs{}
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) GetCategoryID() int64 {
+	return p.CategoryID
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) GetTimestamp() int64 {
+	return p.Timestamp
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) GetPagesize() int64 {
+	return p.Pagesize
+}
+func (p *ProfileServiceGetProfilesByCategoryArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		case 3:
+			if err := p.readField3(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.CategoryID = v
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.Timestamp = v
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) readField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 3: ", err)
+	} else {
+		p.Pagesize = v
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetProfilesByCategory_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField3(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("category_id", thrift.I64, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:category_id: ", p), err)
+	}
+	if err := oprot.WriteI64(int64(p.CategoryID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.category_id (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:category_id: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("timestamp", thrift.I64, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:timestamp: ", p), err)
+	}
+	if err := oprot.WriteI64(int64(p.Timestamp)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.timestamp (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:timestamp: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) writeField3(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("pagesize", thrift.I64, 3); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:pagesize: ", p), err)
+	}
+	if err := oprot.WriteI64(int64(p.Pagesize)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.pagesize (3) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 3:pagesize: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceGetProfilesByCategoryArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileServiceGetProfilesByCategoryArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ProfileServiceGetProfilesByCategoryResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewProfileServiceGetProfilesByCategoryResult() *ProfileServiceGetProfilesByCategoryResult {
+	return &ProfileServiceGetProfilesByCategoryResult{}
+}
+
+var ProfileServiceGetProfilesByCategoryResult_Success_DEFAULT string
+
+func (p *ProfileServiceGetProfilesByCategoryResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ProfileServiceGetProfilesByCategoryResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ProfileServiceGetProfilesByCategoryResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetProfilesByCategory_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesByCategoryResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ProfileServiceGetProfilesByCategoryResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileServiceGetProfilesByCategoryResult(%+v)", *p)
+}
+
+// Attributes:
+//  - SubcategoryID
+//  - Timestamp
+//  - Pagesize
+type ProfileServiceGetProfilesBySubCategoryArgs struct {
+	SubcategoryID int64 `thrift:"subcategory_id,1" json:"subcategory_id"`
+	Timestamp     int64 `thrift:"timestamp,2" json:"timestamp"`
+	Pagesize      int64 `thrift:"pagesize,3" json:"pagesize"`
+}
+
+func NewProfileServiceGetProfilesBySubCategoryArgs() *ProfileServiceGetProfilesBySubCategoryArgs {
+	return &ProfileServiceGetProfilesBySubCategoryArgs{}
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) GetSubcategoryID() int64 {
+	return p.SubcategoryID
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) GetTimestamp() int64 {
+	return p.Timestamp
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) GetPagesize() int64 {
+	return p.Pagesize
+}
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		case 2:
+			if err := p.readField2(iprot); err != nil {
+				return err
+			}
+		case 3:
+			if err := p.readField3(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.SubcategoryID = v
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) readField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 2: ", err)
+	} else {
+		p.Timestamp = v
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) readField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return thrift.PrependError("error reading field 3: ", err)
+	} else {
+		p.Pagesize = v
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetProfilesBySubCategory_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField2(oprot); err != nil {
+		return err
+	}
+	if err := p.writeField3(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("subcategory_id", thrift.I64, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:subcategory_id: ", p), err)
+	}
+	if err := oprot.WriteI64(int64(p.SubcategoryID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.subcategory_id (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:subcategory_id: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) writeField2(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("timestamp", thrift.I64, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:timestamp: ", p), err)
+	}
+	if err := oprot.WriteI64(int64(p.Timestamp)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.timestamp (2) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:timestamp: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) writeField3(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("pagesize", thrift.I64, 3); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:pagesize: ", p), err)
+	}
+	if err := oprot.WriteI64(int64(p.Pagesize)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.pagesize (3) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 3:pagesize: ", p), err)
+	}
+	return err
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileServiceGetProfilesBySubCategoryArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type ProfileServiceGetProfilesBySubCategoryResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewProfileServiceGetProfilesBySubCategoryResult() *ProfileServiceGetProfilesBySubCategoryResult {
+	return &ProfileServiceGetProfilesBySubCategoryResult{}
+}
+
+var ProfileServiceGetProfilesBySubCategoryResult_Success_DEFAULT string
+
+func (p *ProfileServiceGetProfilesBySubCategoryResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return ProfileServiceGetProfilesBySubCategoryResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *ProfileServiceGetProfilesBySubCategoryResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetProfilesBySubCategory_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *ProfileServiceGetProfilesBySubCategoryResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProfileServiceGetProfilesBySubCategoryResult(%+v)", *p)
+}
+
+// Attributes:
 //  - OptionMmap
 //  - KeyMmap
 //  - Timestamp
@@ -1232,19 +2028,19 @@ func (p *ProfileServiceSearchProfilesArgs) readField1(iprot thrift.TProtocol) er
 	tMap := make(map[string]int64, size)
 	p.OptionMmap = tMap
 	for i := 0; i < size; i++ {
-		var _key10 string
+		var _key14 string
 		if v, err := iprot.ReadString(); err != nil {
 			return thrift.PrependError("error reading field 0: ", err)
 		} else {
-			_key10 = v
+			_key14 = v
 		}
-		var _val11 int64
+		var _val15 int64
 		if v, err := iprot.ReadI64(); err != nil {
 			return thrift.PrependError("error reading field 0: ", err)
 		} else {
-			_val11 = v
+			_val15 = v
 		}
-		p.OptionMmap[_key10] = _val11
+		p.OptionMmap[_key14] = _val15
 	}
 	if err := iprot.ReadMapEnd(); err != nil {
 		return thrift.PrependError("error reading map end: ", err)
@@ -1260,19 +2056,19 @@ func (p *ProfileServiceSearchProfilesArgs) readField2(iprot thrift.TProtocol) er
 	tMap := make(map[string]string, size)
 	p.KeyMmap = tMap
 	for i := 0; i < size; i++ {
-		var _key12 string
+		var _key16 string
 		if v, err := iprot.ReadString(); err != nil {
 			return thrift.PrependError("error reading field 0: ", err)
 		} else {
-			_key12 = v
+			_key16 = v
 		}
-		var _val13 string
+		var _val17 string
 		if v, err := iprot.ReadString(); err != nil {
 			return thrift.PrependError("error reading field 0: ", err)
 		} else {
-			_val13 = v
+			_val17 = v
 		}
-		p.KeyMmap[_key12] = _val13
+		p.KeyMmap[_key16] = _val17
 	}
 	if err := iprot.ReadMapEnd(); err != nil {
 		return thrift.PrependError("error reading map end: ", err)

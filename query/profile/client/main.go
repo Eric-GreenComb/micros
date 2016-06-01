@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -107,9 +108,28 @@ func main() {
 		fmt.Println(_profiles)
 		logger.Log("method", "GetProfilesByUserId", "v", v, "took", time.Since(begin))
 
+	case "cat":
+		_cat_id, _ := strconv.ParseInt(s1, 10, 64)
+		v := svc.GetProfilesByCategory(_cat_id, time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
+		var _profiles []bean.Profile
+		json.Unmarshal([]byte(v), &_profiles)
+		for _, _prof := range _profiles {
+			fmt.Println(_prof.JobTitle, _prof.SerialNumber)
+		}
+		logger.Log("method", "GetProfilesByUserId", "took", time.Since(begin))
+
+	case "subcat":
+		_subcat_id, _ := strconv.ParseInt(s1, 10, 64)
+		v := svc.GetProfilesBySubCategory(_subcat_id, 1464785330, banerwaiglobal.Pagination_PAGESIZE_Web)
+		var _profiles []bean.Profile
+		json.Unmarshal([]byte(v), &_profiles)
+		for _, _prof := range _profiles {
+			fmt.Println(_prof.SerialNumber, _prof.LastActiveTime.Unix())
+		}
+		logger.Log("method", "GetProfilesByUserId", "took", time.Since(begin))
+
 	case "search":
 		_key := s1
-		fmt.Println(_key)
 
 		option_mmap := make(map[string]int64)
 

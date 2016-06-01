@@ -12,6 +12,16 @@ type ProfileService interface {
 	//  - UserID
 	GetProfilesByUserId(user_id string) string
 	// Parameters:
+	//  - CategoryID
+	//  - Timestamp
+	//  - Pagesize
+	GetProfilesByCategory(category_id int64, timestamp int64, pagesize int64) string
+	// Parameters:
+	//  - SubcategoryID
+	//  - Timestamp
+	//  - Pagesize
+	GetProfilesBySubCategory(subcategory_id int64, timestamp int64, pagesize int64) string
+	// Parameters:
 	//  - OptionMmap
 	//  - KeyMmap
 	//  - Timestamp

@@ -100,7 +100,8 @@ func main() {
 		_obj.Name = "Test"
 		_obj.JobTitle = "this is a title"
 		_obj.Overview = "this is a overview go"
-		_obj.Serialnumber = 531770282584862733
+		_obj.CategoryNumber = 10100
+		_obj.SerialNumber = 10101
 		_obj.HourRate = 15000
 		_obj.WorkHours = 40
 
@@ -115,7 +116,8 @@ func main() {
 		_obj.UserID = bson.ObjectIdHex(*_defaultObjectId)
 		_obj.Name = "Test1"
 		_obj.JobTitle = "this is a title1"
-		_obj.Serialnumber = 531770282584862733
+		_obj.CategoryNumber = 10100
+		_obj.SerialNumber = 10101
 		_obj.HourRate = 21234
 		_obj.WorkHours = 40
 
