@@ -82,7 +82,6 @@ func (m loggingMiddleware) GetCategories() (v string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetCategories",
-			"v", fmt.Sprintf("%v", v),
 			"took", time.Since(begin),
 		)
 	}(time.Now())
