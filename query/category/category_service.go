@@ -81,10 +81,10 @@ func (self *inmemService) initCategories(categories []Category) bool {
 	}
 
 	for _, _category := range categories {
-		if _, ok := self.m[int(_category.Serialnumber)]; ok {
+		if _, ok := self.m[int(_category.SerialNumber)]; ok {
 			continue // don't overwrite
 		}
-		self.m[int(_category.Serialnumber)] = _category
+		self.m[int(_category.SerialNumber)] = _category
 	}
 
 	self.sortkey = make([]int, 0)

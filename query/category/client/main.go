@@ -121,9 +121,9 @@ func main() {
 		}
 
 		for _, _cat := range cats {
-			fmt.Println(strconv.Itoa(int(_cat.Serialnumber)) + " " + _cat.Name + "(" + _cat.Desc + ")")
+			fmt.Println(strconv.Itoa(int(_cat.SerialNumber)) + " " + _cat.Name + "(" + _cat.Desc + ")")
 			for _, _sub := range _cat.Subcategories {
-				fmt.Println("    " + strconv.Itoa(int(_sub.Serialnumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
+				fmt.Println("    " + strconv.Itoa(int(_sub.SerialNumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
 			}
 		}
 
@@ -140,7 +140,7 @@ func main() {
 		}
 
 		for _, _sub := range subs {
-			fmt.Println("    " + strconv.Itoa(int(_sub.Serialnumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
+			fmt.Println("    " + strconv.Itoa(int(_sub.SerialNumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
 		}
 
 		logger.Log("method", "GetSubCategories", "Serialnumber", _serialnumber, "subs", len(subs), "took", time.Since(begin))

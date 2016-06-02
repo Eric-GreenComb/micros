@@ -628,5 +628,49 @@
                 "desc": "其他会计-咨询"
             }
         ]
+    },
+    {
+        "id": "531770112600000004",
+        "serialnumber": 11300,
+        "name": "cultural-sports",
+        "desc": "文化-体育",
+        "subcategories": [
+            {
+                "id": "531770282601639951",
+                "serialnumber": 11301,
+                "name": "shower",
+                "desc": "演艺"
+            },
+            {
+                "id": "531770282601639952",
+                "serialnumber": 11302,
+                "name": "backend",
+                "desc": "后台"
+            },
+            {
+                "id": "531770282601639953",
+                "serialnumber": 11303,
+                "name": "art",
+                "desc": "艺术"
+            },
+            {
+                "id": "531770282601639954",
+                "serialnumber": 11304,
+                "name": "fitness",
+                "desc": "健身"
+            },
+            {
+                "id": "531770282601639955",
+                "serialnumber": 11305,
+                "name": "trainer",
+                "desc": "陪练"
+            },
+            {
+                "id": "531770282601639956",
+                "serialnumber": 11306,
+                "name": "other-cultural-sports",
+                "desc": "其他文化-体育"
+            }
+        ]
     }
 ]
