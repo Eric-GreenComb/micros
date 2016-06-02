@@ -13,7 +13,7 @@ func (tb thriftBinding) Ping() (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) Login(emailOrUsername string, pwd string) (string, error) {
-	r := tb.AuthService.Login(emailOrUsername, pwd)
+func (tb thriftBinding) Login(email string, pwd string) (string, error) {
+	r := tb.AuthService.Login(email, pwd)
 	return r, nil
 }

@@ -21,7 +21,8 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string GetUser(string email)")
+	fmt.Fprintln(os.Stderr, "  string GetUserByEmail(string email)")
+	fmt.Fprintln(os.Stderr, "  string GetUserByID(string id)")
 	fmt.Fprintln(os.Stderr, "  i64 CountUser()")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
@@ -125,14 +126,24 @@ func main() {
 		fmt.Print(client.Ping())
 		fmt.Print("\n")
 		break
-	case "GetUser":
+	case "GetUserByEmail":
 		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetUser requires 1 args")
+			fmt.Fprintln(os.Stderr, "GetUserByEmail requires 1 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.GetUser(value0))
+		fmt.Print(client.GetUserByEmail(value0))
+		fmt.Print("\n")
+		break
+	case "GetUserByID":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "GetUserByID requires 1 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		fmt.Print(client.GetUserByID(value0))
 		fmt.Print("\n")
 		break
 	case "CountUser":

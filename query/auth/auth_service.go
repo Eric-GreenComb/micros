@@ -18,19 +18,25 @@ func (self *inmemService) Ping() (r string) {
 	return
 }
 
-func (self *inmemService) Login(emailOrUsername string, pwd string) (r string) {
+func (self *inmemService) Login(email string, pwd string) (r string) {
 	var _bson_m bson.M
-	err := UsersCollection.Find(bson.M{"email": emailOrUsername}).One(&_bson_m)
+	err := UsersCollection.Find(bson.M{"email": email}).One(&_bson_m)
 
 	if err != nil {
-		return err.Error()
+		return "error:" + err.Error()
 	}
 	_pwd := _bson_m["pwd"].(string)
 
 	_is := crypto.CompareHash([]byte(_pwd), pwd)
 	if !_is {
-		return "compare false"
+		return "error: compare false"
 	}
 
-	return "true"
+	_data, _err := bson.Marshal(_bson_m)
+	if _err != nil {
+		return "error: bson.Marshal error"
+	}
+
+	r = string(_data)
+	return
 }

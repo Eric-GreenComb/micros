@@ -36,13 +36,21 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	// email is a index, if email has ,insert is err
 	_mongo_m := bson.M{}
 
-	if _, ok := mmap["pwd"]; ok {
-		_b, _ := crypto.GenerateHash(mmap["pwd"])
-		mmap["pwd"] = string(_b)
-	}
+	// if _, ok := mmap["pwd"]; ok {
+	// 	_b, _ := crypto.GenerateHash(mmap["pwd"])
+	// 	mmap["pwd"] = string(_b)
+	// }
 
 	for k, v := range mmap {
-		_mongo_m[k] = v
+		switch k {
+		case "pwd":
+			_b, _ := crypto.GenerateHash(v)
+			_mongo_m[k] = string(_b)
+		case "invited":
+			_mongo_m[k] = bson.ObjectIdHex(v)
+		default:
+			_mongo_m[k] = v
+		}
 	}
 
 	_time := time.Now()
@@ -50,14 +58,13 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	_id := bson.NewObjectId()
 	_mongo_m["_id"] = _id
 	_mongo_m["createdtime"] = _time
-	_mongo_m["lastactivity"] = _time
 	_mongo_m["actived"] = false
 
 	err := UsersCollection.Insert(_mongo_m)
 	if err != nil {
 		return err.Error()
 	}
-	return _id
+	return _id.Hex()
 }
 
 func (self *inmemService) ResetPwd(email string, newpwd string) (r bool) {

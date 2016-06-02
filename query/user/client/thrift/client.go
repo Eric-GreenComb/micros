@@ -26,8 +26,17 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) GetUser(email string) string {
-	reply, err := c.UserServiceClient.GetUser(email)
+func (c client) GetUserByEmail(email string) string {
+	reply, err := c.UserServiceClient.GetUserByEmail(email)
+	if err != nil {
+		c.Logger.Log("err", err)
+		return ""
+	}
+	return reply
+}
+
+func (c client) GetUserByID(id string) string {
+	reply, err := c.UserServiceClient.GetUserByID(id)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

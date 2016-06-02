@@ -22,11 +22,11 @@ func (m instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) Login(emailOrUsername string, pwd string) (r string) {
+func (m instrumentingMiddleware) Login(email string, pwd string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "Login"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.AuthService.Login(emailOrUsername, pwd)
+	r = m.AuthService.Login(email, pwd)
 	return
 }

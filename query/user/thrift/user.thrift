@@ -1,6 +1,7 @@
 
 service UserService {
     string Ping()
-	string GetUser(1: string email)
+	string GetUserByEmail(1: string email)
+	string GetUserByID(1: string id)	
 	i64 CountUser()
 }

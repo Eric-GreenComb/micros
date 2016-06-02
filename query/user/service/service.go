@@ -7,6 +7,9 @@ type UserService interface {
 	Ping() string
 	// Parameters:
 	//  - Email
-	GetUser(email string) string
+	GetUserByEmail(email string) string
+	// Parameters:
+	//  - ID
+	GetUserByID(id string) string
 	CountUser() int64
 }

@@ -25,16 +25,29 @@ func (m loggingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m loggingMiddleware) GetUser(email string) (r string) {
+func (m loggingMiddleware) GetUserByEmail(email string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "GetUser",
+			"method", "GetUserByEmail",
 			"email", email,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.UserService.GetUser(email)
+	r = m.UserService.GetUserByEmail(email)
+	return
+}
+
+func (m loggingMiddleware) GetUserByID(id string) (r string) {
+	defer func(begin time.Time) {
+		m.Logger.Log(
+			"method", "GetUserByID",
+			"id", id,
+			"r", r,
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+	r = m.UserService.GetUserByID(id)
 	return
 }
 

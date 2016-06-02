@@ -18,7 +18,10 @@ type UserService interface {
 	Ping() (r string, err error)
 	// Parameters:
 	//  - Email
-	GetUser(email string) (r string, err error)
+	GetUserByEmail(email string) (r string, err error)
+	// Parameters:
+	//  - ID
+	GetUserByID(id string) (r string, err error)
 	CountUser() (r int64, err error)
 }
 
@@ -123,24 +126,24 @@ func (p *UserServiceClient) recvPing() (value string, err error) {
 
 // Parameters:
 //  - Email
-func (p *UserServiceClient) GetUser(email string) (r string, err error) {
-	if err = p.sendGetUser(email); err != nil {
+func (p *UserServiceClient) GetUserByEmail(email string) (r string, err error) {
+	if err = p.sendGetUserByEmail(email); err != nil {
 		return
 	}
-	return p.recvGetUser()
+	return p.recvGetUserByEmail()
 }
 
-func (p *UserServiceClient) sendGetUser(email string) (err error) {
+func (p *UserServiceClient) sendGetUserByEmail(email string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetUser", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("GetUserByEmail", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := UserServiceGetUserArgs{
+	args := UserServiceGetUserByEmailArgs{
 		Email: email,
 	}
 	if err = args.Write(oprot); err != nil {
@@ -152,7 +155,7 @@ func (p *UserServiceClient) sendGetUser(email string) (err error) {
 	return oprot.Flush()
 }
 
-func (p *UserServiceClient) recvGetUser() (value string, err error) {
+func (p *UserServiceClient) recvGetUserByEmail() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -162,12 +165,12 @@ func (p *UserServiceClient) recvGetUser() (value string, err error) {
 	if err != nil {
 		return
 	}
-	if method != "GetUser" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetUser failed: wrong method name")
+	if method != "GetUserByEmail" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetUserByEmail failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetUser failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetUserByEmail failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -184,10 +187,87 @@ func (p *UserServiceClient) recvGetUser() (value string, err error) {
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetUser failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetUserByEmail failed: invalid message type")
 		return
 	}
-	result := UserServiceGetUserResult{}
+	result := UserServiceGetUserByEmailResult{}
+	if err = result.Read(iprot); err != nil {
+		return
+	}
+	if err = iprot.ReadMessageEnd(); err != nil {
+		return
+	}
+	value = result.GetSuccess()
+	return
+}
+
+// Parameters:
+//  - ID
+func (p *UserServiceClient) GetUserByID(id string) (r string, err error) {
+	if err = p.sendGetUserByID(id); err != nil {
+		return
+	}
+	return p.recvGetUserByID()
+}
+
+func (p *UserServiceClient) sendGetUserByID(id string) (err error) {
+	oprot := p.OutputProtocol
+	if oprot == nil {
+		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.OutputProtocol = oprot
+	}
+	p.SeqId++
+	if err = oprot.WriteMessageBegin("GetUserByID", thrift.CALL, p.SeqId); err != nil {
+		return
+	}
+	args := UserServiceGetUserByIDArgs{
+		ID: id,
+	}
+	if err = args.Write(oprot); err != nil {
+		return
+	}
+	if err = oprot.WriteMessageEnd(); err != nil {
+		return
+	}
+	return oprot.Flush()
+}
+
+func (p *UserServiceClient) recvGetUserByID() (value string, err error) {
+	iprot := p.InputProtocol
+	if iprot == nil {
+		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
+		p.InputProtocol = iprot
+	}
+	method, mTypeId, seqId, err := iprot.ReadMessageBegin()
+	if err != nil {
+		return
+	}
+	if method != "GetUserByID" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetUserByID failed: wrong method name")
+		return
+	}
+	if p.SeqId != seqId {
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetUserByID failed: out of sequence response")
+		return
+	}
+	if mTypeId == thrift.EXCEPTION {
+		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error5 error
+		error5, err = error4.Read(iprot)
+		if err != nil {
+			return
+		}
+		if err = iprot.ReadMessageEnd(); err != nil {
+			return
+		}
+		err = error5
+		return
+	}
+	if mTypeId != thrift.REPLY {
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetUserByID failed: invalid message type")
+		return
+	}
+	result := UserServiceGetUserByIDResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -244,16 +324,16 @@ func (p *UserServiceClient) recvCountUser() (value int64, err error) {
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
-		error4 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
-		var error5 error
-		error5, err = error4.Read(iprot)
+		error6 := thrift.NewTApplicationException(thrift.UNKNOWN_APPLICATION_EXCEPTION, "Unknown Exception")
+		var error7 error
+		error7, err = error6.Read(iprot)
 		if err != nil {
 			return
 		}
 		if err = iprot.ReadMessageEnd(); err != nil {
 			return
 		}
-		err = error5
+		err = error7
 		return
 	}
 	if mTypeId != thrift.REPLY {
@@ -291,11 +371,12 @@ func (p *UserServiceProcessor) ProcessorMap() map[string]thrift.TProcessorFuncti
 
 func NewUserServiceProcessor(handler UserService) *UserServiceProcessor {
 
-	self6 := &UserServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
-	self6.processorMap["Ping"] = &userServiceProcessorPing{handler: handler}
-	self6.processorMap["GetUser"] = &userServiceProcessorGetUser{handler: handler}
-	self6.processorMap["CountUser"] = &userServiceProcessorCountUser{handler: handler}
-	return self6
+	self8 := &UserServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
+	self8.processorMap["Ping"] = &userServiceProcessorPing{handler: handler}
+	self8.processorMap["GetUserByEmail"] = &userServiceProcessorGetUserByEmail{handler: handler}
+	self8.processorMap["GetUserByID"] = &userServiceProcessorGetUserByID{handler: handler}
+	self8.processorMap["CountUser"] = &userServiceProcessorCountUser{handler: handler}
+	return self8
 }
 
 func (p *UserServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -308,12 +389,12 @@ func (p *UserServiceProcessor) Process(iprot, oprot thrift.TProtocol) (success b
 	}
 	iprot.Skip(thrift.STRUCT)
 	iprot.ReadMessageEnd()
-	x7 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
+	x9 := thrift.NewTApplicationException(thrift.UNKNOWN_METHOD, "Unknown function "+name)
 	oprot.WriteMessageBegin(name, thrift.EXCEPTION, seqId)
-	x7.Write(oprot)
+	x9.Write(oprot)
 	oprot.WriteMessageEnd()
 	oprot.Flush()
-	return false, x7
+	return false, x9
 
 }
 
@@ -365,16 +446,16 @@ func (p *userServiceProcessorPing) Process(seqId int32, iprot, oprot thrift.TPro
 	return true, err
 }
 
-type userServiceProcessorGetUser struct {
+type userServiceProcessorGetUserByEmail struct {
 	handler UserService
 }
 
-func (p *userServiceProcessorGetUser) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := UserServiceGetUserArgs{}
+func (p *userServiceProcessorGetUserByEmail) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := UserServiceGetUserByEmailArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetUser", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("GetUserByEmail", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -382,12 +463,12 @@ func (p *userServiceProcessorGetUser) Process(seqId int32, iprot, oprot thrift.T
 	}
 
 	iprot.ReadMessageEnd()
-	result := UserServiceGetUserResult{}
+	result := UserServiceGetUserByEmailResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetUser(args.Email); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetUser: "+err2.Error())
-		oprot.WriteMessageBegin("GetUser", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.GetUserByEmail(args.Email); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetUserByEmail: "+err2.Error())
+		oprot.WriteMessageBegin("GetUserByEmail", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -395,7 +476,55 @@ func (p *userServiceProcessorGetUser) Process(seqId int32, iprot, oprot thrift.T
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetUser", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("GetUserByEmail", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type userServiceProcessorGetUserByID struct {
+	handler UserService
+}
+
+func (p *userServiceProcessorGetUserByID) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := UserServiceGetUserByIDArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("GetUserByID", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	result := UserServiceGetUserByIDResult{}
+	var retval string
+	var err2 error
+	if retval, err2 = p.handler.GetUserByID(args.ID); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetUserByID: "+err2.Error())
+		oprot.WriteMessageBegin("GetUserByID", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush()
+		return true, err2
+	} else {
+		result.Success = &retval
+	}
+	if err2 = oprot.WriteMessageBegin("GetUserByID", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -620,18 +749,18 @@ func (p *UserServicePingResult) String() string {
 
 // Attributes:
 //  - Email
-type UserServiceGetUserArgs struct {
+type UserServiceGetUserByEmailArgs struct {
 	Email string `thrift:"email,1" json:"email"`
 }
 
-func NewUserServiceGetUserArgs() *UserServiceGetUserArgs {
-	return &UserServiceGetUserArgs{}
+func NewUserServiceGetUserByEmailArgs() *UserServiceGetUserByEmailArgs {
+	return &UserServiceGetUserByEmailArgs{}
 }
 
-func (p *UserServiceGetUserArgs) GetEmail() string {
+func (p *UserServiceGetUserByEmailArgs) GetEmail() string {
 	return p.Email
 }
-func (p *UserServiceGetUserArgs) Read(iprot thrift.TProtocol) error {
+func (p *UserServiceGetUserByEmailArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -664,7 +793,7 @@ func (p *UserServiceGetUserArgs) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UserServiceGetUserArgs) readField1(iprot thrift.TProtocol) error {
+func (p *UserServiceGetUserByEmailArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
@@ -673,8 +802,8 @@ func (p *UserServiceGetUserArgs) readField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UserServiceGetUserArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetUser_args"); err != nil {
+func (p *UserServiceGetUserByEmailArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetUserByEmail_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -689,7 +818,7 @@ func (p *UserServiceGetUserArgs) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UserServiceGetUserArgs) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *UserServiceGetUserByEmailArgs) writeField1(oprot thrift.TProtocol) (err error) {
 	if err := oprot.WriteFieldBegin("email", thrift.STRING, 1); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:email: ", p), err)
 	}
@@ -702,36 +831,36 @@ func (p *UserServiceGetUserArgs) writeField1(oprot thrift.TProtocol) (err error)
 	return err
 }
 
-func (p *UserServiceGetUserArgs) String() string {
+func (p *UserServiceGetUserByEmailArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserServiceGetUserArgs(%+v)", *p)
+	return fmt.Sprintf("UserServiceGetUserByEmailArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type UserServiceGetUserResult struct {
+type UserServiceGetUserByEmailResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewUserServiceGetUserResult() *UserServiceGetUserResult {
-	return &UserServiceGetUserResult{}
+func NewUserServiceGetUserByEmailResult() *UserServiceGetUserByEmailResult {
+	return &UserServiceGetUserByEmailResult{}
 }
 
-var UserServiceGetUserResult_Success_DEFAULT string
+var UserServiceGetUserByEmailResult_Success_DEFAULT string
 
-func (p *UserServiceGetUserResult) GetSuccess() string {
+func (p *UserServiceGetUserByEmailResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return UserServiceGetUserResult_Success_DEFAULT
+		return UserServiceGetUserByEmailResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *UserServiceGetUserResult) IsSetSuccess() bool {
+func (p *UserServiceGetUserByEmailResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *UserServiceGetUserResult) Read(iprot thrift.TProtocol) error {
+func (p *UserServiceGetUserByEmailResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -764,7 +893,7 @@ func (p *UserServiceGetUserResult) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UserServiceGetUserResult) readField0(iprot thrift.TProtocol) error {
+func (p *UserServiceGetUserByEmailResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -773,8 +902,8 @@ func (p *UserServiceGetUserResult) readField0(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UserServiceGetUserResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetUser_result"); err != nil {
+func (p *UserServiceGetUserByEmailResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetUserByEmail_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -789,7 +918,7 @@ func (p *UserServiceGetUserResult) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *UserServiceGetUserResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *UserServiceGetUserByEmailResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -804,11 +933,204 @@ func (p *UserServiceGetUserResult) writeField0(oprot thrift.TProtocol) (err erro
 	return err
 }
 
-func (p *UserServiceGetUserResult) String() string {
+func (p *UserServiceGetUserByEmailResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserServiceGetUserResult(%+v)", *p)
+	return fmt.Sprintf("UserServiceGetUserByEmailResult(%+v)", *p)
+}
+
+// Attributes:
+//  - ID
+type UserServiceGetUserByIDArgs struct {
+	ID string `thrift:"id,1" json:"id"`
+}
+
+func NewUserServiceGetUserByIDArgs() *UserServiceGetUserByIDArgs {
+	return &UserServiceGetUserByIDArgs{}
+}
+
+func (p *UserServiceGetUserByIDArgs) GetID() string {
+	return p.ID
+}
+func (p *UserServiceGetUserByIDArgs) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if err := p.readField1(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *UserServiceGetUserByIDArgs) readField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 1: ", err)
+	} else {
+		p.ID = v
+	}
+	return nil
+}
+
+func (p *UserServiceGetUserByIDArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetUserByID_args"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField1(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *UserServiceGetUserByIDArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("id", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:id: ", p), err)
+	}
+	if err := oprot.WriteString(string(p.ID)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.id (1) field write error: ", p), err)
+	}
+	if err := oprot.WriteFieldEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:id: ", p), err)
+	}
+	return err
+}
+
+func (p *UserServiceGetUserByIDArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("UserServiceGetUserByIDArgs(%+v)", *p)
+}
+
+// Attributes:
+//  - Success
+type UserServiceGetUserByIDResult struct {
+	Success *string `thrift:"success,0" json:"success,omitempty"`
+}
+
+func NewUserServiceGetUserByIDResult() *UserServiceGetUserByIDResult {
+	return &UserServiceGetUserByIDResult{}
+}
+
+var UserServiceGetUserByIDResult_Success_DEFAULT string
+
+func (p *UserServiceGetUserByIDResult) GetSuccess() string {
+	if !p.IsSetSuccess() {
+		return UserServiceGetUserByIDResult_Success_DEFAULT
+	}
+	return *p.Success
+}
+func (p *UserServiceGetUserByIDResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *UserServiceGetUserByIDResult) Read(iprot thrift.TProtocol) error {
+	if _, err := iprot.ReadStructBegin(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err := iprot.ReadFieldBegin()
+		if err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T field %d read error: ", p, fieldId), err)
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if err := p.readField0(iprot); err != nil {
+				return err
+			}
+		default:
+			if err := iprot.Skip(fieldTypeId); err != nil {
+				return err
+			}
+		}
+		if err := iprot.ReadFieldEnd(); err != nil {
+			return err
+		}
+	}
+	if err := iprot.ReadStructEnd(); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+	}
+	return nil
+}
+
+func (p *UserServiceGetUserByIDResult) readField0(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return thrift.PrependError("error reading field 0: ", err)
+	} else {
+		p.Success = &v
+	}
+	return nil
+}
+
+func (p *UserServiceGetUserByIDResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetUserByID_result"); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+	}
+	if err := p.writeField0(oprot); err != nil {
+		return err
+	}
+	if err := oprot.WriteFieldStop(); err != nil {
+		return thrift.PrependError("write field stop error: ", err)
+	}
+	if err := oprot.WriteStructEnd(); err != nil {
+		return thrift.PrependError("write struct stop error: ", err)
+	}
+	return nil
+}
+
+func (p *UserServiceGetUserByIDResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
+		}
+		if err := oprot.WriteString(string(*p.Success)); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T.success (0) field write error: ", p), err)
+		}
+		if err := oprot.WriteFieldEnd(); err != nil {
+			return thrift.PrependError(fmt.Sprintf("%T write field end error 0:success: ", p), err)
+		}
+	}
+	return err
+}
+
+func (p *UserServiceGetUserByIDResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("UserServiceGetUserByIDResult(%+v)", *p)
 }
 
 type UserServiceCountUserArgs struct {

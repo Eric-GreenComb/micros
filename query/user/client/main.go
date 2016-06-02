@@ -91,15 +91,26 @@ func main() {
 		v := svc.Ping()
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
-	case "get":
+	case "email":
 		email := s1
-		_v := svc.GetUser(email)
+		_v := svc.GetUserByEmail(email)
 		_user := bean.UserDto{}
 		if len(_v) == 0 {
 			return
 		}
 		bson.Unmarshal([]byte(_v), &_user)
-		logger.Log("method", "GetUser", "email", email, "v", _user.Email, "took", time.Since(begin))
+		logger.Log("method", "GetUserByEmail", "email", email, "v", _user.Email, "took", time.Since(begin))
+
+	case "id":
+		_id := s1
+		_v := svc.GetUserByID(_id)
+		_user := bean.UserDto{}
+		if len(_v) == 0 {
+			return
+		}
+		bson.Unmarshal([]byte(_v), &_user)
+		fmt.Println(_user)
+		logger.Log("method", "GetUserByID", "_id", _id, "v", _user.Email, "took", time.Since(begin))
 
 	case "count":
 		v := svc.CountUser()

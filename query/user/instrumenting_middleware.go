@@ -22,12 +22,21 @@ func (m instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) GetUser(email string) (r string) {
+func (m instrumentingMiddleware) GetUserByEmail(email string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetUser"}
+		methodField := metrics.Field{Key: "method", Value: "GetUserByEmail"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.UserService.GetUser(email)
+	r = m.UserService.GetUserByEmail(email)
+	return
+}
+
+func (m instrumentingMiddleware) GetUserByID(id string) (r string) {
+	defer func(begin time.Time) {
+		methodField := metrics.Field{Key: "method", Value: "GetUserByID"}
+		m.requestDuration.With(methodField).Observe(time.Since(begin))
+	}(time.Now())
+	r = m.UserService.GetUserByID(id)
 	return
 }
 

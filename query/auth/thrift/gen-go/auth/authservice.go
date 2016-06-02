@@ -17,9 +17,9 @@ var _ = bytes.Equal
 type AuthService interface {
 	Ping() (r string, err error)
 	// Parameters:
-	//  - EmailOrUsername
+	//  - Email
 	//  - Pwd
-	Login(emailOrUsername string, pwd string) (r string, err error)
+	Login(email string, pwd string) (r string, err error)
 }
 
 type AuthServiceClient struct {
@@ -122,16 +122,16 @@ func (p *AuthServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
-//  - EmailOrUsername
+//  - Email
 //  - Pwd
-func (p *AuthServiceClient) Login(emailOrUsername string, pwd string) (r string, err error) {
-	if err = p.sendLogin(emailOrUsername, pwd); err != nil {
+func (p *AuthServiceClient) Login(email string, pwd string) (r string, err error) {
+	if err = p.sendLogin(email, pwd); err != nil {
 		return
 	}
 	return p.recvLogin()
 }
 
-func (p *AuthServiceClient) sendLogin(emailOrUsername string, pwd string) (err error) {
+func (p *AuthServiceClient) sendLogin(email string, pwd string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -142,8 +142,8 @@ func (p *AuthServiceClient) sendLogin(emailOrUsername string, pwd string) (err e
 		return
 	}
 	args := AuthServiceLoginArgs{
-		EmailOrUsername: emailOrUsername,
-		Pwd:             pwd,
+		Email: email,
+		Pwd:   pwd,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -313,7 +313,7 @@ func (p *authServiceProcessorLogin) Process(seqId int32, iprot, oprot thrift.TPr
 	result := AuthServiceLoginResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.Login(args.EmailOrUsername, args.Pwd); err2 != nil {
+	if retval, err2 = p.handler.Login(args.Email, args.Pwd); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing Login: "+err2.Error())
 		oprot.WriteMessageBegin("Login", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -499,19 +499,19 @@ func (p *AuthServicePingResult) String() string {
 }
 
 // Attributes:
-//  - EmailOrUsername
+//  - Email
 //  - Pwd
 type AuthServiceLoginArgs struct {
-	EmailOrUsername string `thrift:"emailOrUsername,1" json:"emailOrUsername"`
-	Pwd             string `thrift:"pwd,2" json:"pwd"`
+	Email string `thrift:"email,1" json:"email"`
+	Pwd   string `thrift:"pwd,2" json:"pwd"`
 }
 
 func NewAuthServiceLoginArgs() *AuthServiceLoginArgs {
 	return &AuthServiceLoginArgs{}
 }
 
-func (p *AuthServiceLoginArgs) GetEmailOrUsername() string {
-	return p.EmailOrUsername
+func (p *AuthServiceLoginArgs) GetEmail() string {
+	return p.Email
 }
 
 func (p *AuthServiceLoginArgs) GetPwd() string {
@@ -558,7 +558,7 @@ func (p *AuthServiceLoginArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.EmailOrUsername = v
+		p.Email = v
 	}
 	return nil
 }
@@ -592,14 +592,14 @@ func (p *AuthServiceLoginArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *AuthServiceLoginArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("emailOrUsername", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:emailOrUsername: ", p), err)
+	if err := oprot.WriteFieldBegin("email", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:email: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.EmailOrUsername)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.emailOrUsername (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.Email)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.email (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:emailOrUsername: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:email: ", p), err)
 	}
 	return err
 }

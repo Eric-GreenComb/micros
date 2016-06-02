@@ -6,7 +6,7 @@ import ()
 type AuthService interface {
 	Ping() string
 	// Parameters:
-	//  - EmailOrUsername
+	//  - Email
 	//  - Pwd
-	Login(emailOrUsername string, pwd string) string
+	Login(email string, pwd string) string
 }

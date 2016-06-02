@@ -16,7 +16,9 @@ import (
 	"github.com/banerwai/micros/query/auth/service"
 	thriftauth "github.com/banerwai/micros/query/auth/thrift/gen-go/auth"
 
+	"github.com/banerwai/global/bean"
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
+	"labix.org/v2/mgo/bson"
 )
 
 func main() {
@@ -89,10 +91,17 @@ func main() {
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
 	case "login":
-		emailOrUsername := s1
+		email := s1
 		pwd := s2
-		v := svc.Login(emailOrUsername, pwd)
-		logger.Log("method", "Login", "emailOrUsername", emailOrUsername, "pwd", pwd, "v", v, "took", time.Since(begin))
+		_v := svc.Login(email, pwd)
+		_user := bean.UserDto{}
+		if strings.Contains(_v, "error:") {
+			fmt.Println(_v)
+			return
+		}
+		bson.Unmarshal([]byte(_v), &_user)
+		fmt.Println(_user)
+		logger.Log("method", "Login", "email", email, "pwd", pwd, "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

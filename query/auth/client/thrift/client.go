@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) Login(emailOrUsername string, pwd string) string {
-	reply, err := c.AuthServiceClient.Login(emailOrUsername, pwd)
+func (c client) Login(email string, pwd string) string {
+	reply, err := c.AuthServiceClient.Login(email, pwd)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

@@ -21,7 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string Login(string emailOrUsername, string pwd)")
+	fmt.Fprintln(os.Stderr, "  string Login(string email, string pwd)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
