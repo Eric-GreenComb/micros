@@ -25,6 +25,12 @@ func (self *inmemService) Login(email string, pwd string) (r string) {
 	if err != nil {
 		return "error:" + err.Error()
 	}
+
+	_active := _bson_m["actived"].(bool)
+	if !_active {
+		return "error: user email need active"
+	}
+
 	_pwd := _bson_m["pwd"].(string)
 
 	_is := crypto.CompareHash([]byte(_pwd), pwd)
