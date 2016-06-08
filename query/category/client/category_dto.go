@@ -12,6 +12,7 @@ type Category struct {
 	SerialNumber  int32         `json:"serialnumber"`
 	Name          string        `json:"name"`
 	Desc          string        `json:"desc"`
+	Fa            string        `json:"fa"`
 	Subcategories []SubCategory `json:"subcategories"`
 }
 

@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"sort"
 	"sync"
 
+	"github.com/banerwai/global"
+	"github.com/banerwai/gommon/etcd"
 	"github.com/banerwai/micros/query/category/service"
 )
 
@@ -57,19 +58,28 @@ func (self *inmemService) GetDemoSubCategories(category_id string) string {
 }
 
 func (self *inmemService) LoadCategory(path string) bool {
-	_f, _err := ioutil.ReadFile(path)
+	_json, _err := self.getJsonFromEtcd(path)
 	if _err != nil {
 		fmt.Println("error:", _err)
 		return false
 	}
 	var categories []Category
-	_err = json.Unmarshal(_f, &categories)
+	_err = json.Unmarshal([]byte(_json), &categories)
 	if _err != nil {
 		fmt.Println("error:", _err)
 		return false
 	}
 
 	return self.initCategories(categories)
+}
+
+func (self *inmemService) getJsonFromEtcd(jsonname string) (string, error) {
+	_key := global.ETCD_KEY_JSON_CATEGORY + jsonname
+	_json, _err := etcd.GetValue(_key)
+	if _err != nil {
+		return "", _err
+	}
+	return _json, nil
 }
 
 func (self *inmemService) initCategories(categories []Category) bool {

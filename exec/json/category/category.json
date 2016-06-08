@@ -4,6 +4,8 @@
         "serialnumber": 10100,
         "name": "web-mobile-software-dev",
         "desc": "Web,移动和软件开发",
+        "fa" : "fa-code",
+        "index" : true,
         "subcategories": [
             {
                 "id": "531770282584862733",
@@ -72,6 +74,8 @@
         "serialnumber": 10200,
         "name": "sales-marketing",
         "desc": "营销",
+        "fa" : "fa-users",
+        "index" : true,                
         "subcategories": [
             {
                 "id": "531770282597445639",
@@ -140,6 +144,8 @@
         "serialnumber": 10300,
         "name": "design-creative",
         "desc": "设计创意",
+        "fa" : "fa-bolt", 
+        "index" : true,                 
         "subcategories": [
             {
                 "id": "531770282593251333",
@@ -208,6 +214,8 @@
         "serialnumber": 10400,
         "name": "it-networking",
         "desc": "IT及网络",
+        "fa" : "fa-desktop",
+        "index" : true,                 
         "subcategories": [
             {
                 "id": "531770282589057040",
@@ -258,6 +266,8 @@
         "serialnumber": 10500,
         "name": "data-science-analytics",
         "desc": "数据-数据分析",
+        "fa" : "fa-database",
+        "index" : true,                 
         "subcategories": [
             {
                 "id": "531770282593251330",
@@ -308,6 +318,8 @@
         "serialnumber": 10600,
         "name": "engineering-architecture",
         "desc": "工程建筑",
+        "fa" : "fa-building", 
+        "index" : true,                
         "subcategories": [
             {
                 "id": "531770282601639948",
@@ -376,6 +388,8 @@
         "serialnumber": 10700,
         "name": "writing",
         "desc": "写作",
+        "fa" : "fa-pencil-square-o", 
+        "index" : true,                
         "subcategories": [
             {
                 "id": "531770282597445647",
@@ -444,6 +458,8 @@
         "serialnumber": 10800,
         "name": "translation",
         "desc": "翻译",
+        "fa" : "fa-language", 
+        "index" : true,                
         "subcategories": [
             {
                 "id": "531770282601639939",
@@ -476,6 +492,8 @@
         "serialnumber": 10900,
         "name": "legal",
         "desc": "法律",
+        "fa" : "fa-gavel",
+        "index" : true,                
         "subcategories": [
             {
                 "id": "531770282605834246",
@@ -526,6 +544,8 @@
         "serialnumber": 11000,
         "name": "admin-support",
         "desc": "行政支持",
+        "fa" : "fa-life-ring",
+        "index" : true,                 
         "subcategories": [
             {
                 "id": "531770282584862724",
@@ -570,6 +590,8 @@
         "serialnumber": 11100,
         "name": "customer-service",
         "desc": "客户服务",
+        "fa" : "fa-volume-control-phone",
+        "index" : true,                  
         "subcategories": [
             {
                 "id": "531770282584862730",
@@ -596,6 +618,8 @@
         "serialnumber": 11200,
         "name": "accounting-consulting",
         "desc": "会计-咨询",
+        "fa" : "fa-cogs",
+        "index" : true,                 
         "subcategories": [
             {
                 "id": "531770282601639943",
@@ -634,6 +658,8 @@
         "serialnumber": 11300,
         "name": "cultural-sports",
         "desc": "文化-体育",
+        "fa" : "fa-futbol-o",
+        "index" : true,                
         "subcategories": [
             {
                 "id": "531770282601639951",

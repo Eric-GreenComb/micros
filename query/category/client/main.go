@@ -122,6 +122,7 @@ func main() {
 
 		for _, _cat := range cats {
 			fmt.Println(strconv.Itoa(int(_cat.SerialNumber)) + " " + _cat.Name + "(" + _cat.Desc + ")")
+			fmt.Println(_cat.Fa)
 			for _, _sub := range _cat.Subcategories {
 				fmt.Println("    " + strconv.Itoa(int(_sub.SerialNumber)) + " " + _sub.Name + "(" + _sub.Desc + ")")
 			}
