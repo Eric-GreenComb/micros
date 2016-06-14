@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/banerwai/global"
+	"github.com/banerwai/global/bean"
 	"github.com/banerwai/gommon/etcd"
 	"github.com/banerwai/micros/query/category/service"
 )
@@ -20,13 +21,13 @@ var (
 
 type inmemService struct {
 	mtx     sync.RWMutex
-	m       map[int]Category
+	m       map[int]bean.Category
 	sortkey []int
 }
 
 func newInmemService() service.CategoryService {
 	return &inmemService{
-		m:       map[int]Category{},
+		m:       map[int]bean.Category{},
 		sortkey: make([]int, 0),
 	}
 }
@@ -37,7 +38,7 @@ func (self *inmemService) SayHi(name string) string { return "hi," + name }
 
 func (self *inmemService) GetDemoSubCategory(id string) string {
 
-	b, err := json.Marshal(SubCategory{"001", 10, "name-001", "desc-001"})
+	b, err := json.Marshal(bean.SubCategory{"001", 10, "name-001", "desc-001"})
 	if err != nil {
 		return err.Error()
 	}
@@ -45,10 +46,10 @@ func (self *inmemService) GetDemoSubCategory(id string) string {
 }
 
 func (self *inmemService) GetDemoSubCategories(category_id string) string {
-	var subs []SubCategory
+	var subs []bean.SubCategory
 
-	subs = append(subs, SubCategory{"001", 1001, "name-001", "desc-001"})
-	subs = append(subs, SubCategory{"002", 1002, "name-002", "desc-0012"})
+	subs = append(subs, bean.SubCategory{"001", 1001, "name-001", "desc-001"})
+	subs = append(subs, bean.SubCategory{"002", 1002, "name-002", "desc-0012"})
 
 	b, err := json.Marshal(subs)
 	if err != nil {
@@ -63,7 +64,7 @@ func (self *inmemService) LoadCategory(path string) bool {
 		fmt.Println("error:", _err)
 		return false
 	}
-	var categories []Category
+	var categories []bean.Category
 	_err = json.Unmarshal([]byte(_json), &categories)
 	if _err != nil {
 		fmt.Println("error:", _err)
@@ -82,7 +83,7 @@ func (self *inmemService) getJsonFromEtcd(jsonname string) (string, error) {
 	return _json, nil
 }
 
-func (self *inmemService) initCategories(categories []Category) bool {
+func (self *inmemService) initCategories(categories []bean.Category) bool {
 	self.mtx.Lock()
 	defer self.mtx.Unlock()
 
@@ -110,7 +111,7 @@ func (self *inmemService) GetCategories() string {
 	self.mtx.RLock()
 	defer self.mtx.RUnlock()
 
-	var _categories []Category
+	var _categories []bean.Category
 	for _, _k := range self.sortkey {
 		_cat := self.m[_k]
 		_categories = append(_categories, _cat)
