@@ -112,6 +112,13 @@ func (self *inmemService) GetFreelancerContact(freelanceremail string) (r string
 func (self *inmemService) getTplFromEtcd(tplname string) (string, error) {
 	_key := global.ETCD_KEY_TPL_CONTACT + tplname
 	_tpl, _err := etcd.GetValue(_key)
+
+	if _err == nil {
+		return _tpl, nil
+	}
+
+	_key = global.ETCD_KEY_TPL_CONTACT + "default"
+	_tpl, _err = etcd.GetValue(_key)
 	if _err != nil {
 		return "", _err
 	}
