@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/banerwai/global/bean"
+	bstrings "github.com/banerwai/gommon/strings"
 	"github.com/banerwai/micros/command/contact/service"
 	"labix.org/v2/mgo/bson"
 	"time"
@@ -72,7 +73,25 @@ func (self *inmemService) DealContact(contact_id string, status bool) (r string)
 	if !bson.IsObjectIdHex(contact_id) {
 		return ""
 	}
+
+	var _contact bean.Contact
+
+	err := ContactCollection.Find(bson.M{"_id": bson.ObjectIdHex(contact_id)}).One(&_contact)
+
+	if err != nil {
+		return ""
+	}
+
+	_mmap := make(map[string]string)
+	json.Unmarshal([]byte(_contact.TplParam), &_mmap)
+	_mmap["ContactNumber"] = _contact.Id.Hex()
+
+	_content := bstrings.ParseTpl("default", _contact.ContactTpl, _mmap)
+
 	_mongo_m := bson.M{}
+	_mongo_m["contact_content"] = _content
+	_mongo_m["client_signup"] = true
+	_mongo_m["freelancer_signup"] = true
 	_mongo_m["dealed"] = true
 	_mongo_m["dealedtime"] = time.Now()
 
