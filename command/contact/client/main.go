@@ -20,7 +20,6 @@ import (
 
 	"github.com/banerwai/global/bean"
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
-	bstrings "github.com/banerwai/gommon/strings"
 )
 
 func main() {
@@ -110,9 +109,10 @@ func main() {
 		_mmap := prepareContactParam()
 		_bParam, _ := json.Marshal(_mmap)
 
-		_content := bstrings.ParseTpl("default", _tpl, _mmap)
+		// _content := bstrings.ParseTpl("default", _tpl, _mmap)
 
-		_obj.ContactContent = _content
+		// _obj.ContactContent = _content
+
 		_obj.ContactTpl = _tpl
 		_obj.TplParam = string(_bParam)
 
