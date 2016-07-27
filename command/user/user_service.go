@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/banerwai/global"
+	"github.com/banerwai/global/bean"
 	"github.com/banerwai/gommon/crypto"
 	"github.com/banerwai/micros/command/user/service"
 	"labix.org/v2/mgo/bson"
@@ -27,6 +29,7 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	// } else {
 	// 	_user.Invited = bson.ObjectIdHex(DefaultUserObjectId)
 	// }
+	// _email := mmap["email"]
 	// var _temp bson.M
 	// err := UsersCollection.Find(bson.M{"email": email}).One(&_temp)
 	// if err != nil {
@@ -64,7 +67,49 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	if err != nil {
 		return err.Error()
 	}
+
+	self.createAccount(_id, mmap["email"])
+
 	return _id.Hex()
+}
+
+func (self *inmemService) createAccount(user_id bson.ObjectId, email string) error {
+	var _account bean.Account
+	_account.UserId = user_id
+	_account.Email = email
+	_account.CreatedTime = time.Now()
+
+	var _lsMultiCurrencyAccount []bean.MultiCurrencyAccount
+
+	var _beanMultiCurrencyAccount01 bean.MultiCurrencyAccount
+	_beanMultiCurrencyAccount01.Currency = global.CURRENCY_USD
+	_beanMultiCurrencyAccount01.Amount = 0
+	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount01)
+
+	var _beanMultiCurrencyAccount02 bean.MultiCurrencyAccount
+	_beanMultiCurrencyAccount02.Currency = global.CURRENCY_CNY
+	_beanMultiCurrencyAccount02.Amount = 0
+	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount02)
+
+	var _beanMultiCurrencyAccount03 bean.MultiCurrencyAccount
+	_beanMultiCurrencyAccount03.Currency = global.CURRENCY_EUR
+	_beanMultiCurrencyAccount03.Amount = 0
+	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount03)
+
+	var _beanMultiCurrencyAccount04 bean.MultiCurrencyAccount
+	_beanMultiCurrencyAccount04.Currency = global.CURRENCY_JPY
+	_beanMultiCurrencyAccount04.Amount = 0
+	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount04)
+
+	var _beanMultiCurrencyAccount05 bean.MultiCurrencyAccount
+	_beanMultiCurrencyAccount05.Currency = global.CURRENCY_GBP
+	_beanMultiCurrencyAccount05.Amount = 0
+	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount05)
+
+	_account.MultiCurrency = _lsMultiCurrencyAccount
+
+	_err := AccountCollection.Insert(_account)
+	return _err
 }
 
 func (self *inmemService) ResetPwd(email string, newpwd string) (r bool) {
