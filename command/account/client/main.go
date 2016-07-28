@@ -20,6 +20,7 @@ import (
 
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
 
+	"github.com/banerwai/global"
 	"github.com/banerwai/global/bean"
 )
 
@@ -107,13 +108,26 @@ func main() {
 		var _obj bean.Billing
 		_obj.Id = bson.ObjectIdHex(*_defaultObjectId)
 		_obj.UserId = bson.ObjectIdHex(*_defaultObjectId)
-		_obj.Email = a1
+		_obj.ProfileId = bson.ObjectIdHex(*_defaultObjectId)
+
+		_obj.Operate = 1
+		_obj.Currency = global.CURRENCY_CNY
+		_obj.Amount = 2000
+		_obj.PayType = global.PayType_BankRemittance
+		_obj.PayFee = _obj.Amount * 0 / 1000
+		_obj.RealCosts = _obj.Amount - _obj.PayFee
 
 		b, _ := json.Marshal(_obj)
-		v := svc.CreateAccount(string(b))
-		logger.Log("method", "CreateAccount", "v", v, "took", time.Since(begin))
+		v := svc.CreateBilling(string(b))
+		logger.Log("method", "CreateBilling", "v", v, "took", time.Since(begin))
 
-	case "gen_account":
+	case "deal":
+
+		_billing_id := a1
+		v := svc.DealBilling(_billing_id)
+		logger.Log("method", "DealBilling", "v", v, "took", time.Since(begin))
+
+	case "gen":
 		_user_id := *_defaultObjectId
 		v := svc.GenAccount(_user_id)
 		logger.Log("method", "GenAccount", "v", v, "took", time.Since(begin))

@@ -32,6 +32,7 @@ var Session *mgo.Session
 
 // User表的Collection对象
 var UsersCollection *mgo.Collection
+var AccountCollection *mgo.Collection
 
 func main() {
 	// Flag domain. Note that gRPC transitively registers flags via its import
@@ -60,7 +61,8 @@ func main() {
 	defer Session.Close()
 	Session.SetMode(mgo.Monotonic, true)
 
-	UsersCollection = Session.DB(*mongodbDbname).C("users") //数据库名称
+	UsersCollection = Session.DB(*mongodbDbname).C("users")     //数据库名称
+	AccountCollection = Session.DB(*mongodbDbname).C("account") //数据库名称
 
 	// package log
 	var logger log.Logger
