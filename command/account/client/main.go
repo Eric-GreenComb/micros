@@ -114,8 +114,6 @@ func main() {
 		_obj.Currency = global.CURRENCY_CNY
 		_obj.Amount = 2000
 		_obj.PayType = global.PayType_BankRemittance
-		_obj.PayFee = _obj.Amount * 0 / 1000
-		_obj.RealCosts = _obj.Amount - _obj.PayFee
 
 		b, _ := json.Marshal(_obj)
 		v := svc.CreateBilling(string(b))
