@@ -3,12 +3,10 @@ package service
 import (
 	"encoding/json"
 
-	"github.com/garyburd/redigo/redis"
-
-	gatherredis "github.com/banerwai/gather/common/redis"
 	"github.com/banerwai/gommon/openapi/alidayu"
 )
 
+// Sms sms struct
 type Sms struct {
 	RecNum          string `json:"rec_num"`
 	SmsFreeSignName string `json:"sms_free_sign_name"`
@@ -16,27 +14,31 @@ type Sms struct {
 	SmsParam        string `json:"sms_param"`
 }
 
+// SmsService smsservice struct
 type SmsService struct {
 }
 
-func (self *SmsService) SendSms(json string) bool {
+// SendSms smsservice sendsms
+func (smsService *SmsService) SendSms(json string) bool {
 	var _sms Sms
-	_err := self.Unmarshal(json, &_sms)
+	_err := smsService.Unmarshal(json, &_sms)
 	if _err != nil {
 		return false
 	}
 
-	self.SendSmsBean(_sms)
+	smsService.SendSmsBean(_sms)
 
 	return true
 }
 
+// SendSmsBean send sms bean
 // success, resp := alidayu.SendSMS("18888888888", "身份验证", "SMS_4000328", `{"code":"1234","product":"alidayu"}`)
-func (self *SmsService) SendSmsBean(sms Sms) (success bool, response string) {
+func (smsService *SmsService) SendSmsBean(sms Sms) (success bool, response string) {
 	return alidayu.SendSMS(sms.RecNum, sms.SmsFreeSignName, sms.SmsTemplateCode, sms.SmsParam)
 }
 
-func (self *SmsService) Unmarshal(_json string, bean interface{}) error {
+// Unmarshal unmarshal
+func (smsService *SmsService) Unmarshal(_json string, bean interface{}) error {
 	err := json.Unmarshal([]byte(_json), &bean)
 	if err != nil {
 		return err

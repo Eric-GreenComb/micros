@@ -7,25 +7,25 @@ import (
 
 func TestUnmarshal(t *testing.T) {
 
-	_email_bean := Email{}
+	_emailBean := Email{}
 	// change email
-	_email_bean.Host = "smtp.126.com:25"
-	_email_bean.User = "xxx@126.com"
-	_email_bean.Password = "xxx"
-	_email_bean.To = "xxx@126.com"
-	_email_bean.Subject = "Hi"
-	_email_bean.Body = "This is a test email"
-	_email_bean.Mailtype = "html"
+	_emailBean.Host = "smtp.126.com:25"
+	_emailBean.User = "xxx@126.com"
+	_emailBean.Password = "xxx"
+	_emailBean.To = "xxx@126.com"
+	_emailBean.Subject = "Hi"
+	_emailBean.Body = "This is a test email"
+	_emailBean.Mailtype = "html"
 
-	b, err := json.Marshal(_email_bean)
+	b, err := json.Marshal(_emailBean)
 	if err != nil {
 		t.Errorf("TestUnmarshal error")
 	}
 
-	var _email_out Email
+	var _emailOut Email
 	var _service EmailService
-	_service.Unmarshal(string(b), &_email_out)
-	if _email_out.Host != "smtp.126.com:25" {
+	_service.Unmarshal(string(b), &_emailOut)
+	if _emailOut.Host != "smtp.126.com:25" {
 		t.Errorf("Unmarshal error")
 	}
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/banerwai/gommon/etcd"
 )
 
+// Email email struct
 type Email struct {
 	Host     string `json:"host"`
 	User     string `json:"user"`
@@ -21,49 +22,53 @@ type Email struct {
 	Mailtype string `json:"type"`
 }
 
+// EmailExtra email extra(tpl) struct
 type EmailExtra struct {
 	Email    Email             `json:"email"`
 	TempName string            `json:"tempname"`
 	Parse    map[string]string `json:"parse"`
 }
 
+// EmailService email service struct
 type EmailService struct {
 }
 
-func (self *EmailService) SendEmail(json string) bool {
+// SendEmail send email service
+func (es *EmailService) SendEmail(json string) bool {
 	var _email Email
-	_err := self.Unmarshal(json, &_email)
+	_err := es.Unmarshal(json, &_email)
 	if _err != nil {
 		return false
 	}
 
-	self.SendEmailBean(_email)
+	es.SendEmailBean(_email)
 
 	return true
 }
 
-func (self *EmailService) SendTpl(json string) bool {
-	var _email_extra EmailExtra
-	_err := self.Unmarshal(json, &_email_extra)
+// SendTpl send email by tpl
+func (es *EmailService) SendTpl(json string) bool {
+	var _emailExtra EmailExtra
+	_err := es.Unmarshal(json, &_emailExtra)
 	if _err != nil {
 		return false
 	}
 
 	var _email Email
-	_email.Host = _email_extra.Email.Host
-	_email.User = _email_extra.Email.User
-	_email.Password = _email_extra.Email.Password
-	_email.To = _email_extra.Email.To
-	_email.Subject = _email_extra.Email.Subject
-	_email.Mailtype = _email_extra.Email.Mailtype
+	_email.Host = _emailExtra.Email.Host
+	_email.User = _emailExtra.Email.User
+	_email.Password = _emailExtra.Email.Password
+	_email.To = _emailExtra.Email.To
+	_email.Subject = _emailExtra.Email.Subject
+	_email.Mailtype = _emailExtra.Email.Mailtype
 
-	_email.Body = self.GenBodyByTpl(_email_extra.TempName, _email_extra.Parse)
+	_email.Body = es.GenBodyByTpl(_emailExtra.TempName, _emailExtra.Parse)
 	if len(_email.Body) == 0 {
 		fmt.Println("gen body error")
 		return false
 	}
 
-	_err = self.SendEmailBean(_email)
+	_err = es.SendEmailBean(_email)
 	if _err != nil {
 		fmt.Println(_err.Error())
 		return false
@@ -72,8 +77,9 @@ func (self *EmailService) SendTpl(json string) bool {
 	return true
 }
 
-func (self *EmailService) GenBodyByTpl(tplname string, parse map[string]string) string {
-	_tpl, _err := self.getTplFromEtcd(tplname)
+// GenBodyByTpl gen email body by tpl
+func (es *EmailService) GenBodyByTpl(tplname string, parse map[string]string) string {
+	_tpl, _err := es.getTplFromEtcd(tplname)
 	if _err != nil || len(_tpl) == 0 {
 		return ""
 	}
@@ -92,7 +98,7 @@ func (self *EmailService) GenBodyByTpl(tplname string, parse map[string]string) 
 	return b.String()
 }
 
-func (self *EmailService) getTplFromEtcd(tplname string) (string, error) {
+func (es *EmailService) getTplFromEtcd(tplname string) (string, error) {
 	_key := global.ETCD_KEY_TPL_EMAIL + tplname
 	_tpl, _err := etcd.GetValue(_key)
 	if _err != nil {
@@ -101,13 +107,15 @@ func (self *EmailService) getTplFromEtcd(tplname string) (string, error) {
 	return _tpl, nil
 }
 
-func (self *EmailService) SendEmailBean(_email Email) error {
+// SendEmailBean send email bean
+func (es *EmailService) SendEmailBean(_email Email) error {
 	var _server smtp.Email
 	_server.Server(_email.Host, _email.User, _email.Password)
 	return _server.Send(_email.To, _email.Subject, _email.Body, _email.Mailtype)
 }
 
-func (self *EmailService) Unmarshal(_json string, bean interface{}) error {
+// Unmarshal unmarshal bean
+func (es *EmailService) Unmarshal(_json string, bean interface{}) error {
 	err := json.Unmarshal([]byte(_json), &bean)
 	if err != nil {
 		return err

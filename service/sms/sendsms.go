@@ -11,11 +11,13 @@ import (
 	"github.com/nats-io/nats"
 )
 
+// SendSms send sms by nats
 func SendSms(sms string) {
-	var _sms_service service.SmsService
-	_sms_service.SendSms(email)
+	var _smsService service.SmsService
+	_smsService.SendSms(sms)
 }
 
+// SendEmailWorker nats worker
 func SendEmailWorker(subject string, m *nats.Msg) {
 	switch subject {
 	case "sms":

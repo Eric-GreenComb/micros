@@ -11,16 +11,19 @@ import (
 	"github.com/nats-io/nats"
 )
 
+// SendEmail send email
 func SendEmail(email string) {
-	var _email_service service.EmailService
-	_email_service.SendEmail(email)
+	var _emailService service.EmailService
+	_emailService.SendEmail(email)
 }
 
+// SendTpl send email by tpl
 func SendTpl(emailextra string) {
-	var _email_service service.EmailService
-	_email_service.SendTpl(emailextra)
+	var _emailService service.EmailService
+	_emailService.SendTpl(emailextra)
 }
 
+// SendEmailWorker send email nats worker
 func SendEmailWorker(subject string, m *nats.Msg) {
 	switch subject {
 	case "mail":

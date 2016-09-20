@@ -17,22 +17,22 @@ func TestSendEmail(t *testing.T) {
 
 	defer nc.Close()
 
-	_email_extra := service.EmailExtra{}
-	_email_extra.Email.Host = "smtp.126.com:25"
-	_email_extra.Email.User = "ministor@126.com"
-	_email_extra.Email.Password = "xxxxxx"
-	_email_extra.Email.To = "ministor@126.com"
-	_email_extra.Email.Subject = "this is a tpl email"
-	_email_extra.Email.Mailtype = "html"
+	_emailExtra := service.EmailExtra{}
+	_emailExtra.Email.Host = "smtp.126.com:25"
+	_emailExtra.Email.User = "ministor@126.com"
+	_emailExtra.Email.Password = "xxxxxx"
+	_emailExtra.Email.To = "ministor@126.com"
+	_emailExtra.Email.Subject = "this is a tpl email"
+	_emailExtra.Email.Mailtype = "html"
 
-	_email_extra.TempName = "hello"
+	_emailExtra.TempName = "hello"
 
-	_map_parse := make(map[string]string)
-	_map_parse["Hi"] = "Hello"
-	_map_parse["Name"] = "Eric"
-	_email_extra.Parse = _map_parse
+	_mapParse := make(map[string]string)
+	_mapParse["Hi"] = "Hello"
+	_mapParse["Name"] = "Eric"
+	_emailExtra.Parse = _mapParse
 
-	b, err := json.Marshal(_email_extra)
+	b, err := json.Marshal(_emailExtra)
 	if err != nil {
 		t.Errorf("TestUnmarshal error")
 	}
