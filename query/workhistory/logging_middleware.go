@@ -25,15 +25,15 @@ func (m loggingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m loggingMiddleware) GetWorkHistory(profile_id string) (r string) {
+func (m loggingMiddleware) GetWorkHistory(profileID string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetWorkHistory",
-			"profile_id", profile_id,
+			"profile_id", profileID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.WorkHistoryService.GetWorkHistory(profile_id)
+	r = m.WorkHistoryService.GetWorkHistory(profileID)
 	return
 }

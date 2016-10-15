@@ -12,20 +12,20 @@ func newInmemService() service.WorkHistoryService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() (r string) {
+func (ims *inmemService) Ping() (r string) {
 	r = "pong"
 	return
 }
 
-func (self *inmemService) GetWorkHistory(profile_id string) (r string) {
-	var _bson_m bson.M
-	err := WorkHistoryCollection.Find(bson.M{"profile_id": bson.ObjectIdHex(profile_id)}).One(&_bson_m)
+func (ims *inmemService) GetWorkHistory(profileID string) (r string) {
+	var _bsonM bson.M
+	err := WorkHistoryCollection.Find(bson.M{"profile_id": bson.ObjectIdHex(profileID)}).One(&_bsonM)
 
 	if err != nil {
 		return ""
 	}
 
-	_data, _err := bson.Marshal(_bson_m)
+	_data, _err := bson.Marshal(_bsonM)
 	if _err != nil {
 		return ""
 	}

@@ -26,7 +26,7 @@ func main() {
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
 
-		_defaultObjectId = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
+		_defaultObjectID = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
 	)
 	flag.Parse()
 	if len(os.Args) < 3 {
@@ -36,7 +36,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, s1, s2 := flag.Arg(0), flag.Arg(1), flag.Arg(2)
 
@@ -69,7 +69,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -99,11 +99,11 @@ func main() {
 		// }
 
 		_email := s1
-		_map_create := make(map[string]string)
-		_map_create["invited"] = *_defaultObjectId
-		_map_create["email"] = _email
-		_map_create["pwd"] = "12345678901"
-		v := svc.CreateUser(_map_create)
+		_mapCreate := make(map[string]string)
+		_mapCreate["invited"] = *_defaultObjectID
+		_mapCreate["email"] = _email
+		_mapCreate["pwd"] = "12345678901"
+		v := svc.CreateUser(_mapCreate)
 		logger.Log("method", "CreateUser", "email", _email, "v", v, "took", time.Since(begin))
 
 	case "reset":

@@ -18,7 +18,7 @@ type WorkHistoryService interface {
 	Ping() (r string, err error)
 	// Parameters:
 	//  - ProfileID
-	GetWorkHistory(profile_id string) (r string, err error)
+	GetWorkHistory(profileID string) (r string, err error)
 }
 
 type WorkHistoryServiceClient struct {
@@ -122,14 +122,14 @@ func (p *WorkHistoryServiceClient) recvPing() (value string, err error) {
 
 // Parameters:
 //  - ProfileID
-func (p *WorkHistoryServiceClient) GetWorkHistory(profile_id string) (r string, err error) {
-	if err = p.sendGetWorkHistory(profile_id); err != nil {
+func (p *WorkHistoryServiceClient) GetWorkHistory(profileID string) (r string, err error) {
+	if err = p.sendGetWorkHistory(profileID); err != nil {
 		return
 	}
 	return p.recvGetWorkHistory()
 }
 
-func (p *WorkHistoryServiceClient) sendGetWorkHistory(profile_id string) (err error) {
+func (p *WorkHistoryServiceClient) sendGetWorkHistory(profileID string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -140,7 +140,7 @@ func (p *WorkHistoryServiceClient) sendGetWorkHistory(profile_id string) (err er
 		return
 	}
 	args := WorkHistoryServiceGetWorkHistoryArgs{
-		ProfileID: profile_id,
+		ProfileID: profileID,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -498,7 +498,7 @@ func (p *WorkHistoryServicePingResult) String() string {
 // Attributes:
 //  - ProfileID
 type WorkHistoryServiceGetWorkHistoryArgs struct {
-	ProfileID string `thrift:"profile_id,1" json:"profile_id"`
+	ProfileID string `thrift:"profileID,1" json:"profileID"`
 }
 
 func NewWorkHistoryServiceGetWorkHistoryArgs() *WorkHistoryServiceGetWorkHistoryArgs {
@@ -567,14 +567,14 @@ func (p *WorkHistoryServiceGetWorkHistoryArgs) Write(oprot thrift.TProtocol) err
 }
 
 func (p *WorkHistoryServiceGetWorkHistoryArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("profile_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_id: ", p), err)
+	if err := oprot.WriteFieldBegin("profileID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profileID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ProfileID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.profile_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.profileID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profileID: ", p), err)
 	}
 	return err
 }

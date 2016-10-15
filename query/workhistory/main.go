@@ -27,10 +27,10 @@ import (
 	"labix.org/v2/mgo"
 )
 
-// 数据连接
+// Session 数据连接
 var Session *mgo.Session
 
-// WorkHistory表的Collection对象
+// WorkHistoryCollection WorkHistory表的Collection对象
 var WorkHistoryCollection *mgo.Collection
 
 func main() {
@@ -43,7 +43,7 @@ func main() {
 		thriftBufferSize = fs.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = fs.Bool("thrift.framed", false, "true to enable framing")
 
-		mongodbUrl    = fs.String("mongodb.url", "127.0.0.1:27017", "mongodb url")
+		mongodbURL    = fs.String("mongodb.url", "127.0.0.1:27017", "mongodb url")
 		mongodbDbname = fs.String("mongodb.dbname", "banerwai", "mongodb dbname")
 	)
 	flag.Usage = fs.Usage // only show our flags
@@ -53,7 +53,7 @@ func main() {
 	}
 
 	var err error
-	Session, err = mgo.Dial(*mongodbUrl) //连接数据库
+	Session, err = mgo.Dial(*mongodbURL) //连接数据库
 	if err != nil {
 		panic(err)
 	}

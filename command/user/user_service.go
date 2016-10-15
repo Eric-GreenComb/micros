@@ -16,11 +16,11 @@ func newInmemService() service.UserService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() (r string) {
+func (ims *inmemService) Ping() (r string) {
 	return "pong"
 }
 
-func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
+func (ims *inmemService) CreateUser(mmap map[string]string) (r string) {
 	// var _user bean.User
 	// _user.Email = email
 	// _user.Pwd = pwd
@@ -37,7 +37,7 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 	// }
 
 	// email is a index, if email has ,insert is err
-	_mongo_m := bson.M{}
+	_mongoM := bson.M{}
 
 	// if _, ok := mmap["pwd"]; ok {
 	// 	_b, _ := crypto.GenerateHash(mmap["pwd"])
@@ -48,34 +48,34 @@ func (self *inmemService) CreateUser(mmap map[string]string) (r string) {
 		switch k {
 		case "pwd":
 			_b, _ := crypto.GenerateHash(v)
-			_mongo_m[k] = string(_b)
+			_mongoM[k] = string(_b)
 		case "invited":
-			_mongo_m[k] = bson.ObjectIdHex(v)
+			_mongoM[k] = bson.ObjectIdHex(v)
 		default:
-			_mongo_m[k] = v
+			_mongoM[k] = v
 		}
 	}
 
 	_time := time.Now()
 
 	_id := bson.NewObjectId()
-	_mongo_m["_id"] = _id
-	_mongo_m["createdtime"] = _time
-	_mongo_m["actived"] = false
+	_mongoM["_id"] = _id
+	_mongoM["createdtime"] = _time
+	_mongoM["actived"] = false
 
-	err := UsersCollection.Insert(_mongo_m)
+	err := UsersCollection.Insert(_mongoM)
 	if err != nil {
 		return err.Error()
 	}
 
-	self.createAccount(_id, mmap["email"])
+	ims.createAccount(_id, mmap["email"])
 
 	return _id.Hex()
 }
 
-func (self *inmemService) createAccount(user_id bson.ObjectId, email string) error {
+func (ims *inmemService) createAccount(userID bson.ObjectId, email string) error {
 	var _account bean.Account
-	_account.UserId = user_id
+	_account.UserId = userID
 	_account.Email = email
 	_account.CreatedTime = time.Now()
 
@@ -112,7 +112,7 @@ func (self *inmemService) createAccount(user_id bson.ObjectId, email string) err
 	return _err
 }
 
-func (self *inmemService) ResetPwd(email string, newpwd string) (r bool) {
+func (ims *inmemService) ResetPwd(email string, newpwd string) (r bool) {
 	r = true
 	_b, _ := crypto.GenerateHash(newpwd)
 	err := UsersCollection.Update(bson.M{"email": email}, bson.M{"$set": bson.M{"pwd": string(_b)}})
@@ -123,7 +123,7 @@ func (self *inmemService) ResetPwd(email string, newpwd string) (r bool) {
 	return
 }
 
-func (self *inmemService) ActiveUser(email string) (r bool) {
+func (ims *inmemService) ActiveUser(email string) (r bool) {
 	r = true
 	err := UsersCollection.Update(bson.M{"email": email}, bson.M{"$set": bson.M{"actived": true}})
 	if nil != err {

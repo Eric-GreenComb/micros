@@ -22,11 +22,11 @@ func (m instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) GetWorkHistory(profile_id string) (r string) {
+func (m instrumentingMiddleware) GetWorkHistory(profileID string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GetWorkHistory"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.WorkHistoryService.GetWorkHistory(profile_id)
+	r = m.WorkHistoryService.GetWorkHistory(profileID)
 	return
 }
