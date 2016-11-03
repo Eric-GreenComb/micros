@@ -1,11 +1,11 @@
 
 service AccountService {
     string Ping()
-	string CreateAccount(1: string json_account) 
+	string CreateAccount(1: string jsonAccount) 
 
-	string CreateBilling(1: string json_billing)
-	string DealBilling(1: string billing_id) 
-	string CancelBilling(1: string billing_id)
+	string CreateBilling(1: string jsonBilling)
+	string DealBilling(1: string billingID) 
+	string CancelBilling(1: string billingID)
 	
-	string GenAccount(1: string user_id)		  
+	string GenAccount(1: string userID)		  
 }

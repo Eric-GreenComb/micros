@@ -22,47 +22,47 @@ func (m instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) CreateAccount(json_account string) (r string) {
+func (m instrumentingMiddleware) CreateAccount(jsonAccount string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "CreateAccount"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.AccountService.CreateAccount(json_account)
+	r = m.AccountService.CreateAccount(jsonAccount)
 	return
 }
 
-func (m instrumentingMiddleware) CreateBilling(json_billing string) (r string) {
+func (m instrumentingMiddleware) CreateBilling(jsonBilling string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "CreateBilling"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.AccountService.CreateBilling(json_billing)
+	r = m.AccountService.CreateBilling(jsonBilling)
 	return
 }
 
-func (m instrumentingMiddleware) DealBilling(billing_id string) (r string) {
+func (m instrumentingMiddleware) DealBilling(billingID string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "DealBilling"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.AccountService.DealBilling(billing_id)
+	r = m.AccountService.DealBilling(billingID)
 	return
 }
 
-func (m instrumentingMiddleware) CancelBilling(billing_id string) (r string) {
+func (m instrumentingMiddleware) CancelBilling(billingID string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "CancelBilling"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.AccountService.CancelBilling(billing_id)
+	r = m.AccountService.CancelBilling(billingID)
 	return
 }
 
-func (m instrumentingMiddleware) GenAccount(user_id string) (r string) {
+func (m instrumentingMiddleware) GenAccount(billingID string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "GenAccount"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.AccountService.GenAccount(user_id)
+	r = m.AccountService.GenAccount(billingID)
 	return
 }

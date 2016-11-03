@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"github.com/banerwai/global"
 	"github.com/banerwai/global/bean"
+	"github.com/banerwai/global/constant"
 	"github.com/banerwai/micros/command/account/service"
 	"labix.org/v2/mgo/bson"
 	"time"
@@ -17,18 +17,18 @@ func newInmemService() service.AccountService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() (r string) {
+func (ims *inmemService) Ping() (r string) {
 	r = "pong"
 	return
 }
 
-func (self *inmemService) CreateAccount(json_account string) (r string) {
+func (ims *inmemService) CreateAccount(jsonAccount string) (r string) {
 	var _account bean.Account
-	err := json.Unmarshal([]byte(json_account), &_account)
+	err := json.Unmarshal([]byte(jsonAccount), &_account)
 	if err != nil {
 		return err.Error()
 	}
-	_account.Id = bson.NewObjectId()
+	_account.ID = bson.NewObjectId()
 
 	_time := time.Now()
 
@@ -38,38 +38,38 @@ func (self *inmemService) CreateAccount(json_account string) (r string) {
 	if _err != nil {
 		return _err.Error()
 	}
-	return _account.Id.Hex()
+	return _account.ID.Hex()
 }
 
-func (self *inmemService) CreateBilling(json_billing string) (r string) {
+func (ims *inmemService) CreateBilling(jsonBilling string) (r string) {
 	var _billing bean.Billing
-	err := json.Unmarshal([]byte(json_billing), &_billing)
+	err := json.Unmarshal([]byte(jsonBilling), &_billing)
 	if err != nil {
 		return err.Error()
 	}
-	_billing.Id = bson.NewObjectId()
+	_billing.ID = bson.NewObjectId()
 
 	_time := time.Now()
 
 	_billing.CreatedTime = _time
-	_billing.Status = global.BillingStatus_Create
+	_billing.Status = constant.BillingStatusCreate
 
 	_err := BillingCollection.Insert(_billing)
 	if _err != nil {
 		return _err.Error()
 	}
-	return _billing.Id.Hex()
+	return _billing.ID.Hex()
 }
 
-func (self *inmemService) DealBilling(billing_id string) (r string) {
-	if !bson.IsObjectIdHex(billing_id) {
+func (ims *inmemService) DealBilling(billingID string) (r string) {
+	if !bson.IsObjectIdHex(billingID) {
 		return ""
 	}
 
-	_mongo_m := bson.M{}
-	_mongo_m["status"] = global.BillingStatus_Deal
+	_mongoM := bson.M{}
+	_mongoM["status"] = constant.BillingStatusDeal
 
-	_err := BillingCollection.Update(bson.M{"_id": bson.ObjectIdHex(billing_id)}, bson.M{"$set": _mongo_m})
+	_err := BillingCollection.Update(bson.M{"_id": bson.ObjectIdHex(billingID)}, bson.M{"$set": _mongoM})
 	if nil != _err {
 		r = _err.Error()
 	}
@@ -77,15 +77,15 @@ func (self *inmemService) DealBilling(billing_id string) (r string) {
 	return "OK"
 }
 
-func (self *inmemService) CancelBilling(billing_id string) (r string) {
-	if !bson.IsObjectIdHex(billing_id) {
+func (ims *inmemService) CancelBilling(billingID string) (r string) {
+	if !bson.IsObjectIdHex(billingID) {
 		return ""
 	}
 
-	_mongo_m := bson.M{}
-	_mongo_m["status"] = global.BillingStatus_Cancel
+	_mongoM := bson.M{}
+	_mongoM["status"] = constant.BillingStatusCancel
 
-	_err := BillingCollection.Update(bson.M{"_id": bson.ObjectIdHex(billing_id)}, bson.M{"$set": _mongo_m})
+	_err := BillingCollection.Update(bson.M{"_id": bson.ObjectIdHex(billingID)}, bson.M{"$set": _mongoM})
 	if nil != _err {
 		r = _err.Error()
 	}
@@ -93,22 +93,22 @@ func (self *inmemService) CancelBilling(billing_id string) (r string) {
 	return "OK"
 }
 
-func (self *inmemService) GenAccount(user_id string) (r string) {
-	if !bson.IsObjectIdHex(user_id) {
+func (ims *inmemService) GenAccount(userID string) (r string) {
+	if !bson.IsObjectIdHex(userID) {
 		return ""
 	}
 	var _billings []bean.Billing
 
 	query := bson.M{}
-	query["status"] = global.BillingStatus_Deal
-	query["user_id"] = bson.ObjectIdHex(user_id)
+	query["status"] = constant.BillingStatusDeal
+	query["user_id"] = bson.ObjectIdHex(userID)
 
 	_err := BillingCollection.Find(query).All(&_billings)
 	if _err != nil {
 		return _err.Error()
 	}
 
-	_err = self.updateMultiCurrencyAccount(user_id, self.genMultiCurrency(_billings))
+	_err = ims.updateMultiCurrencyAccount(userID, ims.genMultiCurrency(_billings))
 
 	if _err != nil {
 		return _err.Error()
@@ -116,53 +116,53 @@ func (self *inmemService) GenAccount(user_id string) (r string) {
 	return "OK"
 }
 
-func (self *inmemService) genMultiCurrency(billing []bean.Billing) []bean.MultiCurrencyAccount {
+func (ims *inmemService) genMultiCurrency(billing []bean.Billing) []bean.MultiCurrencyAccount {
 	var _lsMultiCurrencyAccount []bean.MultiCurrencyAccount
 
 	var _beanMultiCurrencyAccount01 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount01.Currency = global.CURRENCY_USD
-	_beanMultiCurrencyAccount01.Amount = self.genMultiCurrencyAmount(global.CURRENCY_USD, billing)
+	_beanMultiCurrencyAccount01.Currency = constant.CurrencyUSD
+	_beanMultiCurrencyAccount01.Amount = ims.genMultiCurrencyAmount(constant.CurrencyUSD, billing)
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount01)
 
 	var _beanMultiCurrencyAccount02 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount02.Currency = global.CURRENCY_CNY
-	_beanMultiCurrencyAccount02.Amount = self.genMultiCurrencyAmount(global.CURRENCY_CNY, billing)
+	_beanMultiCurrencyAccount02.Currency = constant.CurrencyCNY
+	_beanMultiCurrencyAccount02.Amount = ims.genMultiCurrencyAmount(constant.CurrencyCNY, billing)
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount02)
 
 	var _beanMultiCurrencyAccount03 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount03.Currency = global.CURRENCY_EUR
-	_beanMultiCurrencyAccount03.Amount = self.genMultiCurrencyAmount(global.CURRENCY_EUR, billing)
+	_beanMultiCurrencyAccount03.Currency = constant.CurrencyEUR
+	_beanMultiCurrencyAccount03.Amount = ims.genMultiCurrencyAmount(constant.CurrencyEUR, billing)
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount03)
 
 	var _beanMultiCurrencyAccount04 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount04.Currency = global.CURRENCY_JPY
-	_beanMultiCurrencyAccount04.Amount = self.genMultiCurrencyAmount(global.CURRENCY_JPY, billing)
+	_beanMultiCurrencyAccount04.Currency = constant.CurrencyJPY
+	_beanMultiCurrencyAccount04.Amount = ims.genMultiCurrencyAmount(constant.CurrencyJPY, billing)
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount04)
 
 	var _beanMultiCurrencyAccount05 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount05.Currency = global.CURRENCY_GBP
-	_beanMultiCurrencyAccount05.Amount = self.genMultiCurrencyAmount(global.CURRENCY_GBP, billing)
+	_beanMultiCurrencyAccount05.Currency = constant.CurrencyGBP
+	_beanMultiCurrencyAccount05.Amount = ims.genMultiCurrencyAmount(constant.CurrencyGBP, billing)
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount05)
 
 	return _lsMultiCurrencyAccount
 }
 
-func (self *inmemService) genMultiCurrencyAmount(currency_code string, billings []bean.Billing) int64 {
+func (ims *inmemService) genMultiCurrencyAmount(currencyCode string, billings []bean.Billing) int64 {
 	var ret int64
 	ret = 0
 	for _, _billing := range billings {
-		if _billing.Currency == currency_code {
+		if _billing.Currency == currencyCode {
 			ret += int64(_billing.Operate) * _billing.Amount
 		}
 	}
 	return ret
 }
 
-func (self *inmemService) updateMultiCurrencyAccount(user_id string, multi_curreency []bean.MultiCurrencyAccount) error {
-	if !bson.IsObjectIdHex(user_id) {
+func (ims *inmemService) updateMultiCurrencyAccount(userID string, multiCurreency []bean.MultiCurrencyAccount) error {
+	if !bson.IsObjectIdHex(userID) {
 		return errors.New("user_id is not ObjectIdHex")
 	}
 
-	_, _err := AccountCollection.Upsert(bson.M{"user_id": bson.ObjectIdHex(user_id)}, bson.M{"$set": bson.M{"multi_curreency": multi_curreency}})
+	_, _err := AccountCollection.Upsert(bson.M{"user_id": bson.ObjectIdHex(userID)}, bson.M{"$set": bson.M{"multi_curreency": multiCurreency}})
 	return _err
 }

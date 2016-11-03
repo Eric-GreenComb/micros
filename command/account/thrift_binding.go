@@ -13,27 +13,27 @@ func (tb thriftBinding) Ping() (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) CreateAccount(json_account string) (string, error) {
-	r := tb.AccountService.CreateAccount(json_account)
+func (tb thriftBinding) CreateAccount(jsonAccount string) (string, error) {
+	r := tb.AccountService.CreateAccount(jsonAccount)
 	return r, nil
 }
 
-func (tb thriftBinding) CreateBilling(json_billing string) (string, error) {
-	r := tb.AccountService.CreateBilling(json_billing)
+func (tb thriftBinding) CreateBilling(jsonBilling string) (string, error) {
+	r := tb.AccountService.CreateBilling(jsonBilling)
 	return r, nil
 }
 
-func (tb thriftBinding) DealBilling(billing_id string) (string, error) {
-	r := tb.AccountService.DealBilling(billing_id)
+func (tb thriftBinding) DealBilling(billingID string) (string, error) {
+	r := tb.AccountService.DealBilling(billingID)
 	return r, nil
 }
 
-func (tb thriftBinding) CancelBilling(billing_id string) (string, error) {
-	r := tb.AccountService.CancelBilling(billing_id)
+func (tb thriftBinding) CancelBilling(billingID string) (string, error) {
+	r := tb.AccountService.CancelBilling(billingID)
 	return r, nil
 }
 
-func (tb thriftBinding) GenAccount(user_id string) (string, error) {
-	r := tb.AccountService.GenAccount(user_id)
+func (tb thriftBinding) GenAccount(userID string) (string, error) {
+	r := tb.AccountService.GenAccount(userID)
 	return r, nil
 }

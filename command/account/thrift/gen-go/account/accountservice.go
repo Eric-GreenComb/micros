@@ -17,20 +17,20 @@ var _ = bytes.Equal
 type AccountService interface {
 	Ping() (r string, err error)
 	// Parameters:
-	//  - JSONAccount
-	CreateAccount(json_account string) (r string, err error)
+	//  - JsonAccount
+	CreateAccount(jsonAccount string) (r string, err error)
 	// Parameters:
-	//  - JSONBilling
-	CreateBilling(json_billing string) (r string, err error)
-	// Parameters:
-	//  - BillingID
-	DealBilling(billing_id string) (r string, err error)
+	//  - JsonBilling
+	CreateBilling(jsonBilling string) (r string, err error)
 	// Parameters:
 	//  - BillingID
-	CancelBilling(billing_id string) (r string, err error)
+	DealBilling(billingID string) (r string, err error)
+	// Parameters:
+	//  - BillingID
+	CancelBilling(billingID string) (r string, err error)
 	// Parameters:
 	//  - UserID
-	GenAccount(user_id string) (r string, err error)
+	GenAccount(userID string) (r string, err error)
 }
 
 type AccountServiceClient struct {
@@ -133,15 +133,15 @@ func (p *AccountServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
-//  - JSONAccount
-func (p *AccountServiceClient) CreateAccount(json_account string) (r string, err error) {
-	if err = p.sendCreateAccount(json_account); err != nil {
+//  - JsonAccount
+func (p *AccountServiceClient) CreateAccount(jsonAccount string) (r string, err error) {
+	if err = p.sendCreateAccount(jsonAccount); err != nil {
 		return
 	}
 	return p.recvCreateAccount()
 }
 
-func (p *AccountServiceClient) sendCreateAccount(json_account string) (err error) {
+func (p *AccountServiceClient) sendCreateAccount(jsonAccount string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -152,7 +152,7 @@ func (p *AccountServiceClient) sendCreateAccount(json_account string) (err error
 		return
 	}
 	args := AccountServiceCreateAccountArgs{
-		JSONAccount: json_account,
+		JsonAccount: jsonAccount,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -210,15 +210,15 @@ func (p *AccountServiceClient) recvCreateAccount() (value string, err error) {
 }
 
 // Parameters:
-//  - JSONBilling
-func (p *AccountServiceClient) CreateBilling(json_billing string) (r string, err error) {
-	if err = p.sendCreateBilling(json_billing); err != nil {
+//  - JsonBilling
+func (p *AccountServiceClient) CreateBilling(jsonBilling string) (r string, err error) {
+	if err = p.sendCreateBilling(jsonBilling); err != nil {
 		return
 	}
 	return p.recvCreateBilling()
 }
 
-func (p *AccountServiceClient) sendCreateBilling(json_billing string) (err error) {
+func (p *AccountServiceClient) sendCreateBilling(jsonBilling string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -229,7 +229,7 @@ func (p *AccountServiceClient) sendCreateBilling(json_billing string) (err error
 		return
 	}
 	args := AccountServiceCreateBillingArgs{
-		JSONBilling: json_billing,
+		JsonBilling: jsonBilling,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -288,14 +288,14 @@ func (p *AccountServiceClient) recvCreateBilling() (value string, err error) {
 
 // Parameters:
 //  - BillingID
-func (p *AccountServiceClient) DealBilling(billing_id string) (r string, err error) {
-	if err = p.sendDealBilling(billing_id); err != nil {
+func (p *AccountServiceClient) DealBilling(billingID string) (r string, err error) {
+	if err = p.sendDealBilling(billingID); err != nil {
 		return
 	}
 	return p.recvDealBilling()
 }
 
-func (p *AccountServiceClient) sendDealBilling(billing_id string) (err error) {
+func (p *AccountServiceClient) sendDealBilling(billingID string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -306,7 +306,7 @@ func (p *AccountServiceClient) sendDealBilling(billing_id string) (err error) {
 		return
 	}
 	args := AccountServiceDealBillingArgs{
-		BillingID: billing_id,
+		BillingID: billingID,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -365,14 +365,14 @@ func (p *AccountServiceClient) recvDealBilling() (value string, err error) {
 
 // Parameters:
 //  - BillingID
-func (p *AccountServiceClient) CancelBilling(billing_id string) (r string, err error) {
-	if err = p.sendCancelBilling(billing_id); err != nil {
+func (p *AccountServiceClient) CancelBilling(billingID string) (r string, err error) {
+	if err = p.sendCancelBilling(billingID); err != nil {
 		return
 	}
 	return p.recvCancelBilling()
 }
 
-func (p *AccountServiceClient) sendCancelBilling(billing_id string) (err error) {
+func (p *AccountServiceClient) sendCancelBilling(billingID string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -383,7 +383,7 @@ func (p *AccountServiceClient) sendCancelBilling(billing_id string) (err error) 
 		return
 	}
 	args := AccountServiceCancelBillingArgs{
-		BillingID: billing_id,
+		BillingID: billingID,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -442,14 +442,14 @@ func (p *AccountServiceClient) recvCancelBilling() (value string, err error) {
 
 // Parameters:
 //  - UserID
-func (p *AccountServiceClient) GenAccount(user_id string) (r string, err error) {
-	if err = p.sendGenAccount(user_id); err != nil {
+func (p *AccountServiceClient) GenAccount(userID string) (r string, err error) {
+	if err = p.sendGenAccount(userID); err != nil {
 		return
 	}
 	return p.recvGenAccount()
 }
 
-func (p *AccountServiceClient) sendGenAccount(user_id string) (err error) {
+func (p *AccountServiceClient) sendGenAccount(userID string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -460,7 +460,7 @@ func (p *AccountServiceClient) sendGenAccount(user_id string) (err error) {
 		return
 	}
 	args := AccountServiceGenAccountArgs{
-		UserID: user_id,
+		UserID: userID,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -634,7 +634,7 @@ func (p *accountServiceProcessorCreateAccount) Process(seqId int32, iprot, oprot
 	result := AccountServiceCreateAccountResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.CreateAccount(args.JSONAccount); err2 != nil {
+	if retval, err2 = p.handler.CreateAccount(args.JsonAccount); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing CreateAccount: "+err2.Error())
 		oprot.WriteMessageBegin("CreateAccount", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -682,7 +682,7 @@ func (p *accountServiceProcessorCreateBilling) Process(seqId int32, iprot, oprot
 	result := AccountServiceCreateBillingResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.CreateBilling(args.JSONBilling); err2 != nil {
+	if retval, err2 = p.handler.CreateBilling(args.JsonBilling); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing CreateBilling: "+err2.Error())
 		oprot.WriteMessageBegin("CreateBilling", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -1012,17 +1012,17 @@ func (p *AccountServicePingResult) String() string {
 }
 
 // Attributes:
-//  - JSONAccount
+//  - JsonAccount
 type AccountServiceCreateAccountArgs struct {
-	JSONAccount string `thrift:"json_account,1" json:"json_account"`
+	JsonAccount string `thrift:"jsonAccount,1" json:"jsonAccount"`
 }
 
 func NewAccountServiceCreateAccountArgs() *AccountServiceCreateAccountArgs {
 	return &AccountServiceCreateAccountArgs{}
 }
 
-func (p *AccountServiceCreateAccountArgs) GetJSONAccount() string {
-	return p.JSONAccount
+func (p *AccountServiceCreateAccountArgs) GetJsonAccount() string {
+	return p.JsonAccount
 }
 func (p *AccountServiceCreateAccountArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -1061,7 +1061,7 @@ func (p *AccountServiceCreateAccountArgs) readField1(iprot thrift.TProtocol) err
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.JSONAccount = v
+		p.JsonAccount = v
 	}
 	return nil
 }
@@ -1083,14 +1083,14 @@ func (p *AccountServiceCreateAccountArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *AccountServiceCreateAccountArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_account", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_account: ", p), err)
+	if err := oprot.WriteFieldBegin("jsonAccount", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:jsonAccount: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.JSONAccount)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_account (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.JsonAccount)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.jsonAccount (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_account: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:jsonAccount: ", p), err)
 	}
 	return err
 }
@@ -1205,17 +1205,17 @@ func (p *AccountServiceCreateAccountResult) String() string {
 }
 
 // Attributes:
-//  - JSONBilling
+//  - JsonBilling
 type AccountServiceCreateBillingArgs struct {
-	JSONBilling string `thrift:"json_billing,1" json:"json_billing"`
+	JsonBilling string `thrift:"jsonBilling,1" json:"jsonBilling"`
 }
 
 func NewAccountServiceCreateBillingArgs() *AccountServiceCreateBillingArgs {
 	return &AccountServiceCreateBillingArgs{}
 }
 
-func (p *AccountServiceCreateBillingArgs) GetJSONBilling() string {
-	return p.JSONBilling
+func (p *AccountServiceCreateBillingArgs) GetJsonBilling() string {
+	return p.JsonBilling
 }
 func (p *AccountServiceCreateBillingArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -1254,7 +1254,7 @@ func (p *AccountServiceCreateBillingArgs) readField1(iprot thrift.TProtocol) err
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.JSONBilling = v
+		p.JsonBilling = v
 	}
 	return nil
 }
@@ -1276,14 +1276,14 @@ func (p *AccountServiceCreateBillingArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *AccountServiceCreateBillingArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_billing", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_billing: ", p), err)
+	if err := oprot.WriteFieldBegin("jsonBilling", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:jsonBilling: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.JSONBilling)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_billing (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.JsonBilling)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.jsonBilling (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_billing: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:jsonBilling: ", p), err)
 	}
 	return err
 }
@@ -1400,7 +1400,7 @@ func (p *AccountServiceCreateBillingResult) String() string {
 // Attributes:
 //  - BillingID
 type AccountServiceDealBillingArgs struct {
-	BillingID string `thrift:"billing_id,1" json:"billing_id"`
+	BillingID string `thrift:"billingID,1" json:"billingID"`
 }
 
 func NewAccountServiceDealBillingArgs() *AccountServiceDealBillingArgs {
@@ -1469,14 +1469,14 @@ func (p *AccountServiceDealBillingArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *AccountServiceDealBillingArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("billing_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:billing_id: ", p), err)
+	if err := oprot.WriteFieldBegin("billingID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:billingID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.BillingID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.billing_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.billingID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:billing_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:billingID: ", p), err)
 	}
 	return err
 }
@@ -1593,7 +1593,7 @@ func (p *AccountServiceDealBillingResult) String() string {
 // Attributes:
 //  - BillingID
 type AccountServiceCancelBillingArgs struct {
-	BillingID string `thrift:"billing_id,1" json:"billing_id"`
+	BillingID string `thrift:"billingID,1" json:"billingID"`
 }
 
 func NewAccountServiceCancelBillingArgs() *AccountServiceCancelBillingArgs {
@@ -1662,14 +1662,14 @@ func (p *AccountServiceCancelBillingArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *AccountServiceCancelBillingArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("billing_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:billing_id: ", p), err)
+	if err := oprot.WriteFieldBegin("billingID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:billingID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.BillingID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.billing_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.billingID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:billing_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:billingID: ", p), err)
 	}
 	return err
 }
@@ -1786,7 +1786,7 @@ func (p *AccountServiceCancelBillingResult) String() string {
 // Attributes:
 //  - UserID
 type AccountServiceGenAccountArgs struct {
-	UserID string `thrift:"user_id,1" json:"user_id"`
+	UserID string `thrift:"userID,1" json:"userID"`
 }
 
 func NewAccountServiceGenAccountArgs() *AccountServiceGenAccountArgs {
@@ -1855,14 +1855,14 @@ func (p *AccountServiceGenAccountArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *AccountServiceGenAccountArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:user_id: ", p), err)
+	if err := oprot.WriteFieldBegin("userID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.UserID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.user_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.userID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:user_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userID: ", p), err)
 	}
 	return err
 }

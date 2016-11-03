@@ -20,8 +20,8 @@ import (
 
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
 
-	"github.com/banerwai/global"
 	"github.com/banerwai/global/bean"
+	"github.com/banerwai/global/constant"
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
 
-		_defaultObjectId = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
+		_defaultObjectID = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
 	)
 	flag.Parse()
 	if len(os.Args) < 2 {
@@ -41,7 +41,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, a1 := flag.Arg(0), flag.Arg(1)
 
@@ -74,7 +74,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -94,10 +94,10 @@ func main() {
 		v := svc.Ping()
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
-	case "create_account":
+	case "create":
 		var _obj bean.Account
-		_obj.Id = bson.ObjectIdHex(*_defaultObjectId)
-		_obj.UserId = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.ID = bson.ObjectIdHex(*_defaultObjectID)
+		_obj.UserID = bson.ObjectIdHex(*_defaultObjectID)
 		_obj.Email = a1
 
 		b, _ := json.Marshal(_obj)
@@ -106,14 +106,15 @@ func main() {
 
 	case "bill":
 		var _obj bean.Billing
-		_obj.Id = bson.ObjectIdHex(*_defaultObjectId)
-		_obj.UserId = bson.ObjectIdHex(*_defaultObjectId)
-		_obj.ProfileId = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.ID = bson.ObjectIdHex(*_defaultObjectID)
+		_obj.UserID = bson.ObjectIdHex(*_defaultObjectID)
+		_obj.PayUserID = bson.ObjectIdHex(*_defaultObjectID)
+		_obj.ServiceID = bson.ObjectIdHex(*_defaultObjectID)
 
 		_obj.Operate = 1
-		_obj.Currency = global.CURRENCY_CNY
+		_obj.Currency = constant.CurrencyCNY
 		_obj.Amount = 2000
-		_obj.PayType = global.PayType_BankRemittance
+		_obj.PayType = constant.PayTypeBankRemittance
 
 		b, _ := json.Marshal(_obj)
 		v := svc.CreateBilling(string(b))
@@ -121,13 +122,13 @@ func main() {
 
 	case "deal":
 
-		_billing_id := a1
-		v := svc.DealBilling(_billing_id)
+		_billingID := a1
+		v := svc.DealBilling(_billingID)
 		logger.Log("method", "DealBilling", "v", v, "took", time.Since(begin))
 
 	case "gen":
-		_user_id := *_defaultObjectId
-		v := svc.GenAccount(_user_id)
+		_userID := *_defaultObjectID
+		v := svc.GenAccount(_userID)
 		logger.Log("method", "GenAccount", "v", v, "took", time.Since(begin))
 
 	// case "update":

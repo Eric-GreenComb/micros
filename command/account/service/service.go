@@ -2,22 +2,22 @@ package service
 
 import ()
 
-// Service is the abstract representation of this service.
+// AccountService Service is the abstract representation of this service.
 type AccountService interface {
 	Ping() string
 	// Parameters:
 	//  - JSONAccount
-	CreateAccount(json_account string) string
+	CreateAccount(jsonAccount string) string
 	// Parameters:
 	//  - JSONBilling
-	CreateBilling(json_billing string) string
+	CreateBilling(jsonBilling string) string
 	// Parameters:
 	//  - BillingID
-	DealBilling(billing_id string) string
+	DealBilling(billingID string) string
 	// Parameters:
 	//  - BillingID
-	CancelBilling(billing_id string) string
+	CancelBilling(billingID string) string
 	// Parameters:
 	//  - UserID
-	GenAccount(user_id string) string
+	GenAccount(userID string) string
 }
