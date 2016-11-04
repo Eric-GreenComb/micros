@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) CreateContact(json_contact string) string {
-	reply, err := c.ContactServiceClient.CreateContact(json_contact)
+func (c client) CreateContact(jsonContact string) string {
+	reply, err := c.ContactServiceClient.CreateContact(jsonContact)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -35,8 +35,8 @@ func (c client) CreateContact(json_contact string) string {
 	return reply
 }
 
-func (c client) ClientSignContact(contact_id string, status bool) string {
-	reply, err := c.ContactServiceClient.ClientSignContact(contact_id, status)
+func (c client) ClientSignContact(contactID string, status bool) string {
+	reply, err := c.ContactServiceClient.ClientSignContact(contactID, status)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -44,8 +44,8 @@ func (c client) ClientSignContact(contact_id string, status bool) string {
 	return reply
 }
 
-func (c client) FreelancerSignContact(contact_id string, status bool) string {
-	reply, err := c.ContactServiceClient.FreelancerSignContact(contact_id, status)
+func (c client) FreelancerSignContact(contactID string, status bool) string {
+	reply, err := c.ContactServiceClient.FreelancerSignContact(contactID, status)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -53,8 +53,8 @@ func (c client) FreelancerSignContact(contact_id string, status bool) string {
 	return reply
 }
 
-func (c client) DealContact(contact_id string, status bool) string {
-	reply, err := c.ContactServiceClient.DealContact(contact_id, status)
+func (c client) DealContact(contactID string, status bool) string {
+	reply, err := c.ContactServiceClient.DealContact(contactID, status)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -62,8 +62,8 @@ func (c client) DealContact(contact_id string, status bool) string {
 	return reply
 }
 
-func (c client) UpdateContact(contact_id string, mmap map[string]string) string {
-	reply, err := c.ContactServiceClient.UpdateContact(contact_id, mmap)
+func (c client) UpdateContact(contactID string, mmap map[string]string) string {
+	reply, err := c.ContactServiceClient.UpdateContact(contactID, mmap)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

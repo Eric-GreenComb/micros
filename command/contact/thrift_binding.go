@@ -13,27 +13,27 @@ func (tb thriftBinding) Ping() (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) CreateContact(json_contact string) (string, error) {
-	r := tb.ContactService.CreateContact(json_contact)
+func (tb thriftBinding) CreateContact(jsonContact string) (string, error) {
+	r := tb.ContactService.CreateContact(jsonContact)
 	return r, nil
 }
 
-func (tb thriftBinding) ClientSignContact(contact_id string, status bool) (string, error) {
-	r := tb.ContactService.ClientSignContact(contact_id, status)
+func (tb thriftBinding) ClientSignContact(contactID string, status bool) (string, error) {
+	r := tb.ContactService.ClientSignContact(contactID, status)
 	return r, nil
 }
 
-func (tb thriftBinding) FreelancerSignContact(contact_id string, status bool) (string, error) {
-	r := tb.ContactService.FreelancerSignContact(contact_id, status)
+func (tb thriftBinding) FreelancerSignContact(contactID string, status bool) (string, error) {
+	r := tb.ContactService.FreelancerSignContact(contactID, status)
 	return r, nil
 }
 
-func (tb thriftBinding) DealContact(contact_id string, status bool) (string, error) {
-	r := tb.ContactService.DealContact(contact_id, status)
+func (tb thriftBinding) DealContact(contactID string, status bool) (string, error) {
+	r := tb.ContactService.DealContact(contactID, status)
 	return r, nil
 }
 
-func (tb thriftBinding) UpdateContact(contact_id string, mmap map[string]string) (string, error) {
-	r := tb.ContactService.UpdateContact(contact_id, mmap)
+func (tb thriftBinding) UpdateContact(contactID string, mmap map[string]string) (string, error) {
+	r := tb.ContactService.UpdateContact(contactID, mmap)
 	return r, nil
 }

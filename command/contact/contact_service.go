@@ -16,18 +16,18 @@ func newInmemService() service.ContactService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() (r string) {
+func (ims *inmemService) Ping() (r string) {
 	r = "pong"
 	return
 }
 
-func (self *inmemService) CreateContact(json_contact string) (r string) {
+func (ims *inmemService) CreateContact(jsonContact string) (r string) {
 	var _contact bean.Contact
-	err := json.Unmarshal([]byte(json_contact), &_contact)
+	err := json.Unmarshal([]byte(jsonContact), &_contact)
 	if err != nil {
 		return err.Error()
 	}
-	_contact.Id = bson.NewObjectId()
+	_contact.ID = bson.NewObjectId()
 
 	_time := time.Now()
 
@@ -42,14 +42,14 @@ func (self *inmemService) CreateContact(json_contact string) (r string) {
 	if _err != nil {
 		return _err.Error()
 	}
-	return _contact.Id.Hex()
+	return _contact.ID.Hex()
 }
 
-func (self *inmemService) ClientSignContact(contact_id string, status bool) (r string) {
-	if !bson.IsObjectIdHex(contact_id) {
+func (ims *inmemService) ClientSignContact(contactID string, status bool) (r string) {
+	if !bson.IsObjectIdHex(contactID) {
 		return ""
 	}
-	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contact_id)}, bson.M{"$set": bson.M{"client_signup": status}})
+	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contactID)}, bson.M{"$set": bson.M{"client_signup": status}})
 	if nil != _err {
 		r = _err.Error()
 	}
@@ -57,11 +57,11 @@ func (self *inmemService) ClientSignContact(contact_id string, status bool) (r s
 	return "OK"
 }
 
-func (self *inmemService) FreelancerSignContact(contact_id string, status bool) (r string) {
-	if !bson.IsObjectIdHex(contact_id) {
+func (ims *inmemService) FreelancerSignContact(contactID string, status bool) (r string) {
+	if !bson.IsObjectIdHex(contactID) {
 		return ""
 	}
-	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contact_id)}, bson.M{"$set": bson.M{"freelancer_signup": status}})
+	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contactID)}, bson.M{"$set": bson.M{"freelancer_signup": status}})
 	if nil != _err {
 		r = _err.Error()
 	}
@@ -69,14 +69,14 @@ func (self *inmemService) FreelancerSignContact(contact_id string, status bool) 
 	return "OK"
 }
 
-func (self *inmemService) DealContact(contact_id string, status bool) (r string) {
-	if !bson.IsObjectIdHex(contact_id) {
+func (ims *inmemService) DealContact(contactID string, status bool) (r string) {
+	if !bson.IsObjectIdHex(contactID) {
 		return ""
 	}
 
 	var _contact bean.Contact
 
-	err := ContactCollection.Find(bson.M{"_id": bson.ObjectIdHex(contact_id)}).One(&_contact)
+	err := ContactCollection.Find(bson.M{"_id": bson.ObjectIdHex(contactID)}).One(&_contact)
 
 	if err != nil {
 		return ""
@@ -84,18 +84,18 @@ func (self *inmemService) DealContact(contact_id string, status bool) (r string)
 
 	_mmap := make(map[string]string)
 	json.Unmarshal([]byte(_contact.TplParam), &_mmap)
-	_mmap["ContactNumber"] = _contact.Id.Hex()
+	_mmap["ContactNumber"] = _contact.ID.Hex()
 
 	_content := bstrings.ParseTpl("default", _contact.ContactTpl, _mmap)
 
-	_mongo_m := bson.M{}
-	_mongo_m["contact_content"] = _content
-	_mongo_m["client_signup"] = true
-	_mongo_m["freelancer_signup"] = true
-	_mongo_m["dealed"] = true
-	_mongo_m["dealedtime"] = time.Now()
+	_mongoM := bson.M{}
+	_mongoM["contact_content"] = _content
+	_mongoM["client_signup"] = true
+	_mongoM["freelancer_signup"] = true
+	_mongoM["dealed"] = true
+	_mongoM["dealedtime"] = time.Now()
 
-	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contact_id)}, bson.M{"$set": _mongo_m})
+	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contactID)}, bson.M{"$set": _mongoM})
 	if nil != _err {
 		r = _err.Error()
 	}
@@ -103,18 +103,18 @@ func (self *inmemService) DealContact(contact_id string, status bool) (r string)
 	return "OK"
 }
 
-func (self *inmemService) UpdateContact(contact_id string, mmap map[string]string) (r string) {
-	if !bson.IsObjectIdHex(contact_id) {
+func (ims *inmemService) UpdateContact(contactID string, mmap map[string]string) (r string) {
+	if !bson.IsObjectIdHex(contactID) {
 		return ""
 	}
 
-	_mongo_m := bson.M{}
+	_mongoM := bson.M{}
 
 	for k, v := range mmap {
-		_mongo_m[k] = v
+		_mongoM[k] = v
 	}
 
-	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contact_id)}, bson.M{"$set": _mongo_m})
+	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contactID)}, bson.M{"$set": _mongoM})
 	if nil != _err {
 		r = _err.Error()
 	}

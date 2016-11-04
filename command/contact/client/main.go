@@ -20,6 +20,7 @@ import (
 
 	"github.com/banerwai/global/bean"
 	banerwaicrypto "github.com/banerwai/gommon/crypto"
+	bstrings "github.com/banerwai/gommon/strings"
 )
 
 func main() {
@@ -37,9 +38,9 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
-	method, _contact_id := flag.Arg(0), flag.Arg(1)
+	method, _contactID := flag.Arg(0), flag.Arg(1)
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(os.Stdout)
@@ -70,7 +71,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -101,7 +102,7 @@ func main() {
 	// 	fmt.Println(_contact)
 	case "create":
 		var _obj bean.Contact
-		_obj.Id = bson.NewObjectId()
+		_obj.ID = bson.NewObjectId()
 		_obj.ClientEmail = "ministor@gmail.com"
 		_obj.FreeLancerEmail = "ministor@126.com"
 
@@ -121,19 +122,19 @@ func main() {
 		logger.Log("method", "CreateContact", "v", v, "took", time.Since(begin))
 
 	case "csign":
-		v := svc.ClientSignContact(_contact_id, true)
+		v := svc.ClientSignContact(_contactID, true)
 		logger.Log("method", "ClientSignContact", "v", v, "took", time.Since(begin))
 
 	case "fsign":
-		v := svc.FreelancerSignContact(_contact_id, true)
+		v := svc.FreelancerSignContact(_contactID, true)
 		logger.Log("method", "FreelancerSignContact", "v", v, "took", time.Since(begin))
 
 	case "deal":
-		v := svc.DealContact(_contact_id, true)
+		v := svc.DealContact(_contactID, true)
 		logger.Log("method", "DealContact", "v", v, "took", time.Since(begin))
 
 	case "update":
-		_map_update := make(map[string]string)
+		_mapUpdate := make(map[string]string)
 
 		_tpl := prepareContactTpl()
 		_mmap := updateContactParam()
@@ -141,11 +142,11 @@ func main() {
 
 		_content := bstrings.ParseTpl("default", _tpl, _mmap)
 
-		_map_update["contact_content"] = _content
-		_map_update["contact_tpl"] = _tpl
-		_map_update["tpl_param"] = string(_bParam)
+		_mapUpdate["contact_content"] = _content
+		_mapUpdate["contact_tpl"] = _tpl
+		_mapUpdate["tpl_param"] = string(_bParam)
 
-		v := svc.UpdateContact(_contact_id, _map_update)
+		v := svc.UpdateContact(_contactID, _mapUpdate)
 		logger.Log("method", "UpdateContact", "v", v, "took", time.Since(begin))
 
 	default:

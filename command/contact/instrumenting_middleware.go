@@ -22,47 +22,47 @@ func (m instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m instrumentingMiddleware) CreateContact(json_contact string) (r string) {
+func (m instrumentingMiddleware) CreateContact(jsonContact string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "CreateContact"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ContactService.CreateContact(json_contact)
+	r = m.ContactService.CreateContact(jsonContact)
 	return
 }
 
-func (m instrumentingMiddleware) ClientSignContact(contact_id string, status bool) (r string) {
+func (m instrumentingMiddleware) ClientSignContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "ClientSignContact"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ContactService.ClientSignContact(contact_id, status)
+	r = m.ContactService.ClientSignContact(contactID, status)
 	return
 }
 
-func (m instrumentingMiddleware) FreelancerSignContact(contact_id string, status bool) (r string) {
+func (m instrumentingMiddleware) FreelancerSignContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "FreelancerSignContact"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ContactService.FreelancerSignContact(contact_id, status)
+	r = m.ContactService.FreelancerSignContact(contactID, status)
 	return
 }
 
-func (m instrumentingMiddleware) DealContact(contact_id string, status bool) (r string) {
+func (m instrumentingMiddleware) DealContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "DealContact"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ContactService.DealContact(contact_id, status)
+	r = m.ContactService.DealContact(contactID, status)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateContact(contact_id string, mmap map[string]string) (r string) {
+func (m instrumentingMiddleware) UpdateContact(contactID string, mmap map[string]string) (r string) {
 	defer func(begin time.Time) {
 		methodField := metrics.Field{Key: "method", Value: "UpdateContact"}
 		m.requestDuration.With(methodField).Observe(time.Since(begin))
 	}(time.Now())
-	r = m.ContactService.UpdateContact(contact_id, mmap)
+	r = m.ContactService.UpdateContact(contactID, mmap)
 	return
 }

@@ -17,24 +17,24 @@ var _ = bytes.Equal
 type ContactService interface {
 	Ping() (r string, err error)
 	// Parameters:
-	//  - JSONContact
-	CreateContact(json_contact string) (r string, err error)
+	//  - JsonContact
+	CreateContact(jsonContact string) (r string, err error)
 	// Parameters:
 	//  - ContactID
 	//  - Status
-	ClientSignContact(contact_id string, status bool) (r string, err error)
+	ClientSignContact(contactID string, status bool) (r string, err error)
 	// Parameters:
 	//  - ContactID
 	//  - Status
-	FreelancerSignContact(contact_id string, status bool) (r string, err error)
+	FreelancerSignContact(contactID string, status bool) (r string, err error)
 	// Parameters:
 	//  - ContactID
 	//  - Status
-	DealContact(contact_id string, status bool) (r string, err error)
+	DealContact(contactID string, status bool) (r string, err error)
 	// Parameters:
 	//  - ContactID
 	//  - Mmap
-	UpdateContact(contact_id string, mmap map[string]string) (r string, err error)
+	UpdateContact(contactID string, mmap map[string]string) (r string, err error)
 }
 
 type ContactServiceClient struct {
@@ -137,15 +137,15 @@ func (p *ContactServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
-//  - JSONContact
-func (p *ContactServiceClient) CreateContact(json_contact string) (r string, err error) {
-	if err = p.sendCreateContact(json_contact); err != nil {
+//  - JsonContact
+func (p *ContactServiceClient) CreateContact(jsonContact string) (r string, err error) {
+	if err = p.sendCreateContact(jsonContact); err != nil {
 		return
 	}
 	return p.recvCreateContact()
 }
 
-func (p *ContactServiceClient) sendCreateContact(json_contact string) (err error) {
+func (p *ContactServiceClient) sendCreateContact(jsonContact string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -156,7 +156,7 @@ func (p *ContactServiceClient) sendCreateContact(json_contact string) (err error
 		return
 	}
 	args := ContactServiceCreateContactArgs{
-		JSONContact: json_contact,
+		JsonContact: jsonContact,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -216,14 +216,14 @@ func (p *ContactServiceClient) recvCreateContact() (value string, err error) {
 // Parameters:
 //  - ContactID
 //  - Status
-func (p *ContactServiceClient) ClientSignContact(contact_id string, status bool) (r string, err error) {
-	if err = p.sendClientSignContact(contact_id, status); err != nil {
+func (p *ContactServiceClient) ClientSignContact(contactID string, status bool) (r string, err error) {
+	if err = p.sendClientSignContact(contactID, status); err != nil {
 		return
 	}
 	return p.recvClientSignContact()
 }
 
-func (p *ContactServiceClient) sendClientSignContact(contact_id string, status bool) (err error) {
+func (p *ContactServiceClient) sendClientSignContact(contactID string, status bool) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -234,7 +234,7 @@ func (p *ContactServiceClient) sendClientSignContact(contact_id string, status b
 		return
 	}
 	args := ContactServiceClientSignContactArgs{
-		ContactID: contact_id,
+		ContactID: contactID,
 		Status:    status,
 	}
 	if err = args.Write(oprot); err != nil {
@@ -295,14 +295,14 @@ func (p *ContactServiceClient) recvClientSignContact() (value string, err error)
 // Parameters:
 //  - ContactID
 //  - Status
-func (p *ContactServiceClient) FreelancerSignContact(contact_id string, status bool) (r string, err error) {
-	if err = p.sendFreelancerSignContact(contact_id, status); err != nil {
+func (p *ContactServiceClient) FreelancerSignContact(contactID string, status bool) (r string, err error) {
+	if err = p.sendFreelancerSignContact(contactID, status); err != nil {
 		return
 	}
 	return p.recvFreelancerSignContact()
 }
 
-func (p *ContactServiceClient) sendFreelancerSignContact(contact_id string, status bool) (err error) {
+func (p *ContactServiceClient) sendFreelancerSignContact(contactID string, status bool) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -313,7 +313,7 @@ func (p *ContactServiceClient) sendFreelancerSignContact(contact_id string, stat
 		return
 	}
 	args := ContactServiceFreelancerSignContactArgs{
-		ContactID: contact_id,
+		ContactID: contactID,
 		Status:    status,
 	}
 	if err = args.Write(oprot); err != nil {
@@ -374,14 +374,14 @@ func (p *ContactServiceClient) recvFreelancerSignContact() (value string, err er
 // Parameters:
 //  - ContactID
 //  - Status
-func (p *ContactServiceClient) DealContact(contact_id string, status bool) (r string, err error) {
-	if err = p.sendDealContact(contact_id, status); err != nil {
+func (p *ContactServiceClient) DealContact(contactID string, status bool) (r string, err error) {
+	if err = p.sendDealContact(contactID, status); err != nil {
 		return
 	}
 	return p.recvDealContact()
 }
 
-func (p *ContactServiceClient) sendDealContact(contact_id string, status bool) (err error) {
+func (p *ContactServiceClient) sendDealContact(contactID string, status bool) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -392,7 +392,7 @@ func (p *ContactServiceClient) sendDealContact(contact_id string, status bool) (
 		return
 	}
 	args := ContactServiceDealContactArgs{
-		ContactID: contact_id,
+		ContactID: contactID,
 		Status:    status,
 	}
 	if err = args.Write(oprot); err != nil {
@@ -453,14 +453,14 @@ func (p *ContactServiceClient) recvDealContact() (value string, err error) {
 // Parameters:
 //  - ContactID
 //  - Mmap
-func (p *ContactServiceClient) UpdateContact(contact_id string, mmap map[string]string) (r string, err error) {
-	if err = p.sendUpdateContact(contact_id, mmap); err != nil {
+func (p *ContactServiceClient) UpdateContact(contactID string, mmap map[string]string) (r string, err error) {
+	if err = p.sendUpdateContact(contactID, mmap); err != nil {
 		return
 	}
 	return p.recvUpdateContact()
 }
 
-func (p *ContactServiceClient) sendUpdateContact(contact_id string, mmap map[string]string) (err error) {
+func (p *ContactServiceClient) sendUpdateContact(contactID string, mmap map[string]string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -471,7 +471,7 @@ func (p *ContactServiceClient) sendUpdateContact(contact_id string, mmap map[str
 		return
 	}
 	args := ContactServiceUpdateContactArgs{
-		ContactID: contact_id,
+		ContactID: contactID,
 		Mmap:      mmap,
 	}
 	if err = args.Write(oprot); err != nil {
@@ -646,7 +646,7 @@ func (p *contactServiceProcessorCreateContact) Process(seqId int32, iprot, oprot
 	result := ContactServiceCreateContactResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.CreateContact(args.JSONContact); err2 != nil {
+	if retval, err2 = p.handler.CreateContact(args.JsonContact); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing CreateContact: "+err2.Error())
 		oprot.WriteMessageBegin("CreateContact", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -1024,17 +1024,17 @@ func (p *ContactServicePingResult) String() string {
 }
 
 // Attributes:
-//  - JSONContact
+//  - JsonContact
 type ContactServiceCreateContactArgs struct {
-	JSONContact string `thrift:"json_contact,1" json:"json_contact"`
+	JsonContact string `thrift:"jsonContact,1" json:"jsonContact"`
 }
 
 func NewContactServiceCreateContactArgs() *ContactServiceCreateContactArgs {
 	return &ContactServiceCreateContactArgs{}
 }
 
-func (p *ContactServiceCreateContactArgs) GetJSONContact() string {
-	return p.JSONContact
+func (p *ContactServiceCreateContactArgs) GetJsonContact() string {
+	return p.JsonContact
 }
 func (p *ContactServiceCreateContactArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -1073,7 +1073,7 @@ func (p *ContactServiceCreateContactArgs) readField1(iprot thrift.TProtocol) err
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.JSONContact = v
+		p.JsonContact = v
 	}
 	return nil
 }
@@ -1095,14 +1095,14 @@ func (p *ContactServiceCreateContactArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ContactServiceCreateContactArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_contact", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_contact: ", p), err)
+	if err := oprot.WriteFieldBegin("jsonContact", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:jsonContact: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.JSONContact)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_contact (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.JsonContact)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.jsonContact (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_contact: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:jsonContact: ", p), err)
 	}
 	return err
 }
@@ -1220,7 +1220,7 @@ func (p *ContactServiceCreateContactResult) String() string {
 //  - ContactID
 //  - Status
 type ContactServiceClientSignContactArgs struct {
-	ContactID string `thrift:"contact_id,1" json:"contact_id"`
+	ContactID string `thrift:"contactID,1" json:"contactID"`
 	Status    bool   `thrift:"status,2" json:"status"`
 }
 
@@ -1310,14 +1310,14 @@ func (p *ContactServiceClientSignContactArgs) Write(oprot thrift.TProtocol) erro
 }
 
 func (p *ContactServiceClientSignContactArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("contact_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:contact_id: ", p), err)
+	if err := oprot.WriteFieldBegin("contactID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:contactID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ContactID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.contact_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.contactID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:contact_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:contactID: ", p), err)
 	}
 	return err
 }
@@ -1448,7 +1448,7 @@ func (p *ContactServiceClientSignContactResult) String() string {
 //  - ContactID
 //  - Status
 type ContactServiceFreelancerSignContactArgs struct {
-	ContactID string `thrift:"contact_id,1" json:"contact_id"`
+	ContactID string `thrift:"contactID,1" json:"contactID"`
 	Status    bool   `thrift:"status,2" json:"status"`
 }
 
@@ -1538,14 +1538,14 @@ func (p *ContactServiceFreelancerSignContactArgs) Write(oprot thrift.TProtocol) 
 }
 
 func (p *ContactServiceFreelancerSignContactArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("contact_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:contact_id: ", p), err)
+	if err := oprot.WriteFieldBegin("contactID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:contactID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ContactID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.contact_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.contactID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:contact_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:contactID: ", p), err)
 	}
 	return err
 }
@@ -1676,7 +1676,7 @@ func (p *ContactServiceFreelancerSignContactResult) String() string {
 //  - ContactID
 //  - Status
 type ContactServiceDealContactArgs struct {
-	ContactID string `thrift:"contact_id,1" json:"contact_id"`
+	ContactID string `thrift:"contactID,1" json:"contactID"`
 	Status    bool   `thrift:"status,2" json:"status"`
 }
 
@@ -1766,14 +1766,14 @@ func (p *ContactServiceDealContactArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ContactServiceDealContactArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("contact_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:contact_id: ", p), err)
+	if err := oprot.WriteFieldBegin("contactID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:contactID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ContactID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.contact_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.contactID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:contact_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:contactID: ", p), err)
 	}
 	return err
 }
@@ -1904,7 +1904,7 @@ func (p *ContactServiceDealContactResult) String() string {
 //  - ContactID
 //  - Mmap
 type ContactServiceUpdateContactArgs struct {
-	ContactID string            `thrift:"contact_id,1" json:"contact_id"`
+	ContactID string            `thrift:"contactID,1" json:"contactID"`
 	Mmap      map[string]string `thrift:"mmap,2" json:"mmap"`
 }
 
@@ -2013,14 +2013,14 @@ func (p *ContactServiceUpdateContactArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ContactServiceUpdateContactArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("contact_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:contact_id: ", p), err)
+	if err := oprot.WriteFieldBegin("contactID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:contactID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ContactID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.contact_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.contactID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:contact_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:contactID: ", p), err)
 	}
 	return err
 }

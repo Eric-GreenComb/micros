@@ -25,67 +25,67 @@ func (m loggingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m loggingMiddleware) CreateContact(json_contact string) (r string) {
+func (m loggingMiddleware) CreateContact(jsonContact string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "CreateContact",
-			"json_contact", json_contact,
+			"jsonContact", jsonContact,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ContactService.CreateContact(json_contact)
+	r = m.ContactService.CreateContact(jsonContact)
 	return
 }
 
-func (m loggingMiddleware) ClientSignContact(contact_id string, status bool) (r string) {
+func (m loggingMiddleware) ClientSignContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "ClientSignContact",
-			"contact_id", contact_id,
+			"contactID", contactID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ContactService.ClientSignContact(contact_id, status)
+	r = m.ContactService.ClientSignContact(contactID, status)
 	return
 }
 
-func (m loggingMiddleware) FreelancerSignContact(contact_id string, status bool) (r string) {
+func (m loggingMiddleware) FreelancerSignContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "FreelancerSignContact",
-			"contact_id", contact_id,
+			"contactID", contactID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ContactService.FreelancerSignContact(contact_id, status)
+	r = m.ContactService.FreelancerSignContact(contactID, status)
 	return
 }
 
-func (m loggingMiddleware) DealContact(contact_id string, status bool) (r string) {
+func (m loggingMiddleware) DealContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "DealContact",
-			"contact_id", contact_id,
+			"contactID", contactID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ContactService.DealContact(contact_id, status)
+	r = m.ContactService.DealContact(contactID, status)
 	return
 }
 
-func (m loggingMiddleware) UpdateContact(contact_id string, mmap map[string]string) (r string) {
+func (m loggingMiddleware) UpdateContact(contactID string, mmap map[string]string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateContact",
-			"contact_id", contact_id,
+			"contactID", contactID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ContactService.UpdateContact(contact_id, mmap)
+	r = m.ContactService.UpdateContact(contactID, mmap)
 	return
 }
