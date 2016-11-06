@@ -30,7 +30,7 @@ func main() {
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
 
-		_defaultObjectId = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
+		_defaultObjectID = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
 	)
 	flag.Parse()
 	if len(os.Args) < 2 {
@@ -40,9 +40,9 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
-	method, _profile_id := flag.Arg(0), flag.Arg(1)
+	method, _profileID := flag.Arg(0), flag.Arg(1)
 
 	var logger log.Logger
 	logger = log.NewLogfmtLogger(os.Stdout)
@@ -73,7 +73,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -95,8 +95,8 @@ func main() {
 
 	case "add":
 		var _obj bean.Profile
-		_obj.Id = bson.ObjectIdHex(*_defaultObjectId)
-		_obj.UserID = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.ID = bson.ObjectIdHex(*_defaultObjectID)
+		_obj.UserID = bson.ObjectIdHex(*_defaultObjectID)
 		_obj.Name = "Test"
 		_obj.JobTitle = "this is a title"
 		_obj.Overview = "this is a overview go"
@@ -112,8 +112,8 @@ func main() {
 	case "update":
 
 		var _obj bean.Profile
-		_obj.Id = bson.ObjectIdHex(_profile_id)
-		_obj.UserID = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.ID = bson.ObjectIdHex(_profileID)
+		_obj.UserID = bson.ObjectIdHex(*_defaultObjectID)
 		_obj.Name = "Test1"
 		_obj.JobTitle = "this is a title1"
 		_obj.CategoryNumber = 10100
@@ -129,21 +129,21 @@ func main() {
 		_obj.AgencyMembers = lsAgencyMembers
 
 		b, _ := json.Marshal(_obj)
-		v := svc.UpdateProfile(_profile_id, string(b))
+		v := svc.UpdateProfile(_profileID, string(b))
 		logger.Log("method", "UpdateProfile", "v", v, "took", time.Since(begin))
 
 	case "status":
-		v := svc.UpdateProfileStatus(_profile_id, false)
+		v := svc.UpdateProfileStatus(_profileID, false)
 		logger.Log("method", "UpdateProfileStatus", "v", v, "took", time.Since(begin))
 
 	case "base":
-		_map_update := make(map[string]string)
-		_map_update["freelancer_name"] = "freelancer_name"
-		_map_update["job_title"] = "job_title"
-		_map_update["hour_rate"] = "1601234"
-		_map_update["portfolio_nums"] = "4"
+		_mapUpdate := make(map[string]string)
+		_mapUpdate["freelancer_name"] = "freelancer_name"
+		_mapUpdate["job_title"] = "job_title"
+		_mapUpdate["hour_rate"] = "1601234"
+		_mapUpdate["portfolio_nums"] = "4"
 
-		v := svc.UpdateProfileBase(_profile_id, _map_update)
+		v := svc.UpdateProfileBase(_profileID, _mapUpdate)
 		logger.Log("method", "UpdateProfileBase", "v", v, "took", time.Since(begin))
 
 	case "member":
@@ -157,7 +157,7 @@ func main() {
 
 		b, _ := json.Marshal(lsAgencyMembers)
 
-		v := svc.UpdateProfileAgencyMembers(_profile_id, string(b))
+		v := svc.UpdateProfileAgencyMembers(_profileID, string(b))
 		logger.Log("method", "UpdateProfileAgencyMembers", "v", v, "took", time.Since(begin))
 
 	default:

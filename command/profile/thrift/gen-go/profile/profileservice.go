@@ -17,24 +17,24 @@ var _ = bytes.Equal
 type ProfileService interface {
 	Ping() (r string, err error)
 	// Parameters:
-	//  - JSONProfile
-	AddProfile(json_profile string) (r string, err error)
+	//  - JsonProfile
+	AddProfile(jsonProfile string) (r string, err error)
 	// Parameters:
 	//  - ProfileID
-	//  - JSONProfile
-	UpdateProfile(profile_id string, json_profile string) (r string, err error)
+	//  - JsonProfile
+	UpdateProfile(profileID string, jsonProfile string) (r string, err error)
 	// Parameters:
 	//  - ProfileID
 	//  - Status
-	UpdateProfileStatus(profile_id string, status bool) (r string, err error)
+	UpdateProfileStatus(profileID string, status bool) (r string, err error)
 	// Parameters:
 	//  - ProfileID
 	//  - Mmap
-	UpdateProfileBase(profile_id string, mmap map[string]string) (r string, err error)
+	UpdateProfileBase(profileID string, mmap map[string]string) (r string, err error)
 	// Parameters:
 	//  - ProfileID
 	//  - AgencyMembers
-	UpdateProfileAgencyMembers(profile_id string, agency_members string) (r string, err error)
+	UpdateProfileAgencyMembers(profileID string, agencyMembers string) (r string, err error)
 }
 
 type ProfileServiceClient struct {
@@ -137,15 +137,15 @@ func (p *ProfileServiceClient) recvPing() (value string, err error) {
 }
 
 // Parameters:
-//  - JSONProfile
-func (p *ProfileServiceClient) AddProfile(json_profile string) (r string, err error) {
-	if err = p.sendAddProfile(json_profile); err != nil {
+//  - JsonProfile
+func (p *ProfileServiceClient) AddProfile(jsonProfile string) (r string, err error) {
+	if err = p.sendAddProfile(jsonProfile); err != nil {
 		return
 	}
 	return p.recvAddProfile()
 }
 
-func (p *ProfileServiceClient) sendAddProfile(json_profile string) (err error) {
+func (p *ProfileServiceClient) sendAddProfile(jsonProfile string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -156,7 +156,7 @@ func (p *ProfileServiceClient) sendAddProfile(json_profile string) (err error) {
 		return
 	}
 	args := ProfileServiceAddProfileArgs{
-		JSONProfile: json_profile,
+		JsonProfile: jsonProfile,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -215,15 +215,15 @@ func (p *ProfileServiceClient) recvAddProfile() (value string, err error) {
 
 // Parameters:
 //  - ProfileID
-//  - JSONProfile
-func (p *ProfileServiceClient) UpdateProfile(profile_id string, json_profile string) (r string, err error) {
-	if err = p.sendUpdateProfile(profile_id, json_profile); err != nil {
+//  - JsonProfile
+func (p *ProfileServiceClient) UpdateProfile(profileID string, jsonProfile string) (r string, err error) {
+	if err = p.sendUpdateProfile(profileID, jsonProfile); err != nil {
 		return
 	}
 	return p.recvUpdateProfile()
 }
 
-func (p *ProfileServiceClient) sendUpdateProfile(profile_id string, json_profile string) (err error) {
+func (p *ProfileServiceClient) sendUpdateProfile(profileID string, jsonProfile string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -234,8 +234,8 @@ func (p *ProfileServiceClient) sendUpdateProfile(profile_id string, json_profile
 		return
 	}
 	args := ProfileServiceUpdateProfileArgs{
-		ProfileID:   profile_id,
-		JSONProfile: json_profile,
+		ProfileID:   profileID,
+		JsonProfile: jsonProfile,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -295,14 +295,14 @@ func (p *ProfileServiceClient) recvUpdateProfile() (value string, err error) {
 // Parameters:
 //  - ProfileID
 //  - Status
-func (p *ProfileServiceClient) UpdateProfileStatus(profile_id string, status bool) (r string, err error) {
-	if err = p.sendUpdateProfileStatus(profile_id, status); err != nil {
+func (p *ProfileServiceClient) UpdateProfileStatus(profileID string, status bool) (r string, err error) {
+	if err = p.sendUpdateProfileStatus(profileID, status); err != nil {
 		return
 	}
 	return p.recvUpdateProfileStatus()
 }
 
-func (p *ProfileServiceClient) sendUpdateProfileStatus(profile_id string, status bool) (err error) {
+func (p *ProfileServiceClient) sendUpdateProfileStatus(profileID string, status bool) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -313,7 +313,7 @@ func (p *ProfileServiceClient) sendUpdateProfileStatus(profile_id string, status
 		return
 	}
 	args := ProfileServiceUpdateProfileStatusArgs{
-		ProfileID: profile_id,
+		ProfileID: profileID,
 		Status:    status,
 	}
 	if err = args.Write(oprot); err != nil {
@@ -374,14 +374,14 @@ func (p *ProfileServiceClient) recvUpdateProfileStatus() (value string, err erro
 // Parameters:
 //  - ProfileID
 //  - Mmap
-func (p *ProfileServiceClient) UpdateProfileBase(profile_id string, mmap map[string]string) (r string, err error) {
-	if err = p.sendUpdateProfileBase(profile_id, mmap); err != nil {
+func (p *ProfileServiceClient) UpdateProfileBase(profileID string, mmap map[string]string) (r string, err error) {
+	if err = p.sendUpdateProfileBase(profileID, mmap); err != nil {
 		return
 	}
 	return p.recvUpdateProfileBase()
 }
 
-func (p *ProfileServiceClient) sendUpdateProfileBase(profile_id string, mmap map[string]string) (err error) {
+func (p *ProfileServiceClient) sendUpdateProfileBase(profileID string, mmap map[string]string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -392,7 +392,7 @@ func (p *ProfileServiceClient) sendUpdateProfileBase(profile_id string, mmap map
 		return
 	}
 	args := ProfileServiceUpdateProfileBaseArgs{
-		ProfileID: profile_id,
+		ProfileID: profileID,
 		Mmap:      mmap,
 	}
 	if err = args.Write(oprot); err != nil {
@@ -453,14 +453,14 @@ func (p *ProfileServiceClient) recvUpdateProfileBase() (value string, err error)
 // Parameters:
 //  - ProfileID
 //  - AgencyMembers
-func (p *ProfileServiceClient) UpdateProfileAgencyMembers(profile_id string, agency_members string) (r string, err error) {
-	if err = p.sendUpdateProfileAgencyMembers(profile_id, agency_members); err != nil {
+func (p *ProfileServiceClient) UpdateProfileAgencyMembers(profileID string, agencyMembers string) (r string, err error) {
+	if err = p.sendUpdateProfileAgencyMembers(profileID, agencyMembers); err != nil {
 		return
 	}
 	return p.recvUpdateProfileAgencyMembers()
 }
 
-func (p *ProfileServiceClient) sendUpdateProfileAgencyMembers(profile_id string, agency_members string) (err error) {
+func (p *ProfileServiceClient) sendUpdateProfileAgencyMembers(profileID string, agencyMembers string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -471,8 +471,8 @@ func (p *ProfileServiceClient) sendUpdateProfileAgencyMembers(profile_id string,
 		return
 	}
 	args := ProfileServiceUpdateProfileAgencyMembersArgs{
-		ProfileID:     profile_id,
-		AgencyMembers: agency_members,
+		ProfileID:     profileID,
+		AgencyMembers: agencyMembers,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -646,7 +646,7 @@ func (p *profileServiceProcessorAddProfile) Process(seqId int32, iprot, oprot th
 	result := ProfileServiceAddProfileResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.AddProfile(args.JSONProfile); err2 != nil {
+	if retval, err2 = p.handler.AddProfile(args.JsonProfile); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing AddProfile: "+err2.Error())
 		oprot.WriteMessageBegin("AddProfile", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -694,7 +694,7 @@ func (p *profileServiceProcessorUpdateProfile) Process(seqId int32, iprot, oprot
 	result := ProfileServiceUpdateProfileResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.UpdateProfile(args.ProfileID, args.JSONProfile); err2 != nil {
+	if retval, err2 = p.handler.UpdateProfile(args.ProfileID, args.JsonProfile); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateProfile: "+err2.Error())
 		oprot.WriteMessageBegin("UpdateProfile", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -1024,17 +1024,17 @@ func (p *ProfileServicePingResult) String() string {
 }
 
 // Attributes:
-//  - JSONProfile
+//  - JsonProfile
 type ProfileServiceAddProfileArgs struct {
-	JSONProfile string `thrift:"json_profile,1" json:"json_profile"`
+	JsonProfile string `thrift:"jsonProfile,1" json:"jsonProfile"`
 }
 
 func NewProfileServiceAddProfileArgs() *ProfileServiceAddProfileArgs {
 	return &ProfileServiceAddProfileArgs{}
 }
 
-func (p *ProfileServiceAddProfileArgs) GetJSONProfile() string {
-	return p.JSONProfile
+func (p *ProfileServiceAddProfileArgs) GetJsonProfile() string {
+	return p.JsonProfile
 }
 func (p *ProfileServiceAddProfileArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -1073,7 +1073,7 @@ func (p *ProfileServiceAddProfileArgs) readField1(iprot thrift.TProtocol) error 
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
-		p.JSONProfile = v
+		p.JsonProfile = v
 	}
 	return nil
 }
@@ -1095,14 +1095,14 @@ func (p *ProfileServiceAddProfileArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ProfileServiceAddProfileArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_profile", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:json_profile: ", p), err)
+	if err := oprot.WriteFieldBegin("jsonProfile", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:jsonProfile: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.JSONProfile)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_profile (1) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.JsonProfile)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.jsonProfile (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:json_profile: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:jsonProfile: ", p), err)
 	}
 	return err
 }
@@ -1218,10 +1218,10 @@ func (p *ProfileServiceAddProfileResult) String() string {
 
 // Attributes:
 //  - ProfileID
-//  - JSONProfile
+//  - JsonProfile
 type ProfileServiceUpdateProfileArgs struct {
-	ProfileID   string `thrift:"profile_id,1" json:"profile_id"`
-	JSONProfile string `thrift:"json_profile,2" json:"json_profile"`
+	ProfileID   string `thrift:"profileID,1" json:"profileID"`
+	JsonProfile string `thrift:"jsonProfile,2" json:"jsonProfile"`
 }
 
 func NewProfileServiceUpdateProfileArgs() *ProfileServiceUpdateProfileArgs {
@@ -1232,8 +1232,8 @@ func (p *ProfileServiceUpdateProfileArgs) GetProfileID() string {
 	return p.ProfileID
 }
 
-func (p *ProfileServiceUpdateProfileArgs) GetJSONProfile() string {
-	return p.JSONProfile
+func (p *ProfileServiceUpdateProfileArgs) GetJsonProfile() string {
+	return p.JsonProfile
 }
 func (p *ProfileServiceUpdateProfileArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -1285,7 +1285,7 @@ func (p *ProfileServiceUpdateProfileArgs) readField2(iprot thrift.TProtocol) err
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 2: ", err)
 	} else {
-		p.JSONProfile = v
+		p.JsonProfile = v
 	}
 	return nil
 }
@@ -1310,27 +1310,27 @@ func (p *ProfileServiceUpdateProfileArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *ProfileServiceUpdateProfileArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("profile_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_id: ", p), err)
+	if err := oprot.WriteFieldBegin("profileID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profileID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ProfileID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.profile_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.profileID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profileID: ", p), err)
 	}
 	return err
 }
 
 func (p *ProfileServiceUpdateProfileArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("json_profile", thrift.STRING, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:json_profile: ", p), err)
+	if err := oprot.WriteFieldBegin("jsonProfile", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:jsonProfile: ", p), err)
 	}
-	if err := oprot.WriteString(string(p.JSONProfile)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.json_profile (2) field write error: ", p), err)
+	if err := oprot.WriteString(string(p.JsonProfile)); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T.jsonProfile (2) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:json_profile: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:jsonProfile: ", p), err)
 	}
 	return err
 }
@@ -1448,7 +1448,7 @@ func (p *ProfileServiceUpdateProfileResult) String() string {
 //  - ProfileID
 //  - Status
 type ProfileServiceUpdateProfileStatusArgs struct {
-	ProfileID string `thrift:"profile_id,1" json:"profile_id"`
+	ProfileID string `thrift:"profileID,1" json:"profileID"`
 	Status    bool   `thrift:"status,2" json:"status"`
 }
 
@@ -1538,14 +1538,14 @@ func (p *ProfileServiceUpdateProfileStatusArgs) Write(oprot thrift.TProtocol) er
 }
 
 func (p *ProfileServiceUpdateProfileStatusArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("profile_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_id: ", p), err)
+	if err := oprot.WriteFieldBegin("profileID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profileID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ProfileID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.profile_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.profileID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profileID: ", p), err)
 	}
 	return err
 }
@@ -1676,7 +1676,7 @@ func (p *ProfileServiceUpdateProfileStatusResult) String() string {
 //  - ProfileID
 //  - Mmap
 type ProfileServiceUpdateProfileBaseArgs struct {
-	ProfileID string            `thrift:"profile_id,1" json:"profile_id"`
+	ProfileID string            `thrift:"profileID,1" json:"profileID"`
 	Mmap      map[string]string `thrift:"mmap,2" json:"mmap"`
 }
 
@@ -1785,14 +1785,14 @@ func (p *ProfileServiceUpdateProfileBaseArgs) Write(oprot thrift.TProtocol) erro
 }
 
 func (p *ProfileServiceUpdateProfileBaseArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("profile_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_id: ", p), err)
+	if err := oprot.WriteFieldBegin("profileID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profileID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ProfileID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.profile_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.profileID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profileID: ", p), err)
 	}
 	return err
 }
@@ -1934,8 +1934,8 @@ func (p *ProfileServiceUpdateProfileBaseResult) String() string {
 //  - ProfileID
 //  - AgencyMembers
 type ProfileServiceUpdateProfileAgencyMembersArgs struct {
-	ProfileID     string `thrift:"profile_id,1" json:"profile_id"`
-	AgencyMembers string `thrift:"agency_members,2" json:"agency_members"`
+	ProfileID     string `thrift:"profileID,1" json:"profileID"`
+	AgencyMembers string `thrift:"agencyMembers,2" json:"agencyMembers"`
 }
 
 func NewProfileServiceUpdateProfileAgencyMembersArgs() *ProfileServiceUpdateProfileAgencyMembersArgs {
@@ -2024,27 +2024,27 @@ func (p *ProfileServiceUpdateProfileAgencyMembersArgs) Write(oprot thrift.TProto
 }
 
 func (p *ProfileServiceUpdateProfileAgencyMembersArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("profile_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profile_id: ", p), err)
+	if err := oprot.WriteFieldBegin("profileID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:profileID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ProfileID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.profile_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.profileID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profile_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:profileID: ", p), err)
 	}
 	return err
 }
 
 func (p *ProfileServiceUpdateProfileAgencyMembersArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("agency_members", thrift.STRING, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:agency_members: ", p), err)
+	if err := oprot.WriteFieldBegin("agencyMembers", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:agencyMembers: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.AgencyMembers)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.agency_members (2) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.agencyMembers (2) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:agency_members: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:agencyMembers: ", p), err)
 	}
 	return err
 }

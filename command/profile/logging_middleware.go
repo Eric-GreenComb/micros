@@ -25,70 +25,70 @@ func (m loggingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m loggingMiddleware) AddProfile(json_profile string) (r string) {
+func (m loggingMiddleware) AddProfile(jsonProfile string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "AddProfile",
-			"json_profile", json_profile,
+			"jsonProfile", jsonProfile,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.AddProfile(json_profile)
+	r = m.ProfileService.AddProfile(jsonProfile)
 	return
 }
 
-func (m loggingMiddleware) UpdateProfile(profile_id string, json_profile string) (r string) {
+func (m loggingMiddleware) UpdateProfile(profileID string, jsonProfile string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateProfile",
-			"json_profile", json_profile,
+			"jsonProfile", jsonProfile,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.UpdateProfile(profile_id, json_profile)
+	r = m.ProfileService.UpdateProfile(profileID, jsonProfile)
 	return
 }
 
-func (m loggingMiddleware) UpdateProfileStatus(profile_id string, status bool) (r string) {
+func (m loggingMiddleware) UpdateProfileStatus(profileID string, status bool) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateProfileStatus",
-			"profile_id", profile_id,
+			"profileID", profileID,
 			"status", status,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.UpdateProfileStatus(profile_id, status)
+	r = m.ProfileService.UpdateProfileStatus(profileID, status)
 	return
 }
 
-func (m loggingMiddleware) UpdateProfileBase(profile_id string, mmap map[string]string) (r string) {
+func (m loggingMiddleware) UpdateProfileBase(profileID string, mmap map[string]string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateProfileBase",
-			"profile_id", profile_id,
+			"profileID", profileID,
 			"mmap", mmap,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.UpdateProfileBase(profile_id, mmap)
+	r = m.ProfileService.UpdateProfileBase(profileID, mmap)
 	return
 }
 
-func (m loggingMiddleware) UpdateProfileAgencyMembers(profile_id string, agency_members string) (r string) {
+func (m loggingMiddleware) UpdateProfileAgencyMembers(profileID string, agencyMembers string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateProfileAgencyMembers",
-			"profile_id", profile_id,
-			"agency_members", agency_members,
+			"profileID", profileID,
+			"agencyMembers", agencyMembers,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ProfileService.UpdateProfileAgencyMembers(profile_id, agency_members)
+	r = m.ProfileService.UpdateProfileAgencyMembers(profileID, agencyMembers)
 	return
 }

@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) AddProfile(json_profile string) string {
-	reply, err := c.ProfileServiceClient.AddProfile(json_profile)
+func (c client) AddProfile(jsonProfile string) string {
+	reply, err := c.ProfileServiceClient.AddProfile(jsonProfile)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -35,8 +35,8 @@ func (c client) AddProfile(json_profile string) string {
 	return reply
 }
 
-func (c client) UpdateProfile(profile_id string, json_profile string) string {
-	reply, err := c.ProfileServiceClient.UpdateProfile(profile_id, json_profile)
+func (c client) UpdateProfile(profileID string, jsonProfile string) string {
+	reply, err := c.ProfileServiceClient.UpdateProfile(profileID, jsonProfile)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -44,8 +44,8 @@ func (c client) UpdateProfile(profile_id string, json_profile string) string {
 	return reply
 }
 
-func (c client) UpdateProfileStatus(profile_id string, status bool) string {
-	reply, err := c.ProfileServiceClient.UpdateProfileStatus(profile_id, status)
+func (c client) UpdateProfileStatus(profileID string, status bool) string {
+	reply, err := c.ProfileServiceClient.UpdateProfileStatus(profileID, status)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -53,8 +53,8 @@ func (c client) UpdateProfileStatus(profile_id string, status bool) string {
 	return reply
 }
 
-func (c client) UpdateProfileBase(profile_id string, mmap map[string]string) string {
-	reply, err := c.ProfileServiceClient.UpdateProfileBase(profile_id, mmap)
+func (c client) UpdateProfileBase(profileID string, mmap map[string]string) string {
+	reply, err := c.ProfileServiceClient.UpdateProfileBase(profileID, mmap)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -62,8 +62,8 @@ func (c client) UpdateProfileBase(profile_id string, mmap map[string]string) str
 	return reply
 }
 
-func (c client) UpdateProfileAgencyMembers(profile_id string, agency_members string) string {
-	reply, err := c.ProfileServiceClient.UpdateProfileAgencyMembers(profile_id, agency_members)
+func (c client) UpdateProfileAgencyMembers(profileID string, agencyMembers string) string {
+	reply, err := c.ProfileServiceClient.UpdateProfileAgencyMembers(profileID, agencyMembers)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
