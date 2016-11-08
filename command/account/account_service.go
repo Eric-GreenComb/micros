@@ -6,7 +6,7 @@ import (
 	"github.com/banerwai/global/bean"
 	"github.com/banerwai/global/constant"
 	"github.com/banerwai/micros/command/account/service"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 	"time"
 )
 

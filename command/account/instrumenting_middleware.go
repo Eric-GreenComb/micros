@@ -1,68 +1,80 @@
 package main
 
 import (
-	"time"
-
-	"github.com/go-kit/kit/metrics"
-
 	"github.com/banerwai/micros/command/account/service"
+	"github.com/go-kit/kit/metrics"
+	"time"
 )
 
 type instrumentingMiddleware struct {
-	service.AccountService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.AccountService
 }
 
-func (m instrumentingMiddleware) Ping() (r string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) CreateAccount(jsonAccount string) (r string) {
+func (mw instrumentingMiddleware) CreateAccount(jsonAccount string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "CreateAccount"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "CreateAccount", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.CreateAccount(jsonAccount)
+
+	r = mw.next.CreateAccount(jsonAccount)
 	return
 }
 
-func (m instrumentingMiddleware) CreateBilling(jsonBilling string) (r string) {
+func (mw instrumentingMiddleware) CreateBilling(jsonBilling string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "CreateBilling"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "CreateBilling", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.CreateBilling(jsonBilling)
+
+	r = mw.next.CreateBilling(jsonBilling)
 	return
 }
 
-func (m instrumentingMiddleware) DealBilling(billingID string) (r string) {
+func (mw instrumentingMiddleware) DealBilling(billingID string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "DealBilling"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "DealBilling", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.DealBilling(billingID)
+
+	r = mw.next.DealBilling(billingID)
 	return
 }
 
-func (m instrumentingMiddleware) CancelBilling(billingID string) (r string) {
+func (mw instrumentingMiddleware) CancelBilling(billingID string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "CancelBilling"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "CancelBilling", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.CancelBilling(billingID)
+
+	r = mw.next.CancelBilling(billingID)
 	return
 }
 
-func (m instrumentingMiddleware) GenAccount(billingID string) (r string) {
+func (mw instrumentingMiddleware) GenAccount(billingID string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GenAccount"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GenAccount", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.GenAccount(billingID)
+
+	r = mw.next.GenAccount(billingID)
 	return
 }
