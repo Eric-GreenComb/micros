@@ -110,6 +110,7 @@ func main() {
 		_obj.UserID = bson.ObjectIdHex(*_defaultObjectID)
 		_obj.PayUserID = bson.ObjectIdHex(*_defaultObjectID)
 		_obj.ServiceID = bson.ObjectIdHex(*_defaultObjectID)
+		_obj.LinkID = bson.ObjectIdHex(*_defaultObjectID)
 
 		_obj.Operate = 1
 		_obj.Currency = constant.CurrencyCNY
