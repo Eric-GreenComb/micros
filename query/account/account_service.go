@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 	"time"
 
-	"github.com/banerwai/global"
 	"github.com/banerwai/global/bean"
+	"github.com/banerwai/global/constant"
 	"github.com/banerwai/micros/query/account/service"
 )
 
@@ -17,17 +17,17 @@ func newInmemService() service.AccountService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() (r string) {
+func (ims *inmemService) Ping() (r string) {
 	r = "pong"
 	return
 }
 
-func (self *inmemService) GetAccountByUserId(user_id string) (r string) {
-	if !bson.IsObjectIdHex(user_id) {
+func (ims *inmemService) GetAccountByUserID(userID string) (r string) {
+	if !bson.IsObjectIdHex(userID) {
 		return ""
 	}
 	var _obj bean.Account
-	err := AccountCollection.Find(bson.M{"user_id": bson.ObjectIdHex(user_id)}).One(&_obj)
+	err := AccountCollection.Find(bson.M{"user_id": bson.ObjectIdHex(userID)}).One(&_obj)
 
 	if err != nil {
 		return ""
@@ -38,14 +38,14 @@ func (self *inmemService) GetAccountByUserId(user_id string) (r string) {
 	return
 }
 
-func (self *inmemService) GetBillingById(id string) (r string) {
-	if !bson.IsObjectIdHex(id) {
+func (ims *inmemService) GetBillingByID(ID string) (r string) {
+	if !bson.IsObjectIdHex(ID) {
 		return ""
 	}
 
 	var _obj bean.Billing
 
-	err := BillingCollection.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&_obj)
+	err := BillingCollection.Find(bson.M{"_id": bson.ObjectIdHex(ID)}).One(&_obj)
 
 	if err != nil {
 		return ""
@@ -56,11 +56,12 @@ func (self *inmemService) GetBillingById(id string) (r string) {
 	return
 }
 
-func (self *inmemService) GetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string) {
+func (ims *inmemService) GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) (r string) {
 	var _objs []bean.Billing
 
 	query := bson.M{"createdtime": bson.M{"$lt": time.Unix(timestamp, 0)}}
-	query["status"] = global.BillingStatus_Deal
+	query["status"] = constant.BillingStatusDeal
+	query["user_id"] = userID
 
 	err := BillingCollection.Find(query).Sort("-createdtime").Limit(int(pagesize)).All(&_objs)
 
@@ -73,10 +74,11 @@ func (self *inmemService) GetDealBillingByUserId(user_id string, timestamp int64
 	return
 }
 
-func (self *inmemService) GetBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string) {
+func (ims *inmemService) GetBillingByUserID(userID string, timestamp int64, pagesize int64) (r string) {
 	var _objs []bean.Billing
 
 	query := bson.M{"createdtime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	query["user_id"] = userID
 
 	err := BillingCollection.Find(query).Sort("-createdtime").Limit(int(pagesize)).All(&_objs)
 

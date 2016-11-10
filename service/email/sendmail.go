@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -15,12 +16,14 @@ import (
 func SendEmail(email string) {
 	var _emailService service.EmailService
 	_emailService.SendEmail(email)
+	fmt.Println("SendEmail")
 }
 
 // SendTpl send email by tpl
 func SendTpl(emailextra string) {
 	var _emailService service.EmailService
 	_emailService.SendTpl(emailextra)
+	fmt.Println("SendTpl")
 }
 
 // SendEmailWorker send email nats worker

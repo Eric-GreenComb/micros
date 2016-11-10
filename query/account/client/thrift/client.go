@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) GetAccountByUserId(user_id string) string {
-	reply, err := c.AccountServiceClient.GetAccountByUserId(user_id)
+func (c client) GetAccountByUserID(userID string) string {
+	reply, err := c.AccountServiceClient.GetAccountByUserID(userID)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -35,8 +35,8 @@ func (c client) GetAccountByUserId(user_id string) string {
 	return reply
 }
 
-func (c client) GetBillingById(id string) string {
-	reply, err := c.AccountServiceClient.GetBillingById(id)
+func (c client) GetBillingByID(id string) string {
+	reply, err := c.AccountServiceClient.GetBillingByID(id)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -44,8 +44,8 @@ func (c client) GetBillingById(id string) string {
 	return reply
 }
 
-func (c client) GetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) string {
-	reply, err := c.AccountServiceClient.GetDealBillingByUserId(user_id, timestamp, pagesize)
+func (c client) GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) string {
+	reply, err := c.AccountServiceClient.GetDealBillingByUserID(userID, timestamp, pagesize)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -53,8 +53,8 @@ func (c client) GetDealBillingByUserId(user_id string, timestamp int64, pagesize
 	return reply
 }
 
-func (c client) GetBillingByUserId(user_id string, timestamp int64, pagesize int64) string {
-	reply, err := c.AccountServiceClient.GetBillingByUserId(user_id, timestamp, pagesize)
+func (c client) GetBillingByUserID(userID string, timestamp int64, pagesize int64) string {
+	reply, err := c.AccountServiceClient.GetBillingByUserID(userID, timestamp, pagesize)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

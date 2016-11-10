@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/banerwai/global"
+	"github.com/banerwai/global/constant"
 	"github.com/banerwai/gommon/etcd"
 )
 
@@ -32,7 +32,7 @@ func main() {
 
 	fmt.Println(string(_f))
 
-	_key := global.ETCD_KEY_TPL_WEB + *tplName
+	_key := constant.EtcdKeyTplWeb + *tplName
 	_value := string(_f)
 	etcd.Set(_key, _value)
 

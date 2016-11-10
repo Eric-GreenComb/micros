@@ -7,18 +7,18 @@ type AccountService interface {
 	Ping() string
 	// Parameters:
 	//  - UserID
-	GetAccountByUserId(user_id string) string
+	GetAccountByUserID(userID string) string
 	// Parameters:
 	//  - ID
-	GetBillingById(id string) string
+	GetBillingByID(ID string) string
 	// Parameters:
 	//  - UserID
 	//  - Timestamp
 	//  - Pagesize
-	GetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) string
+	GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) string
 	// Parameters:
 	//  - UserID
 	//  - Timestamp
 	//  - Pagesize
-	GetBillingByUserId(user_id string, timestamp int64, pagesize int64) string
+	GetBillingByUserID(userID string, timestamp int64, pagesize int64) string
 }

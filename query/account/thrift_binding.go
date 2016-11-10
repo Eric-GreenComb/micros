@@ -13,22 +13,22 @@ func (tb thriftBinding) Ping() (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) GetAccountByUserId(user_id string) (string, error) {
-	r := tb.AccountService.GetAccountByUserId(user_id)
+func (tb thriftBinding) GetAccountByUserID(userID string) (string, error) {
+	r := tb.AccountService.GetAccountByUserID(userID)
 	return r, nil
 }
 
-func (tb thriftBinding) GetBillingById(id string) (string, error) {
-	r := tb.AccountService.GetBillingById(id)
+func (tb thriftBinding) GetBillingByID(ID string) (string, error) {
+	r := tb.AccountService.GetBillingByID(ID)
 	return r, nil
 }
 
-func (tb thriftBinding) GetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) (string, error) {
-	r := tb.AccountService.GetDealBillingByUserId(user_id, timestamp, pagesize)
+func (tb thriftBinding) GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) (string, error) {
+	r := tb.AccountService.GetDealBillingByUserID(userID, timestamp, pagesize)
 	return r, nil
 }
 
-func (tb thriftBinding) GetBillingByUserId(user_id string, timestamp int64, pagesize int64) (string, error) {
-	r := tb.AccountService.GetBillingByUserId(user_id, timestamp, pagesize)
+func (tb thriftBinding) GetBillingByUserID(userID string, timestamp int64, pagesize int64) (string, error) {
+	r := tb.AccountService.GetBillingByUserID(userID, timestamp, pagesize)
 	return r, nil
 }

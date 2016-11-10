@@ -21,10 +21,10 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string GetAccountByUserId(string user_id)")
-	fmt.Fprintln(os.Stderr, "  string GetBillingById(string id)")
-	fmt.Fprintln(os.Stderr, "  string GetDealBillingByUserId(string user_id, i64 timestamp, i64 pagesize)")
-	fmt.Fprintln(os.Stderr, "  string GetBillingByUserId(string user_id, i64 timestamp, i64 pagesize)")
+	fmt.Fprintln(os.Stderr, "  string GetAccountByUserID(string userID)")
+	fmt.Fprintln(os.Stderr, "  string GetBillingByID(string ID)")
+	fmt.Fprintln(os.Stderr, "  string GetDealBillingByUserID(string userID, i64 timestamp, i64 pagesize)")
+	fmt.Fprintln(os.Stderr, "  string GetBillingByUserID(string userID, i64 timestamp, i64 pagesize)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -127,29 +127,29 @@ func main() {
 		fmt.Print(client.Ping())
 		fmt.Print("\n")
 		break
-	case "GetAccountByUserId":
+	case "GetAccountByUserID":
 		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetAccountByUserId requires 1 args")
+			fmt.Fprintln(os.Stderr, "GetAccountByUserID requires 1 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.GetAccountByUserId(value0))
+		fmt.Print(client.GetAccountByUserID(value0))
 		fmt.Print("\n")
 		break
-	case "GetBillingById":
+	case "GetBillingByID":
 		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetBillingById requires 1 args")
+			fmt.Fprintln(os.Stderr, "GetBillingByID requires 1 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.GetBillingById(value0))
+		fmt.Print(client.GetBillingByID(value0))
 		fmt.Print("\n")
 		break
-	case "GetDealBillingByUserId":
+	case "GetDealBillingByUserID":
 		if flag.NArg()-1 != 3 {
-			fmt.Fprintln(os.Stderr, "GetDealBillingByUserId requires 3 args")
+			fmt.Fprintln(os.Stderr, "GetDealBillingByUserID requires 3 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
@@ -166,12 +166,12 @@ func main() {
 			return
 		}
 		value2 := argvalue2
-		fmt.Print(client.GetDealBillingByUserId(value0, value1, value2))
+		fmt.Print(client.GetDealBillingByUserID(value0, value1, value2))
 		fmt.Print("\n")
 		break
-	case "GetBillingByUserId":
+	case "GetBillingByUserID":
 		if flag.NArg()-1 != 3 {
-			fmt.Fprintln(os.Stderr, "GetBillingByUserId requires 3 args")
+			fmt.Fprintln(os.Stderr, "GetBillingByUserID requires 3 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
@@ -188,7 +188,7 @@ func main() {
 			return
 		}
 		value2 := argvalue2
-		fmt.Print(client.GetBillingByUserId(value0, value1, value2))
+		fmt.Print(client.GetBillingByUserID(value0, value1, value2))
 		fmt.Print("\n")
 		break
 	case "":

@@ -1,9 +1,9 @@
 
 service AccountService {
     string Ping()
-	string GetAccountByUserId(1: string user_id)
+	string GetAccountByUserID(1: string userID)
 
-	string GetBillingById(1: string id)
-	string GetDealBillingByUserId(1: string user_id, 2: i64 timestamp, 3: i64 pagesize)
-	string GetBillingByUserId(1: string user_id, 2: i64 timestamp, 3: i64 pagesize)	
+	string GetBillingByID(1: string ID)
+	string GetDealBillingByUserID(1: string userID, 2: i64 timestamp, 3: i64 pagesize)
+	string GetBillingByUserID(1: string userID, 2: i64 timestamp, 3: i64 pagesize)	
 }

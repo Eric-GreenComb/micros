@@ -1,59 +1,69 @@
 package main
 
 import (
-	"time"
-
-	"github.com/go-kit/kit/metrics"
-
 	"github.com/banerwai/micros/query/account/service"
+	"github.com/go-kit/kit/metrics"
+	"time"
 )
 
 type instrumentingMiddleware struct {
-	service.AccountService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.AccountService
 }
 
-func (m instrumentingMiddleware) Ping() (r string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) GetAccountByUserId(user_id string) (r string) {
+func (mw instrumentingMiddleware) GetAccountByUserID(userID string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetAccountByUserId"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetAccountByUserID", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.GetAccountByUserId(user_id)
+
+	r = mw.next.GetAccountByUserID(userID)
 	return
 }
 
-func (m instrumentingMiddleware) GetBillingById(id string) (r string) {
+func (mw instrumentingMiddleware) GetBillingByID(ID string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetBillingById"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetBillingByID", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.GetBillingById(id)
+
+	r = mw.next.GetBillingByID(ID)
 	return
 }
 
-func (m instrumentingMiddleware) GetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string) {
+func (mw instrumentingMiddleware) GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetDealBillingByUserId"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetDealBillingByUserID", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.GetDealBillingByUserId(user_id, timestamp, pagesize)
+
+	r = mw.next.GetDealBillingByUserID(userID, timestamp, pagesize)
 	return
 }
 
-func (m instrumentingMiddleware) GetBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string) {
+func (mw instrumentingMiddleware) GetBillingByUserID(userID string, timestamp int64, pagesize int64) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetBillingByUserId"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetBillingByUserID", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AccountService.GetBillingByUserId(user_id, timestamp, pagesize)
+
+	r = mw.next.GetBillingByUserID(userID, timestamp, pagesize)
 	return
 }

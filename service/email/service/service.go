@@ -7,7 +7,7 @@ import (
 	"github.com/banerwai/gommon/net/smtp"
 	"text/template"
 
-	"github.com/banerwai/global"
+	"github.com/banerwai/global/constant"
 	"github.com/banerwai/gommon/etcd"
 )
 
@@ -99,7 +99,7 @@ func (es *EmailService) GenBodyByTpl(tplname string, parse map[string]string) st
 }
 
 func (es *EmailService) getTplFromEtcd(tplname string) (string, error) {
-	_key := global.ETCD_KEY_TPL_EMAIL + tplname
+	_key := constant.EtcdKeyTplEmail + tplname
 	_tpl, _err := etcd.GetValue(_key)
 	if _err != nil {
 		return "", _err

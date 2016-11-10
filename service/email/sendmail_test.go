@@ -20,7 +20,7 @@ func TestSendEmail(t *testing.T) {
 	_emailExtra := service.EmailExtra{}
 	_emailExtra.Email.Host = "smtp.126.com:25"
 	_emailExtra.Email.User = "ministor@126.com"
-	_emailExtra.Email.Password = "xxxxxx"
+	_emailExtra.Email.Password = "721126"
 	_emailExtra.Email.To = "ministor@126.com"
 	_emailExtra.Email.Subject = "this is a tpl email"
 	_emailExtra.Email.Mailtype = "html"

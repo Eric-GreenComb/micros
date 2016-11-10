@@ -14,24 +14,24 @@ import (
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 
 	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/metrics"
-	"github.com/go-kit/kit/metrics/expvar"
-	"github.com/go-kit/kit/metrics/prometheus"
+	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 
 	"github.com/banerwai/micros/query/account/service"
 	thriftaccount "github.com/banerwai/micros/query/account/thrift/gen-go/account"
 
-	banerwaiglobal "github.com/banerwai/global"
+	banerwaiglobal "github.com/banerwai/global/constant"
 	"github.com/banerwai/gommon/etcd"
 
-	"labix.org/v2/mgo"
+	"gopkg.in/mgo.v2"
 )
 
-// 数据连接
+// Session 数据连接
 var Session *mgo.Session
 
-// 表的Collection对象
+// AccountCollection 表的Collection对象
 var AccountCollection *mgo.Collection
+
+// BillingCollection 表的Collection对象
 var BillingCollection *mgo.Collection
 
 func main() {
@@ -44,7 +44,7 @@ func main() {
 		thriftBufferSize = fs.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = fs.Bool("thrift.framed", false, "true to enable framing")
 
-		mongodbUrl    = fs.String("mongodb.url", "127.0.0.1:27017", "mongodb url")
+		mongodbURL    = fs.String("mongodb.url", "127.0.0.1:27017", "mongodb url")
 		mongodbDbname = fs.String("mongodb.dbname", "banerwai", "mongodb dbname")
 	)
 	flag.Usage = fs.Usage // only show our flags
@@ -54,7 +54,7 @@ func main() {
 	}
 
 	var err error
-	Session, err = mgo.Dial(*mongodbUrl) //连接数据库
+	Session, err = mgo.Dial(*mongodbURL) //连接数据库
 	if err != nil {
 		panic(err)
 	}
@@ -74,26 +74,31 @@ func main() {
 	}
 
 	// package metrics
-	var requestDuration metrics.TimeHistogram
-	{
-		requestDuration = metrics.NewTimeHistogram(time.Nanosecond, metrics.NewMultiHistogram(
-			"request_duration_ns",
-			expvar.NewHistogram("request_duration_ns", 0, 5e9, 1, 50, 95, 99),
-			prometheus.NewSummary(stdprometheus.SummaryOpts{
-				Namespace: "banerwai",
-				Subsystem: "account",
-				Name:      "duration_ns",
-				Help:      "Request duration in nanoseconds.",
-			}, []string{"method"}),
-		))
-	}
-
+	fieldKeys := []string{"method", "error"}
+	requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "request_count",
+		Help:      "Number of requests received.",
+	}, fieldKeys)
+	requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "request_latency_microseconds",
+		Help:      "Total duration of requests in microseconds.",
+	}, fieldKeys)
+	countResult := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "count_result",
+		Help:      "The result of each count method.",
+	}, []string{}) // no fields here
 	// Business domain
 	var svc service.AccountService
 	{
 		svc = newInmemService()
 		svc = loggingMiddleware{svc, logger}
-		svc = instrumentingMiddleware{svc, requestDuration}
+		svc = instrumentingMiddleware{requestCount, requestLatency, countResult, svc}
 	}
 
 	// Mechanical stuff
@@ -104,9 +109,9 @@ func main() {
 		errc <- interrupt()
 	}()
 
-	client := etcd.EtcdReigistryClient{
-		etcd.EtcdRegistryConfig{
-			ServiceName:  banerwaiglobal.ETCD_KEY_MICROS_QUERY_ACCOUNT,
+	client := etcd.ReigistryClient{
+		etcd.RegistryConfig{
+			ServiceName:  banerwaiglobal.EtcdKeyMicrosQueryAccount,
 			InstanceName: *thriftAddr,
 			BaseURL:      *thriftAddr,
 		},

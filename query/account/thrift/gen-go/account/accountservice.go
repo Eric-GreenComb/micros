@@ -18,20 +18,20 @@ type AccountService interface {
 	Ping() (r string, err error)
 	// Parameters:
 	//  - UserID
-	GetAccountByUserId(user_id string) (r string, err error)
+	GetAccountByUserID(userID string) (r string, err error)
 	// Parameters:
 	//  - ID
-	GetBillingById(id string) (r string, err error)
+	GetBillingByID(ID string) (r string, err error)
 	// Parameters:
 	//  - UserID
 	//  - Timestamp
 	//  - Pagesize
-	GetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string, err error)
+	GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) (r string, err error)
 	// Parameters:
 	//  - UserID
 	//  - Timestamp
 	//  - Pagesize
-	GetBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string, err error)
+	GetBillingByUserID(userID string, timestamp int64, pagesize int64) (r string, err error)
 }
 
 type AccountServiceClient struct {
@@ -135,25 +135,25 @@ func (p *AccountServiceClient) recvPing() (value string, err error) {
 
 // Parameters:
 //  - UserID
-func (p *AccountServiceClient) GetAccountByUserId(user_id string) (r string, err error) {
-	if err = p.sendGetAccountByUserId(user_id); err != nil {
+func (p *AccountServiceClient) GetAccountByUserID(userID string) (r string, err error) {
+	if err = p.sendGetAccountByUserID(userID); err != nil {
 		return
 	}
-	return p.recvGetAccountByUserId()
+	return p.recvGetAccountByUserID()
 }
 
-func (p *AccountServiceClient) sendGetAccountByUserId(user_id string) (err error) {
+func (p *AccountServiceClient) sendGetAccountByUserID(userID string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetAccountByUserId", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("GetAccountByUserID", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := AccountServiceGetAccountByUserIdArgs{
-		UserID: user_id,
+	args := AccountServiceGetAccountByUserIDArgs{
+		UserID: userID,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -164,7 +164,7 @@ func (p *AccountServiceClient) sendGetAccountByUserId(user_id string) (err error
 	return oprot.Flush()
 }
 
-func (p *AccountServiceClient) recvGetAccountByUserId() (value string, err error) {
+func (p *AccountServiceClient) recvGetAccountByUserID() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -174,12 +174,12 @@ func (p *AccountServiceClient) recvGetAccountByUserId() (value string, err error
 	if err != nil {
 		return
 	}
-	if method != "GetAccountByUserId" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetAccountByUserId failed: wrong method name")
+	if method != "GetAccountByUserID" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetAccountByUserID failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetAccountByUserId failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetAccountByUserID failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -196,10 +196,10 @@ func (p *AccountServiceClient) recvGetAccountByUserId() (value string, err error
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetAccountByUserId failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetAccountByUserID failed: invalid message type")
 		return
 	}
-	result := AccountServiceGetAccountByUserIdResult{}
+	result := AccountServiceGetAccountByUserIDResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -212,25 +212,25 @@ func (p *AccountServiceClient) recvGetAccountByUserId() (value string, err error
 
 // Parameters:
 //  - ID
-func (p *AccountServiceClient) GetBillingById(id string) (r string, err error) {
-	if err = p.sendGetBillingById(id); err != nil {
+func (p *AccountServiceClient) GetBillingByID(ID string) (r string, err error) {
+	if err = p.sendGetBillingByID(ID); err != nil {
 		return
 	}
-	return p.recvGetBillingById()
+	return p.recvGetBillingByID()
 }
 
-func (p *AccountServiceClient) sendGetBillingById(id string) (err error) {
+func (p *AccountServiceClient) sendGetBillingByID(ID string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetBillingById", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("GetBillingByID", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := AccountServiceGetBillingByIdArgs{
-		ID: id,
+	args := AccountServiceGetBillingByIDArgs{
+		ID: ID,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -241,7 +241,7 @@ func (p *AccountServiceClient) sendGetBillingById(id string) (err error) {
 	return oprot.Flush()
 }
 
-func (p *AccountServiceClient) recvGetBillingById() (value string, err error) {
+func (p *AccountServiceClient) recvGetBillingByID() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -251,12 +251,12 @@ func (p *AccountServiceClient) recvGetBillingById() (value string, err error) {
 	if err != nil {
 		return
 	}
-	if method != "GetBillingById" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetBillingById failed: wrong method name")
+	if method != "GetBillingByID" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetBillingByID failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetBillingById failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetBillingByID failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -273,10 +273,10 @@ func (p *AccountServiceClient) recvGetBillingById() (value string, err error) {
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetBillingById failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetBillingByID failed: invalid message type")
 		return
 	}
-	result := AccountServiceGetBillingByIdResult{}
+	result := AccountServiceGetBillingByIDResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -291,25 +291,25 @@ func (p *AccountServiceClient) recvGetBillingById() (value string, err error) {
 //  - UserID
 //  - Timestamp
 //  - Pagesize
-func (p *AccountServiceClient) GetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string, err error) {
-	if err = p.sendGetDealBillingByUserId(user_id, timestamp, pagesize); err != nil {
+func (p *AccountServiceClient) GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) (r string, err error) {
+	if err = p.sendGetDealBillingByUserID(userID, timestamp, pagesize); err != nil {
 		return
 	}
-	return p.recvGetDealBillingByUserId()
+	return p.recvGetDealBillingByUserID()
 }
 
-func (p *AccountServiceClient) sendGetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) (err error) {
+func (p *AccountServiceClient) sendGetDealBillingByUserID(userID string, timestamp int64, pagesize int64) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetDealBillingByUserId", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("GetDealBillingByUserID", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := AccountServiceGetDealBillingByUserIdArgs{
-		UserID:    user_id,
+	args := AccountServiceGetDealBillingByUserIDArgs{
+		UserID:    userID,
 		Timestamp: timestamp,
 		Pagesize:  pagesize,
 	}
@@ -322,7 +322,7 @@ func (p *AccountServiceClient) sendGetDealBillingByUserId(user_id string, timest
 	return oprot.Flush()
 }
 
-func (p *AccountServiceClient) recvGetDealBillingByUserId() (value string, err error) {
+func (p *AccountServiceClient) recvGetDealBillingByUserID() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -332,12 +332,12 @@ func (p *AccountServiceClient) recvGetDealBillingByUserId() (value string, err e
 	if err != nil {
 		return
 	}
-	if method != "GetDealBillingByUserId" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetDealBillingByUserId failed: wrong method name")
+	if method != "GetDealBillingByUserID" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetDealBillingByUserID failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetDealBillingByUserId failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetDealBillingByUserID failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -354,10 +354,10 @@ func (p *AccountServiceClient) recvGetDealBillingByUserId() (value string, err e
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetDealBillingByUserId failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetDealBillingByUserID failed: invalid message type")
 		return
 	}
-	result := AccountServiceGetDealBillingByUserIdResult{}
+	result := AccountServiceGetDealBillingByUserIDResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -372,25 +372,25 @@ func (p *AccountServiceClient) recvGetDealBillingByUserId() (value string, err e
 //  - UserID
 //  - Timestamp
 //  - Pagesize
-func (p *AccountServiceClient) GetBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string, err error) {
-	if err = p.sendGetBillingByUserId(user_id, timestamp, pagesize); err != nil {
+func (p *AccountServiceClient) GetBillingByUserID(userID string, timestamp int64, pagesize int64) (r string, err error) {
+	if err = p.sendGetBillingByUserID(userID, timestamp, pagesize); err != nil {
 		return
 	}
-	return p.recvGetBillingByUserId()
+	return p.recvGetBillingByUserID()
 }
 
-func (p *AccountServiceClient) sendGetBillingByUserId(user_id string, timestamp int64, pagesize int64) (err error) {
+func (p *AccountServiceClient) sendGetBillingByUserID(userID string, timestamp int64, pagesize int64) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("GetBillingByUserId", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("GetBillingByUserID", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := AccountServiceGetBillingByUserIdArgs{
-		UserID:    user_id,
+	args := AccountServiceGetBillingByUserIDArgs{
+		UserID:    userID,
 		Timestamp: timestamp,
 		Pagesize:  pagesize,
 	}
@@ -403,7 +403,7 @@ func (p *AccountServiceClient) sendGetBillingByUserId(user_id string, timestamp 
 	return oprot.Flush()
 }
 
-func (p *AccountServiceClient) recvGetBillingByUserId() (value string, err error) {
+func (p *AccountServiceClient) recvGetBillingByUserID() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -413,12 +413,12 @@ func (p *AccountServiceClient) recvGetBillingByUserId() (value string, err error
 	if err != nil {
 		return
 	}
-	if method != "GetBillingByUserId" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetBillingByUserId failed: wrong method name")
+	if method != "GetBillingByUserID" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "GetBillingByUserID failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetBillingByUserId failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "GetBillingByUserID failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -435,10 +435,10 @@ func (p *AccountServiceClient) recvGetBillingByUserId() (value string, err error
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetBillingByUserId failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "GetBillingByUserID failed: invalid message type")
 		return
 	}
-	result := AccountServiceGetBillingByUserIdResult{}
+	result := AccountServiceGetBillingByUserIDResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -471,10 +471,10 @@ func NewAccountServiceProcessor(handler AccountService) *AccountServiceProcessor
 
 	self10 := &AccountServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
 	self10.processorMap["Ping"] = &accountServiceProcessorPing{handler: handler}
-	self10.processorMap["GetAccountByUserId"] = &accountServiceProcessorGetAccountByUserId{handler: handler}
-	self10.processorMap["GetBillingById"] = &accountServiceProcessorGetBillingById{handler: handler}
-	self10.processorMap["GetDealBillingByUserId"] = &accountServiceProcessorGetDealBillingByUserId{handler: handler}
-	self10.processorMap["GetBillingByUserId"] = &accountServiceProcessorGetBillingByUserId{handler: handler}
+	self10.processorMap["GetAccountByUserID"] = &accountServiceProcessorGetAccountByUserID{handler: handler}
+	self10.processorMap["GetBillingByID"] = &accountServiceProcessorGetBillingByID{handler: handler}
+	self10.processorMap["GetDealBillingByUserID"] = &accountServiceProcessorGetDealBillingByUserID{handler: handler}
+	self10.processorMap["GetBillingByUserID"] = &accountServiceProcessorGetBillingByUserID{handler: handler}
 	return self10
 }
 
@@ -545,16 +545,16 @@ func (p *accountServiceProcessorPing) Process(seqId int32, iprot, oprot thrift.T
 	return true, err
 }
 
-type accountServiceProcessorGetAccountByUserId struct {
+type accountServiceProcessorGetAccountByUserID struct {
 	handler AccountService
 }
 
-func (p *accountServiceProcessorGetAccountByUserId) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := AccountServiceGetAccountByUserIdArgs{}
+func (p *accountServiceProcessorGetAccountByUserID) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := AccountServiceGetAccountByUserIDArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetAccountByUserId", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("GetAccountByUserID", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -562,12 +562,12 @@ func (p *accountServiceProcessorGetAccountByUserId) Process(seqId int32, iprot, 
 	}
 
 	iprot.ReadMessageEnd()
-	result := AccountServiceGetAccountByUserIdResult{}
+	result := AccountServiceGetAccountByUserIDResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetAccountByUserId(args.UserID); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetAccountByUserId: "+err2.Error())
-		oprot.WriteMessageBegin("GetAccountByUserId", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.GetAccountByUserID(args.UserID); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetAccountByUserID: "+err2.Error())
+		oprot.WriteMessageBegin("GetAccountByUserID", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -575,7 +575,7 @@ func (p *accountServiceProcessorGetAccountByUserId) Process(seqId int32, iprot, 
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetAccountByUserId", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("GetAccountByUserID", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -593,16 +593,16 @@ func (p *accountServiceProcessorGetAccountByUserId) Process(seqId int32, iprot, 
 	return true, err
 }
 
-type accountServiceProcessorGetBillingById struct {
+type accountServiceProcessorGetBillingByID struct {
 	handler AccountService
 }
 
-func (p *accountServiceProcessorGetBillingById) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := AccountServiceGetBillingByIdArgs{}
+func (p *accountServiceProcessorGetBillingByID) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := AccountServiceGetBillingByIDArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetBillingById", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("GetBillingByID", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -610,12 +610,12 @@ func (p *accountServiceProcessorGetBillingById) Process(seqId int32, iprot, opro
 	}
 
 	iprot.ReadMessageEnd()
-	result := AccountServiceGetBillingByIdResult{}
+	result := AccountServiceGetBillingByIDResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetBillingById(args.ID); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetBillingById: "+err2.Error())
-		oprot.WriteMessageBegin("GetBillingById", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.GetBillingByID(args.ID); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetBillingByID: "+err2.Error())
+		oprot.WriteMessageBegin("GetBillingByID", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -623,7 +623,7 @@ func (p *accountServiceProcessorGetBillingById) Process(seqId int32, iprot, opro
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetBillingById", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("GetBillingByID", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -641,16 +641,16 @@ func (p *accountServiceProcessorGetBillingById) Process(seqId int32, iprot, opro
 	return true, err
 }
 
-type accountServiceProcessorGetDealBillingByUserId struct {
+type accountServiceProcessorGetDealBillingByUserID struct {
 	handler AccountService
 }
 
-func (p *accountServiceProcessorGetDealBillingByUserId) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := AccountServiceGetDealBillingByUserIdArgs{}
+func (p *accountServiceProcessorGetDealBillingByUserID) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := AccountServiceGetDealBillingByUserIDArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetDealBillingByUserId", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("GetDealBillingByUserID", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -658,12 +658,12 @@ func (p *accountServiceProcessorGetDealBillingByUserId) Process(seqId int32, ipr
 	}
 
 	iprot.ReadMessageEnd()
-	result := AccountServiceGetDealBillingByUserIdResult{}
+	result := AccountServiceGetDealBillingByUserIDResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetDealBillingByUserId(args.UserID, args.Timestamp, args.Pagesize); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetDealBillingByUserId: "+err2.Error())
-		oprot.WriteMessageBegin("GetDealBillingByUserId", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.GetDealBillingByUserID(args.UserID, args.Timestamp, args.Pagesize); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetDealBillingByUserID: "+err2.Error())
+		oprot.WriteMessageBegin("GetDealBillingByUserID", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -671,7 +671,7 @@ func (p *accountServiceProcessorGetDealBillingByUserId) Process(seqId int32, ipr
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetDealBillingByUserId", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("GetDealBillingByUserID", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -689,16 +689,16 @@ func (p *accountServiceProcessorGetDealBillingByUserId) Process(seqId int32, ipr
 	return true, err
 }
 
-type accountServiceProcessorGetBillingByUserId struct {
+type accountServiceProcessorGetBillingByUserID struct {
 	handler AccountService
 }
 
-func (p *accountServiceProcessorGetBillingByUserId) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := AccountServiceGetBillingByUserIdArgs{}
+func (p *accountServiceProcessorGetBillingByUserID) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := AccountServiceGetBillingByUserIDArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetBillingByUserId", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("GetBillingByUserID", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -706,12 +706,12 @@ func (p *accountServiceProcessorGetBillingByUserId) Process(seqId int32, iprot, 
 	}
 
 	iprot.ReadMessageEnd()
-	result := AccountServiceGetBillingByUserIdResult{}
+	result := AccountServiceGetBillingByUserIDResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.GetBillingByUserId(args.UserID, args.Timestamp, args.Pagesize); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetBillingByUserId: "+err2.Error())
-		oprot.WriteMessageBegin("GetBillingByUserId", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.GetBillingByUserID(args.UserID, args.Timestamp, args.Pagesize); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetBillingByUserID: "+err2.Error())
+		oprot.WriteMessageBegin("GetBillingByUserID", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -719,7 +719,7 @@ func (p *accountServiceProcessorGetBillingByUserId) Process(seqId int32, iprot, 
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetBillingByUserId", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("GetBillingByUserID", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -896,18 +896,18 @@ func (p *AccountServicePingResult) String() string {
 
 // Attributes:
 //  - UserID
-type AccountServiceGetAccountByUserIdArgs struct {
-	UserID string `thrift:"user_id,1" json:"user_id"`
+type AccountServiceGetAccountByUserIDArgs struct {
+	UserID string `thrift:"userID,1" json:"userID"`
 }
 
-func NewAccountServiceGetAccountByUserIdArgs() *AccountServiceGetAccountByUserIdArgs {
-	return &AccountServiceGetAccountByUserIdArgs{}
+func NewAccountServiceGetAccountByUserIDArgs() *AccountServiceGetAccountByUserIDArgs {
+	return &AccountServiceGetAccountByUserIDArgs{}
 }
 
-func (p *AccountServiceGetAccountByUserIdArgs) GetUserID() string {
+func (p *AccountServiceGetAccountByUserIDArgs) GetUserID() string {
 	return p.UserID
 }
-func (p *AccountServiceGetAccountByUserIdArgs) Read(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetAccountByUserIDArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -940,7 +940,7 @@ func (p *AccountServiceGetAccountByUserIdArgs) Read(iprot thrift.TProtocol) erro
 	return nil
 }
 
-func (p *AccountServiceGetAccountByUserIdArgs) readField1(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetAccountByUserIDArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
@@ -949,8 +949,8 @@ func (p *AccountServiceGetAccountByUserIdArgs) readField1(iprot thrift.TProtocol
 	return nil
 }
 
-func (p *AccountServiceGetAccountByUserIdArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetAccountByUserId_args"); err != nil {
+func (p *AccountServiceGetAccountByUserIDArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetAccountByUserID_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -965,49 +965,49 @@ func (p *AccountServiceGetAccountByUserIdArgs) Write(oprot thrift.TProtocol) err
 	return nil
 }
 
-func (p *AccountServiceGetAccountByUserIdArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:user_id: ", p), err)
+func (p *AccountServiceGetAccountByUserIDArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.UserID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.user_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.userID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:user_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userID: ", p), err)
 	}
 	return err
 }
 
-func (p *AccountServiceGetAccountByUserIdArgs) String() string {
+func (p *AccountServiceGetAccountByUserIDArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AccountServiceGetAccountByUserIdArgs(%+v)", *p)
+	return fmt.Sprintf("AccountServiceGetAccountByUserIDArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type AccountServiceGetAccountByUserIdResult struct {
+type AccountServiceGetAccountByUserIDResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewAccountServiceGetAccountByUserIdResult() *AccountServiceGetAccountByUserIdResult {
-	return &AccountServiceGetAccountByUserIdResult{}
+func NewAccountServiceGetAccountByUserIDResult() *AccountServiceGetAccountByUserIDResult {
+	return &AccountServiceGetAccountByUserIDResult{}
 }
 
-var AccountServiceGetAccountByUserIdResult_Success_DEFAULT string
+var AccountServiceGetAccountByUserIDResult_Success_DEFAULT string
 
-func (p *AccountServiceGetAccountByUserIdResult) GetSuccess() string {
+func (p *AccountServiceGetAccountByUserIDResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return AccountServiceGetAccountByUserIdResult_Success_DEFAULT
+		return AccountServiceGetAccountByUserIDResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *AccountServiceGetAccountByUserIdResult) IsSetSuccess() bool {
+func (p *AccountServiceGetAccountByUserIDResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *AccountServiceGetAccountByUserIdResult) Read(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetAccountByUserIDResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1040,7 +1040,7 @@ func (p *AccountServiceGetAccountByUserIdResult) Read(iprot thrift.TProtocol) er
 	return nil
 }
 
-func (p *AccountServiceGetAccountByUserIdResult) readField0(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetAccountByUserIDResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -1049,8 +1049,8 @@ func (p *AccountServiceGetAccountByUserIdResult) readField0(iprot thrift.TProtoc
 	return nil
 }
 
-func (p *AccountServiceGetAccountByUserIdResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetAccountByUserId_result"); err != nil {
+func (p *AccountServiceGetAccountByUserIDResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetAccountByUserID_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -1065,7 +1065,7 @@ func (p *AccountServiceGetAccountByUserIdResult) Write(oprot thrift.TProtocol) e
 	return nil
 }
 
-func (p *AccountServiceGetAccountByUserIdResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *AccountServiceGetAccountByUserIDResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -1080,27 +1080,27 @@ func (p *AccountServiceGetAccountByUserIdResult) writeField0(oprot thrift.TProto
 	return err
 }
 
-func (p *AccountServiceGetAccountByUserIdResult) String() string {
+func (p *AccountServiceGetAccountByUserIDResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AccountServiceGetAccountByUserIdResult(%+v)", *p)
+	return fmt.Sprintf("AccountServiceGetAccountByUserIDResult(%+v)", *p)
 }
 
 // Attributes:
 //  - ID
-type AccountServiceGetBillingByIdArgs struct {
-	ID string `thrift:"id,1" json:"id"`
+type AccountServiceGetBillingByIDArgs struct {
+	ID string `thrift:"ID,1" json:"ID"`
 }
 
-func NewAccountServiceGetBillingByIdArgs() *AccountServiceGetBillingByIdArgs {
-	return &AccountServiceGetBillingByIdArgs{}
+func NewAccountServiceGetBillingByIDArgs() *AccountServiceGetBillingByIDArgs {
+	return &AccountServiceGetBillingByIDArgs{}
 }
 
-func (p *AccountServiceGetBillingByIdArgs) GetID() string {
+func (p *AccountServiceGetBillingByIDArgs) GetID() string {
 	return p.ID
 }
-func (p *AccountServiceGetBillingByIdArgs) Read(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByIDArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1133,7 +1133,7 @@ func (p *AccountServiceGetBillingByIdArgs) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *AccountServiceGetBillingByIdArgs) readField1(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByIDArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
@@ -1142,8 +1142,8 @@ func (p *AccountServiceGetBillingByIdArgs) readField1(iprot thrift.TProtocol) er
 	return nil
 }
 
-func (p *AccountServiceGetBillingByIdArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetBillingById_args"); err != nil {
+func (p *AccountServiceGetBillingByIDArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetBillingByID_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -1158,49 +1158,49 @@ func (p *AccountServiceGetBillingByIdArgs) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *AccountServiceGetBillingByIdArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:id: ", p), err)
+func (p *AccountServiceGetBillingByIDArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("ID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:ID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.ID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:ID: ", p), err)
 	}
 	return err
 }
 
-func (p *AccountServiceGetBillingByIdArgs) String() string {
+func (p *AccountServiceGetBillingByIDArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AccountServiceGetBillingByIdArgs(%+v)", *p)
+	return fmt.Sprintf("AccountServiceGetBillingByIDArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type AccountServiceGetBillingByIdResult struct {
+type AccountServiceGetBillingByIDResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewAccountServiceGetBillingByIdResult() *AccountServiceGetBillingByIdResult {
-	return &AccountServiceGetBillingByIdResult{}
+func NewAccountServiceGetBillingByIDResult() *AccountServiceGetBillingByIDResult {
+	return &AccountServiceGetBillingByIDResult{}
 }
 
-var AccountServiceGetBillingByIdResult_Success_DEFAULT string
+var AccountServiceGetBillingByIDResult_Success_DEFAULT string
 
-func (p *AccountServiceGetBillingByIdResult) GetSuccess() string {
+func (p *AccountServiceGetBillingByIDResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return AccountServiceGetBillingByIdResult_Success_DEFAULT
+		return AccountServiceGetBillingByIDResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *AccountServiceGetBillingByIdResult) IsSetSuccess() bool {
+func (p *AccountServiceGetBillingByIDResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *AccountServiceGetBillingByIdResult) Read(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByIDResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1233,7 +1233,7 @@ func (p *AccountServiceGetBillingByIdResult) Read(iprot thrift.TProtocol) error 
 	return nil
 }
 
-func (p *AccountServiceGetBillingByIdResult) readField0(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByIDResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -1242,8 +1242,8 @@ func (p *AccountServiceGetBillingByIdResult) readField0(iprot thrift.TProtocol) 
 	return nil
 }
 
-func (p *AccountServiceGetBillingByIdResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetBillingById_result"); err != nil {
+func (p *AccountServiceGetBillingByIDResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetBillingByID_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -1258,7 +1258,7 @@ func (p *AccountServiceGetBillingByIdResult) Write(oprot thrift.TProtocol) error
 	return nil
 }
 
-func (p *AccountServiceGetBillingByIdResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *AccountServiceGetBillingByIDResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -1273,39 +1273,39 @@ func (p *AccountServiceGetBillingByIdResult) writeField0(oprot thrift.TProtocol)
 	return err
 }
 
-func (p *AccountServiceGetBillingByIdResult) String() string {
+func (p *AccountServiceGetBillingByIDResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AccountServiceGetBillingByIdResult(%+v)", *p)
+	return fmt.Sprintf("AccountServiceGetBillingByIDResult(%+v)", *p)
 }
 
 // Attributes:
 //  - UserID
 //  - Timestamp
 //  - Pagesize
-type AccountServiceGetDealBillingByUserIdArgs struct {
-	UserID    string `thrift:"user_id,1" json:"user_id"`
+type AccountServiceGetDealBillingByUserIDArgs struct {
+	UserID    string `thrift:"userID,1" json:"userID"`
 	Timestamp int64  `thrift:"timestamp,2" json:"timestamp"`
 	Pagesize  int64  `thrift:"pagesize,3" json:"pagesize"`
 }
 
-func NewAccountServiceGetDealBillingByUserIdArgs() *AccountServiceGetDealBillingByUserIdArgs {
-	return &AccountServiceGetDealBillingByUserIdArgs{}
+func NewAccountServiceGetDealBillingByUserIDArgs() *AccountServiceGetDealBillingByUserIDArgs {
+	return &AccountServiceGetDealBillingByUserIDArgs{}
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) GetUserID() string {
+func (p *AccountServiceGetDealBillingByUserIDArgs) GetUserID() string {
 	return p.UserID
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) GetTimestamp() int64 {
+func (p *AccountServiceGetDealBillingByUserIDArgs) GetTimestamp() int64 {
 	return p.Timestamp
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) GetPagesize() int64 {
+func (p *AccountServiceGetDealBillingByUserIDArgs) GetPagesize() int64 {
 	return p.Pagesize
 }
-func (p *AccountServiceGetDealBillingByUserIdArgs) Read(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetDealBillingByUserIDArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1346,7 +1346,7 @@ func (p *AccountServiceGetDealBillingByUserIdArgs) Read(iprot thrift.TProtocol) 
 	return nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) readField1(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetDealBillingByUserIDArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
@@ -1355,7 +1355,7 @@ func (p *AccountServiceGetDealBillingByUserIdArgs) readField1(iprot thrift.TProt
 	return nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) readField2(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetDealBillingByUserIDArgs) readField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return thrift.PrependError("error reading field 2: ", err)
 	} else {
@@ -1364,7 +1364,7 @@ func (p *AccountServiceGetDealBillingByUserIdArgs) readField2(iprot thrift.TProt
 	return nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) readField3(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetDealBillingByUserIDArgs) readField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return thrift.PrependError("error reading field 3: ", err)
 	} else {
@@ -1373,8 +1373,8 @@ func (p *AccountServiceGetDealBillingByUserIdArgs) readField3(iprot thrift.TProt
 	return nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetDealBillingByUserId_args"); err != nil {
+func (p *AccountServiceGetDealBillingByUserIDArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetDealBillingByUserID_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -1395,20 +1395,20 @@ func (p *AccountServiceGetDealBillingByUserIdArgs) Write(oprot thrift.TProtocol)
 	return nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:user_id: ", p), err)
+func (p *AccountServiceGetDealBillingByUserIDArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.UserID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.user_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.userID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:user_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userID: ", p), err)
 	}
 	return err
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *AccountServiceGetDealBillingByUserIDArgs) writeField2(oprot thrift.TProtocol) (err error) {
 	if err := oprot.WriteFieldBegin("timestamp", thrift.I64, 2); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:timestamp: ", p), err)
 	}
@@ -1421,7 +1421,7 @@ func (p *AccountServiceGetDealBillingByUserIdArgs) writeField2(oprot thrift.TPro
 	return err
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) writeField3(oprot thrift.TProtocol) (err error) {
+func (p *AccountServiceGetDealBillingByUserIDArgs) writeField3(oprot thrift.TProtocol) (err error) {
 	if err := oprot.WriteFieldBegin("pagesize", thrift.I64, 3); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:pagesize: ", p), err)
 	}
@@ -1434,36 +1434,36 @@ func (p *AccountServiceGetDealBillingByUserIdArgs) writeField3(oprot thrift.TPro
 	return err
 }
 
-func (p *AccountServiceGetDealBillingByUserIdArgs) String() string {
+func (p *AccountServiceGetDealBillingByUserIDArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AccountServiceGetDealBillingByUserIdArgs(%+v)", *p)
+	return fmt.Sprintf("AccountServiceGetDealBillingByUserIDArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type AccountServiceGetDealBillingByUserIdResult struct {
+type AccountServiceGetDealBillingByUserIDResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewAccountServiceGetDealBillingByUserIdResult() *AccountServiceGetDealBillingByUserIdResult {
-	return &AccountServiceGetDealBillingByUserIdResult{}
+func NewAccountServiceGetDealBillingByUserIDResult() *AccountServiceGetDealBillingByUserIDResult {
+	return &AccountServiceGetDealBillingByUserIDResult{}
 }
 
-var AccountServiceGetDealBillingByUserIdResult_Success_DEFAULT string
+var AccountServiceGetDealBillingByUserIDResult_Success_DEFAULT string
 
-func (p *AccountServiceGetDealBillingByUserIdResult) GetSuccess() string {
+func (p *AccountServiceGetDealBillingByUserIDResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return AccountServiceGetDealBillingByUserIdResult_Success_DEFAULT
+		return AccountServiceGetDealBillingByUserIDResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *AccountServiceGetDealBillingByUserIdResult) IsSetSuccess() bool {
+func (p *AccountServiceGetDealBillingByUserIDResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdResult) Read(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetDealBillingByUserIDResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1496,7 +1496,7 @@ func (p *AccountServiceGetDealBillingByUserIdResult) Read(iprot thrift.TProtocol
 	return nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdResult) readField0(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetDealBillingByUserIDResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -1505,8 +1505,8 @@ func (p *AccountServiceGetDealBillingByUserIdResult) readField0(iprot thrift.TPr
 	return nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetDealBillingByUserId_result"); err != nil {
+func (p *AccountServiceGetDealBillingByUserIDResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetDealBillingByUserID_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -1521,7 +1521,7 @@ func (p *AccountServiceGetDealBillingByUserIdResult) Write(oprot thrift.TProtoco
 	return nil
 }
 
-func (p *AccountServiceGetDealBillingByUserIdResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *AccountServiceGetDealBillingByUserIDResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -1536,39 +1536,39 @@ func (p *AccountServiceGetDealBillingByUserIdResult) writeField0(oprot thrift.TP
 	return err
 }
 
-func (p *AccountServiceGetDealBillingByUserIdResult) String() string {
+func (p *AccountServiceGetDealBillingByUserIDResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AccountServiceGetDealBillingByUserIdResult(%+v)", *p)
+	return fmt.Sprintf("AccountServiceGetDealBillingByUserIDResult(%+v)", *p)
 }
 
 // Attributes:
 //  - UserID
 //  - Timestamp
 //  - Pagesize
-type AccountServiceGetBillingByUserIdArgs struct {
-	UserID    string `thrift:"user_id,1" json:"user_id"`
+type AccountServiceGetBillingByUserIDArgs struct {
+	UserID    string `thrift:"userID,1" json:"userID"`
 	Timestamp int64  `thrift:"timestamp,2" json:"timestamp"`
 	Pagesize  int64  `thrift:"pagesize,3" json:"pagesize"`
 }
 
-func NewAccountServiceGetBillingByUserIdArgs() *AccountServiceGetBillingByUserIdArgs {
-	return &AccountServiceGetBillingByUserIdArgs{}
+func NewAccountServiceGetBillingByUserIDArgs() *AccountServiceGetBillingByUserIDArgs {
+	return &AccountServiceGetBillingByUserIDArgs{}
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) GetUserID() string {
+func (p *AccountServiceGetBillingByUserIDArgs) GetUserID() string {
 	return p.UserID
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) GetTimestamp() int64 {
+func (p *AccountServiceGetBillingByUserIDArgs) GetTimestamp() int64 {
 	return p.Timestamp
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) GetPagesize() int64 {
+func (p *AccountServiceGetBillingByUserIDArgs) GetPagesize() int64 {
 	return p.Pagesize
 }
-func (p *AccountServiceGetBillingByUserIdArgs) Read(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByUserIDArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1609,7 +1609,7 @@ func (p *AccountServiceGetBillingByUserIdArgs) Read(iprot thrift.TProtocol) erro
 	return nil
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) readField1(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByUserIDArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
@@ -1618,7 +1618,7 @@ func (p *AccountServiceGetBillingByUserIdArgs) readField1(iprot thrift.TProtocol
 	return nil
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) readField2(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByUserIDArgs) readField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return thrift.PrependError("error reading field 2: ", err)
 	} else {
@@ -1627,7 +1627,7 @@ func (p *AccountServiceGetBillingByUserIdArgs) readField2(iprot thrift.TProtocol
 	return nil
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) readField3(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByUserIDArgs) readField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return thrift.PrependError("error reading field 3: ", err)
 	} else {
@@ -1636,8 +1636,8 @@ func (p *AccountServiceGetBillingByUserIdArgs) readField3(iprot thrift.TProtocol
 	return nil
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetBillingByUserId_args"); err != nil {
+func (p *AccountServiceGetBillingByUserIDArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetBillingByUserID_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -1658,20 +1658,20 @@ func (p *AccountServiceGetBillingByUserIdArgs) Write(oprot thrift.TProtocol) err
 	return nil
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:user_id: ", p), err)
+func (p *AccountServiceGetBillingByUserIDArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err := oprot.WriteFieldBegin("userID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:userID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.UserID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.user_id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.userID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:user_id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:userID: ", p), err)
 	}
 	return err
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *AccountServiceGetBillingByUserIDArgs) writeField2(oprot thrift.TProtocol) (err error) {
 	if err := oprot.WriteFieldBegin("timestamp", thrift.I64, 2); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:timestamp: ", p), err)
 	}
@@ -1684,7 +1684,7 @@ func (p *AccountServiceGetBillingByUserIdArgs) writeField2(oprot thrift.TProtoco
 	return err
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) writeField3(oprot thrift.TProtocol) (err error) {
+func (p *AccountServiceGetBillingByUserIDArgs) writeField3(oprot thrift.TProtocol) (err error) {
 	if err := oprot.WriteFieldBegin("pagesize", thrift.I64, 3); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:pagesize: ", p), err)
 	}
@@ -1697,36 +1697,36 @@ func (p *AccountServiceGetBillingByUserIdArgs) writeField3(oprot thrift.TProtoco
 	return err
 }
 
-func (p *AccountServiceGetBillingByUserIdArgs) String() string {
+func (p *AccountServiceGetBillingByUserIDArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AccountServiceGetBillingByUserIdArgs(%+v)", *p)
+	return fmt.Sprintf("AccountServiceGetBillingByUserIDArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type AccountServiceGetBillingByUserIdResult struct {
+type AccountServiceGetBillingByUserIDResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewAccountServiceGetBillingByUserIdResult() *AccountServiceGetBillingByUserIdResult {
-	return &AccountServiceGetBillingByUserIdResult{}
+func NewAccountServiceGetBillingByUserIDResult() *AccountServiceGetBillingByUserIDResult {
+	return &AccountServiceGetBillingByUserIDResult{}
 }
 
-var AccountServiceGetBillingByUserIdResult_Success_DEFAULT string
+var AccountServiceGetBillingByUserIDResult_Success_DEFAULT string
 
-func (p *AccountServiceGetBillingByUserIdResult) GetSuccess() string {
+func (p *AccountServiceGetBillingByUserIDResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return AccountServiceGetBillingByUserIdResult_Success_DEFAULT
+		return AccountServiceGetBillingByUserIDResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *AccountServiceGetBillingByUserIdResult) IsSetSuccess() bool {
+func (p *AccountServiceGetBillingByUserIDResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *AccountServiceGetBillingByUserIdResult) Read(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByUserIDResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1759,7 +1759,7 @@ func (p *AccountServiceGetBillingByUserIdResult) Read(iprot thrift.TProtocol) er
 	return nil
 }
 
-func (p *AccountServiceGetBillingByUserIdResult) readField0(iprot thrift.TProtocol) error {
+func (p *AccountServiceGetBillingByUserIDResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -1768,8 +1768,8 @@ func (p *AccountServiceGetBillingByUserIdResult) readField0(iprot thrift.TProtoc
 	return nil
 }
 
-func (p *AccountServiceGetBillingByUserIdResult) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("GetBillingByUserId_result"); err != nil {
+func (p *AccountServiceGetBillingByUserIDResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("GetBillingByUserID_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -1784,7 +1784,7 @@ func (p *AccountServiceGetBillingByUserIdResult) Write(oprot thrift.TProtocol) e
 	return nil
 }
 
-func (p *AccountServiceGetBillingByUserIdResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *AccountServiceGetBillingByUserIDResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -1799,9 +1799,9 @@ func (p *AccountServiceGetBillingByUserIdResult) writeField0(oprot thrift.TProto
 	return err
 }
 
-func (p *AccountServiceGetBillingByUserIdResult) String() string {
+func (p *AccountServiceGetBillingByUserIDResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AccountServiceGetBillingByUserIdResult(%+v)", *p)
+	return fmt.Sprintf("AccountServiceGetBillingByUserIDResult(%+v)", *p)
 }

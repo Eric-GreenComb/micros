@@ -14,7 +14,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	banerwaiglobal "github.com/banerwai/global"
+	banerwaiglobal "github.com/banerwai/global/constant"
 	thriftclient "github.com/banerwai/micros/query/account/client/thrift"
 	"github.com/banerwai/micros/query/account/service"
 	thriftaccount "github.com/banerwai/micros/query/account/thrift/gen-go/account"
@@ -38,7 +38,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, s1 := flag.Arg(0), flag.Arg(1)
 
@@ -71,7 +71,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -93,40 +93,40 @@ func main() {
 		logger.Log("method", "Ping", s1, "v", v, "took", time.Since(begin))
 
 	case "account":
-		_user_id := s1
-		v := svc.GetAccountByUserId(_user_id)
+		_userID := s1
+		v := svc.GetAccountByUserID(_userID)
 		var _account bean.Account
 		json.Unmarshal([]byte(v), &_account)
 		fmt.Println(_account)
-		logger.Log("method", "GetAccountByUserId", "_user_id", _user_id, "took", time.Since(begin))
+		logger.Log("method", "GetAccountByUserID", "_userID", _userID, "took", time.Since(begin))
 
 	case "billing":
 		_id := s1
-		v := svc.GetBillingById(_id)
+		v := svc.GetBillingByID(_id)
 		var _billing bean.Billing
 		json.Unmarshal([]byte(v), &_billing)
 		fmt.Println(_billing)
-		logger.Log("method", "GetBillingById", "took", time.Since(begin))
+		logger.Log("method", "GetBillingByID", "took", time.Since(begin))
 
 	case "deal":
-		_user_id := s1
-		v := svc.GetDealBillingByUserId(_user_id, time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
+		_userID := s1
+		v := svc.GetDealBillingByUserID(_userID, time.Now().Unix(), banerwaiglobal.DefaultPageSize)
 		var _billings []bean.Billing
 		json.Unmarshal([]byte(v), &_billings)
 		for _, _billing := range _billings {
 			fmt.Println(_billing.Operate, _billing.Amount)
 		}
-		logger.Log("method", "GetDealBillingByUserId", "took", time.Since(begin))
+		logger.Log("method", "GetDealBillingByUserID", "took", time.Since(begin))
 
 	case "all":
-		_user_id := s1
-		v := svc.GetBillingByUserId(_user_id, time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
+		_userID := s1
+		v := svc.GetBillingByUserID(_userID, time.Now().Unix(), banerwaiglobal.DefaultPageSize)
 		var _billings []bean.Billing
 		json.Unmarshal([]byte(v), &_billings)
 		for _, _billing := range _billings {
 			fmt.Println(_billing.Operate, _billing.Amount)
 		}
-		logger.Log("method", "GetBillingByUserId", "took", time.Since(begin))
+		logger.Log("method", "GetBillingByUserID", "took", time.Since(begin))
 
 	default:
 		logger.Log("err", "invalid method "+method)

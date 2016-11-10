@@ -25,54 +25,54 @@ func (m loggingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m loggingMiddleware) GetAccountByUserId(user_id string) (r string) {
+func (m loggingMiddleware) GetAccountByUserID(userID string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "GetAccountByUserId",
-			"user_id", user_id,
+			"method", "GetAccountByUserID",
+			"userID", userID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.AccountService.GetAccountByUserId(user_id)
+	r = m.AccountService.GetAccountByUserID(userID)
 	return
 }
 
-func (m loggingMiddleware) GetBillingById(id string) (r string) {
+func (m loggingMiddleware) GetBillingByID(ID string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "GetBillingById",
-			"id", id,
+			"method", "GetBillingByID",
+			"ID", ID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.AccountService.GetBillingById(id)
+	r = m.AccountService.GetBillingByID(ID)
 	return
 }
 
-func (m loggingMiddleware) GetDealBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string) {
+func (m loggingMiddleware) GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "GetDealBillingByUserId",
-			"user_id", user_id,
+			"method", "GetDealBillingByUserID",
+			"userID", userID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.AccountService.GetDealBillingByUserId(user_id, timestamp, pagesize)
+	r = m.AccountService.GetDealBillingByUserID(userID, timestamp, pagesize)
 	return
 }
 
-func (m loggingMiddleware) GetBillingByUserId(user_id string, timestamp int64, pagesize int64) (r string) {
+func (m loggingMiddleware) GetBillingByUserID(userID string, timestamp int64, pagesize int64) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "GetBillingByUserId",
-			"user_id", user_id,
+			"method", "GetBillingByUserID",
+			"userID", userID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.AccountService.GetBillingByUserId(user_id, timestamp, pagesize)
+	r = m.AccountService.GetBillingByUserID(userID, timestamp, pagesize)
 	return
 }
