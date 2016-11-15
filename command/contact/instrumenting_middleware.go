@@ -9,60 +9,74 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.ContactService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.ContactService
 }
 
-func (m instrumentingMiddleware) Ping() (r string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ContactService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) CreateContact(jsonContact string) (r string) {
+func (mw instrumentingMiddleware) CreateContact(jsonContact string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "CreateContact"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "CreateContact", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ContactService.CreateContact(jsonContact)
+
+	r = mw.next.CreateContact(jsonContact)
 	return
 }
 
-func (m instrumentingMiddleware) ClientSignContact(contactID string, status bool) (r string) {
+func (mw instrumentingMiddleware) ClientSignContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "ClientSignContact"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "ClientSignContact", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ContactService.ClientSignContact(contactID, status)
+
+	r = mw.next.ClientSignContact(contactID, status)
 	return
 }
 
-func (m instrumentingMiddleware) FreelancerSignContact(contactID string, status bool) (r string) {
+func (mw instrumentingMiddleware) FreelancerSignContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "FreelancerSignContact"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "FreelancerSignContact", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ContactService.FreelancerSignContact(contactID, status)
+
+	r = mw.next.FreelancerSignContact(contactID, status)
 	return
 }
 
-func (m instrumentingMiddleware) DealContact(contactID string, status bool) (r string) {
+func (mw instrumentingMiddleware) DealContact(contactID string, status bool) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "DealContact"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "DealContact", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ContactService.DealContact(contactID, status)
+
+	r = mw.next.DealContact(contactID, status)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateContact(contactID string, mmap map[string]string) (r string) {
+func (mw instrumentingMiddleware) UpdateContact(contactID string, mmap map[string]string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateContact"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateContact", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ContactService.UpdateContact(contactID, mmap)
+
+	r = mw.next.UpdateContact(contactID, mmap)
 	return
 }

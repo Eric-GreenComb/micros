@@ -5,7 +5,7 @@ import (
 	"github.com/banerwai/global/bean"
 	bstrings "github.com/banerwai/gommon/strings"
 	"github.com/banerwai/micros/command/contact/service"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 	"time"
 )
 
