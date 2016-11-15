@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/banerwai/global/bean"
 	"github.com/banerwai/micros/command/profile/service"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 	"strconv"
 	"time"
 )

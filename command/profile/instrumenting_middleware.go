@@ -9,60 +9,74 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.ProfileService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.ProfileService
 }
 
-func (m instrumentingMiddleware) Ping() (r string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ProfileService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) AddProfile(jsonProfile string) (r string) {
+func (mw instrumentingMiddleware) AddProfile(jsonProfile string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "AddProfile"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "AddProfile", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ProfileService.AddProfile(jsonProfile)
+
+	r = mw.next.AddProfile(jsonProfile)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateProfile(profileID string, jsonProfile string) (r string) {
+func (mw instrumentingMiddleware) UpdateProfile(profileID string, jsonProfile string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateProfile"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateProfile", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ProfileService.UpdateProfile(profileID, jsonProfile)
+
+	r = mw.next.UpdateProfile(profileID, jsonProfile)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateProfileStatus(profileID string, status bool) (r string) {
+func (mw instrumentingMiddleware) UpdateProfileStatus(profileID string, status bool) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateProfileStatus"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateProfileStatus", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ProfileService.UpdateProfileStatus(profileID, status)
+
+	r = mw.next.UpdateProfileStatus(profileID, status)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateProfileBase(profileID string, mmap map[string]string) (r string) {
+func (mw instrumentingMiddleware) UpdateProfileBase(profileID string, mmap map[string]string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateProfileBase"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateProfileBase", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ProfileService.UpdateProfileBase(profileID, mmap)
+
+	r = mw.next.UpdateProfileBase(profileID, mmap)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateProfileAgencyMembers(profileID string, agencyMembers string) (r string) {
+func (mw instrumentingMiddleware) UpdateProfileAgencyMembers(profileID string, agencyMembers string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateProfileAgencyMembers"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateProfileAgencyMembers", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ProfileService.UpdateProfileAgencyMembers(profileID, agencyMembers)
+
+	r = mw.next.UpdateProfileAgencyMembers(profileID, agencyMembers)
 	return
 }
