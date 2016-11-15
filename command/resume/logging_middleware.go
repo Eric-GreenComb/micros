@@ -61,7 +61,7 @@ func (m loggingMiddleware) UpdateResumeBase(userid string, mmap map[string]strin
 	return
 }
 
-func (m loggingMiddleware) UpdateResumeSkillExperience(userid string, experience_levels string) (r string) {
+func (m loggingMiddleware) UpdateResumeSkillExperience(userid string, experienceLevels string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateResumeSkillExperience",
@@ -69,11 +69,11 @@ func (m loggingMiddleware) UpdateResumeSkillExperience(userid string, experience
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeSkillExperience(userid, experience_levels)
+	r = m.ResumeService.UpdateResumeSkillExperience(userid, experienceLevels)
 	return
 }
 
-func (m loggingMiddleware) UpdateResumeToolandArchs(userid string, tool_archs string) (r string) {
+func (m loggingMiddleware) UpdateResumeToolandArchs(userid string, toolArchs string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateResumeToolandArchs",
@@ -81,7 +81,7 @@ func (m loggingMiddleware) UpdateResumeToolandArchs(userid string, tool_archs st
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeToolandArchs(userid, tool_archs)
+	r = m.ResumeService.UpdateResumeToolandArchs(userid, toolArchs)
 	return
 }
 
@@ -97,7 +97,7 @@ func (m loggingMiddleware) UpdateResumePortfolioes(userid string, portfolioes st
 	return
 }
 
-func (m loggingMiddleware) UpdateResumeEmploymentHistories(userid string, employment_histories string) (r string) {
+func (m loggingMiddleware) UpdateResumeEmploymentHistories(userid string, employmentHistories string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateResumeEmploymentHistories",
@@ -105,7 +105,7 @@ func (m loggingMiddleware) UpdateResumeEmploymentHistories(userid string, employ
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeEmploymentHistories(userid, employment_histories)
+	r = m.ResumeService.UpdateResumeEmploymentHistories(userid, employmentHistories)
 	return
 }
 
@@ -121,7 +121,7 @@ func (m loggingMiddleware) UpdateResumeEducations(userid string, educations stri
 	return
 }
 
-func (m loggingMiddleware) UpdateResumeOtherExperiences(userid string, other_experiences string) (r string) {
+func (m loggingMiddleware) UpdateResumeOtherExperiences(userid string, otherExperiences string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateResume",
@@ -129,6 +129,6 @@ func (m loggingMiddleware) UpdateResumeOtherExperiences(userid string, other_exp
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeOtherExperiences(userid, other_experiences)
+	r = m.ResumeService.UpdateResumeOtherExperiences(userid, otherExperiences)
 	return
 }

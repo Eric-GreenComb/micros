@@ -28,13 +28,13 @@ func (tb thriftBinding) UpdateResumeBase(userid string, mmap map[string]string) 
 	return r, nil
 }
 
-func (tb thriftBinding) UpdateResumeSkillExperience(userid string, experience_levels string) (string, error) {
-	r := tb.ResumeService.UpdateResumeSkillExperience(userid, experience_levels)
+func (tb thriftBinding) UpdateResumeSkillExperience(userid string, experienceLevels string) (string, error) {
+	r := tb.ResumeService.UpdateResumeSkillExperience(userid, experienceLevels)
 	return r, nil
 }
 
-func (tb thriftBinding) UpdateResumeToolandArchs(userid string, tool_archs string) (string, error) {
-	r := tb.ResumeService.UpdateResumeToolandArchs(userid, tool_archs)
+func (tb thriftBinding) UpdateResumeToolandArchs(userid string, toolArchs string) (string, error) {
+	r := tb.ResumeService.UpdateResumeToolandArchs(userid, toolArchs)
 	return r, nil
 }
 
@@ -43,8 +43,8 @@ func (tb thriftBinding) UpdateResumePortfolioes(userid string, portfolioes strin
 	return r, nil
 }
 
-func (tb thriftBinding) UpdateResumeEmploymentHistories(userid string, employment_histories string) (string, error) {
-	r := tb.ResumeService.UpdateResumeEmploymentHistories(userid, employment_histories)
+func (tb thriftBinding) UpdateResumeEmploymentHistories(userid string, employmentHistories string) (string, error) {
+	r := tb.ResumeService.UpdateResumeEmploymentHistories(userid, employmentHistories)
 	return r, nil
 }
 
@@ -53,7 +53,7 @@ func (tb thriftBinding) UpdateResumeEducations(userid string, educations string)
 	return r, nil
 }
 
-func (tb thriftBinding) UpdateResumeOtherExperiences(userid string, other_experiences string) (string, error) {
-	r := tb.ResumeService.UpdateResumeOtherExperiences(userid, other_experiences)
+func (tb thriftBinding) UpdateResumeOtherExperiences(userid string, otherExperiences string) (string, error) {
+	r := tb.ResumeService.UpdateResumeOtherExperiences(userid, otherExperiences)
 	return r, nil
 }

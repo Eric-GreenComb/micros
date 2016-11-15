@@ -30,11 +30,11 @@ type ResumeService interface {
 	// Parameters:
 	//  - Userid
 	//  - ExperienceLevels
-	UpdateResumeSkillExperience(userid string, experience_levels string) (r string, err error)
+	UpdateResumeSkillExperience(userid string, experienceLevels string) (r string, err error)
 	// Parameters:
 	//  - Userid
 	//  - ToolArchs
-	UpdateResumeToolandArchs(userid string, tool_archs string) (r string, err error)
+	UpdateResumeToolandArchs(userid string, toolArchs string) (r string, err error)
 	// Parameters:
 	//  - Userid
 	//  - Portfolioes
@@ -42,7 +42,7 @@ type ResumeService interface {
 	// Parameters:
 	//  - Userid
 	//  - EmploymentHistories
-	UpdateResumeEmploymentHistories(userid string, employment_histories string) (r string, err error)
+	UpdateResumeEmploymentHistories(userid string, employmentHistories string) (r string, err error)
 	// Parameters:
 	//  - Userid
 	//  - Educations
@@ -50,7 +50,7 @@ type ResumeService interface {
 	// Parameters:
 	//  - Userid
 	//  - OtherExperiences
-	UpdateResumeOtherExperiences(userid string, other_experiences string) (r string, err error)
+	UpdateResumeOtherExperiences(userid string, otherExperiences string) (r string, err error)
 }
 
 type ResumeServiceClient struct {
@@ -390,14 +390,14 @@ func (p *ResumeServiceClient) recvUpdateResumeBase() (value string, err error) {
 // Parameters:
 //  - Userid
 //  - ExperienceLevels
-func (p *ResumeServiceClient) UpdateResumeSkillExperience(userid string, experience_levels string) (r string, err error) {
-	if err = p.sendUpdateResumeSkillExperience(userid, experience_levels); err != nil {
+func (p *ResumeServiceClient) UpdateResumeSkillExperience(userid string, experienceLevels string) (r string, err error) {
+	if err = p.sendUpdateResumeSkillExperience(userid, experienceLevels); err != nil {
 		return
 	}
 	return p.recvUpdateResumeSkillExperience()
 }
 
-func (p *ResumeServiceClient) sendUpdateResumeSkillExperience(userid string, experience_levels string) (err error) {
+func (p *ResumeServiceClient) sendUpdateResumeSkillExperience(userid string, experienceLevels string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -409,7 +409,7 @@ func (p *ResumeServiceClient) sendUpdateResumeSkillExperience(userid string, exp
 	}
 	args := ResumeServiceUpdateResumeSkillExperienceArgs{
 		Userid:           userid,
-		ExperienceLevels: experience_levels,
+		ExperienceLevels: experienceLevels,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -469,14 +469,14 @@ func (p *ResumeServiceClient) recvUpdateResumeSkillExperience() (value string, e
 // Parameters:
 //  - Userid
 //  - ToolArchs
-func (p *ResumeServiceClient) UpdateResumeToolandArchs(userid string, tool_archs string) (r string, err error) {
-	if err = p.sendUpdateResumeToolandArchs(userid, tool_archs); err != nil {
+func (p *ResumeServiceClient) UpdateResumeToolandArchs(userid string, toolArchs string) (r string, err error) {
+	if err = p.sendUpdateResumeToolandArchs(userid, toolArchs); err != nil {
 		return
 	}
 	return p.recvUpdateResumeToolandArchs()
 }
 
-func (p *ResumeServiceClient) sendUpdateResumeToolandArchs(userid string, tool_archs string) (err error) {
+func (p *ResumeServiceClient) sendUpdateResumeToolandArchs(userid string, toolArchs string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -488,7 +488,7 @@ func (p *ResumeServiceClient) sendUpdateResumeToolandArchs(userid string, tool_a
 	}
 	args := ResumeServiceUpdateResumeToolandArchsArgs{
 		Userid:    userid,
-		ToolArchs: tool_archs,
+		ToolArchs: toolArchs,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -627,14 +627,14 @@ func (p *ResumeServiceClient) recvUpdateResumePortfolioes() (value string, err e
 // Parameters:
 //  - Userid
 //  - EmploymentHistories
-func (p *ResumeServiceClient) UpdateResumeEmploymentHistories(userid string, employment_histories string) (r string, err error) {
-	if err = p.sendUpdateResumeEmploymentHistories(userid, employment_histories); err != nil {
+func (p *ResumeServiceClient) UpdateResumeEmploymentHistories(userid string, employmentHistories string) (r string, err error) {
+	if err = p.sendUpdateResumeEmploymentHistories(userid, employmentHistories); err != nil {
 		return
 	}
 	return p.recvUpdateResumeEmploymentHistories()
 }
 
-func (p *ResumeServiceClient) sendUpdateResumeEmploymentHistories(userid string, employment_histories string) (err error) {
+func (p *ResumeServiceClient) sendUpdateResumeEmploymentHistories(userid string, employmentHistories string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -646,7 +646,7 @@ func (p *ResumeServiceClient) sendUpdateResumeEmploymentHistories(userid string,
 	}
 	args := ResumeServiceUpdateResumeEmploymentHistoriesArgs{
 		Userid:              userid,
-		EmploymentHistories: employment_histories,
+		EmploymentHistories: employmentHistories,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -785,14 +785,14 @@ func (p *ResumeServiceClient) recvUpdateResumeEducations() (value string, err er
 // Parameters:
 //  - Userid
 //  - OtherExperiences
-func (p *ResumeServiceClient) UpdateResumeOtherExperiences(userid string, other_experiences string) (r string, err error) {
-	if err = p.sendUpdateResumeOtherExperiences(userid, other_experiences); err != nil {
+func (p *ResumeServiceClient) UpdateResumeOtherExperiences(userid string, otherExperiences string) (r string, err error) {
+	if err = p.sendUpdateResumeOtherExperiences(userid, otherExperiences); err != nil {
 		return
 	}
 	return p.recvUpdateResumeOtherExperiences()
 }
 
-func (p *ResumeServiceClient) sendUpdateResumeOtherExperiences(userid string, other_experiences string) (err error) {
+func (p *ResumeServiceClient) sendUpdateResumeOtherExperiences(userid string, otherExperiences string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -804,7 +804,7 @@ func (p *ResumeServiceClient) sendUpdateResumeOtherExperiences(userid string, ot
 	}
 	args := ResumeServiceUpdateResumeOtherExperiencesArgs{
 		Userid:           userid,
-		OtherExperiences: other_experiences,
+		OtherExperiences: otherExperiences,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -2235,7 +2235,7 @@ func (p *ResumeServiceUpdateResumeBaseResult) String() string {
 //  - ExperienceLevels
 type ResumeServiceUpdateResumeSkillExperienceArgs struct {
 	Userid           string `thrift:"userid,1" json:"userid"`
-	ExperienceLevels string `thrift:"experience_levels,2" json:"experience_levels"`
+	ExperienceLevels string `thrift:"experienceLevels,2" json:"experienceLevels"`
 }
 
 func NewResumeServiceUpdateResumeSkillExperienceArgs() *ResumeServiceUpdateResumeSkillExperienceArgs {
@@ -2337,14 +2337,14 @@ func (p *ResumeServiceUpdateResumeSkillExperienceArgs) writeField1(oprot thrift.
 }
 
 func (p *ResumeServiceUpdateResumeSkillExperienceArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("experience_levels", thrift.STRING, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:experience_levels: ", p), err)
+	if err := oprot.WriteFieldBegin("experienceLevels", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:experienceLevels: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ExperienceLevels)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.experience_levels (2) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.experienceLevels (2) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:experience_levels: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:experienceLevels: ", p), err)
 	}
 	return err
 }
@@ -2463,7 +2463,7 @@ func (p *ResumeServiceUpdateResumeSkillExperienceResult) String() string {
 //  - ToolArchs
 type ResumeServiceUpdateResumeToolandArchsArgs struct {
 	Userid    string `thrift:"userid,1" json:"userid"`
-	ToolArchs string `thrift:"tool_archs,2" json:"tool_archs"`
+	ToolArchs string `thrift:"toolArchs,2" json:"toolArchs"`
 }
 
 func NewResumeServiceUpdateResumeToolandArchsArgs() *ResumeServiceUpdateResumeToolandArchsArgs {
@@ -2565,14 +2565,14 @@ func (p *ResumeServiceUpdateResumeToolandArchsArgs) writeField1(oprot thrift.TPr
 }
 
 func (p *ResumeServiceUpdateResumeToolandArchsArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("tool_archs", thrift.STRING, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:tool_archs: ", p), err)
+	if err := oprot.WriteFieldBegin("toolArchs", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:toolArchs: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ToolArchs)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.tool_archs (2) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.toolArchs (2) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:tool_archs: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:toolArchs: ", p), err)
 	}
 	return err
 }
@@ -2919,7 +2919,7 @@ func (p *ResumeServiceUpdateResumePortfolioesResult) String() string {
 //  - EmploymentHistories
 type ResumeServiceUpdateResumeEmploymentHistoriesArgs struct {
 	Userid              string `thrift:"userid,1" json:"userid"`
-	EmploymentHistories string `thrift:"employment_histories,2" json:"employment_histories"`
+	EmploymentHistories string `thrift:"employmentHistories,2" json:"employmentHistories"`
 }
 
 func NewResumeServiceUpdateResumeEmploymentHistoriesArgs() *ResumeServiceUpdateResumeEmploymentHistoriesArgs {
@@ -3021,14 +3021,14 @@ func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) writeField1(oprot thr
 }
 
 func (p *ResumeServiceUpdateResumeEmploymentHistoriesArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("employment_histories", thrift.STRING, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:employment_histories: ", p), err)
+	if err := oprot.WriteFieldBegin("employmentHistories", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:employmentHistories: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.EmploymentHistories)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.employment_histories (2) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.employmentHistories (2) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:employment_histories: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:employmentHistories: ", p), err)
 	}
 	return err
 }
@@ -3375,7 +3375,7 @@ func (p *ResumeServiceUpdateResumeEducationsResult) String() string {
 //  - OtherExperiences
 type ResumeServiceUpdateResumeOtherExperiencesArgs struct {
 	Userid           string `thrift:"userid,1" json:"userid"`
-	OtherExperiences string `thrift:"other_experiences,2" json:"other_experiences"`
+	OtherExperiences string `thrift:"otherExperiences,2" json:"otherExperiences"`
 }
 
 func NewResumeServiceUpdateResumeOtherExperiencesArgs() *ResumeServiceUpdateResumeOtherExperiencesArgs {
@@ -3477,14 +3477,14 @@ func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) writeField1(oprot thrift
 }
 
 func (p *ResumeServiceUpdateResumeOtherExperiencesArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("other_experiences", thrift.STRING, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:other_experiences: ", p), err)
+	if err := oprot.WriteFieldBegin("otherExperiences", thrift.STRING, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:otherExperiences: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.OtherExperiences)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.other_experiences (2) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.otherExperiences (2) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:other_experiences: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:otherExperiences: ", p), err)
 	}
 	return err
 }

@@ -53,8 +53,8 @@ func (c client) UpdateResumeBase(userid string, mmap map[string]string) string {
 	return reply
 }
 
-func (c client) UpdateResumeSkillExperience(userid string, experience_levels string) string {
-	reply, err := c.ResumeServiceClient.UpdateResumeSkillExperience(userid, experience_levels)
+func (c client) UpdateResumeSkillExperience(userid string, experienceLevels string) string {
+	reply, err := c.ResumeServiceClient.UpdateResumeSkillExperience(userid, experienceLevels)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -62,8 +62,8 @@ func (c client) UpdateResumeSkillExperience(userid string, experience_levels str
 	return reply
 }
 
-func (c client) UpdateResumeToolandArchs(userid string, tool_archs string) string {
-	reply, err := c.ResumeServiceClient.UpdateResumeToolandArchs(userid, tool_archs)
+func (c client) UpdateResumeToolandArchs(userid string, toolArchs string) string {
+	reply, err := c.ResumeServiceClient.UpdateResumeToolandArchs(userid, toolArchs)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -80,8 +80,8 @@ func (c client) UpdateResumePortfolioes(userid string, portfolioes string) strin
 	return reply
 }
 
-func (c client) UpdateResumeEmploymentHistories(userid string, employment_histories string) string {
-	reply, err := c.ResumeServiceClient.UpdateResumeEmploymentHistories(userid, employment_histories)
+func (c client) UpdateResumeEmploymentHistories(userid string, employmentHistories string) string {
+	reply, err := c.ResumeServiceClient.UpdateResumeEmploymentHistories(userid, employmentHistories)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -98,8 +98,8 @@ func (c client) UpdateResumeEducations(userid string, educations string) string 
 	return reply
 }
 
-func (c client) UpdateResumeOtherExperiences(userid string, other_experiences string) string {
-	reply, err := c.ResumeServiceClient.UpdateResumeOtherExperiences(userid, other_experiences)
+func (c client) UpdateResumeOtherExperiences(userid string, otherExperiences string) string {
+	reply, err := c.ResumeServiceClient.UpdateResumeOtherExperiences(userid, otherExperiences)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

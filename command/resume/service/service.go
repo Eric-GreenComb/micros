@@ -2,7 +2,7 @@ package service
 
 import ()
 
-// Service is the abstract representation of this service.
+// ResumeService is the abstract representation of this service.
 type ResumeService interface {
 	Ping() string
 	// Parameters:
@@ -19,11 +19,11 @@ type ResumeService interface {
 	// Parameters:
 	//  - Userid
 	//  - ExperienceLevels
-	UpdateResumeSkillExperience(userid string, experience_levels string) string
+	UpdateResumeSkillExperience(userid string, experienceLevels string) string
 	// Parameters:
 	//  - Userid
 	//  - ToolArchs
-	UpdateResumeToolandArchs(userid string, tool_archs string) string
+	UpdateResumeToolandArchs(userid string, toolArchs string) string
 	// Parameters:
 	//  - Userid
 	//  - Portfolioes
@@ -31,7 +31,7 @@ type ResumeService interface {
 	// Parameters:
 	//  - Userid
 	//  - EmploymentHistories
-	UpdateResumeEmploymentHistories(userid string, employment_histories string) string
+	UpdateResumeEmploymentHistories(userid string, employmentHistories string) string
 	// Parameters:
 	//  - Userid
 	//  - Educations
@@ -39,5 +39,5 @@ type ResumeService interface {
 	// Parameters:
 	//  - Userid
 	//  - OtherExperiences
-	UpdateResumeOtherExperiences(userid string, other_experiences string) string
+	UpdateResumeOtherExperiences(userid string, otherExperiences string) string
 }

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 	"os"
 	"path/filepath"
 	"strings"
@@ -30,7 +30,7 @@ func main() {
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
 
-		_defaultObjectId = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
+		_defaultObjectID = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
 	)
 	flag.Parse()
 	if len(os.Args) < 1 {
@@ -40,7 +40,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method := flag.Arg(0)
 
@@ -73,7 +73,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -95,9 +95,9 @@ func main() {
 
 	case "create":
 		var _obj bean.Resume
-		_obj.Id = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.ID = bson.ObjectIdHex(*_defaultObjectID)
 		_obj.AuthEmail = "ministor@126.com"
-		_obj.UserID = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.UserID = bson.ObjectIdHex(*_defaultObjectID)
 
 		_obj.Phone = "12345678901"
 
@@ -121,9 +121,9 @@ func main() {
 
 	case "update":
 		var _obj bean.Resume
-		_obj.Id = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.ID = bson.ObjectIdHex(*_defaultObjectID)
 		_obj.AuthEmail = "ministor@126.com"
-		_obj.UserID = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.UserID = bson.ObjectIdHex(*_defaultObjectID)
 
 		_obj.Phone = "12345678901"
 
@@ -142,14 +142,14 @@ func main() {
 		_obj.ToolandArchs = lsToolandArchs
 
 		b, _ := json.Marshal(_obj)
-		v := svc.UpdateResume(*_defaultObjectId, string(b))
+		v := svc.UpdateResume(*_defaultObjectID, string(b))
 		logger.Log("method", "UpdateResumeBase", "v", v, "took", time.Since(begin))
 
 	case "updatebase":
-		_map_update := make(map[string]string)
-		_map_update["auth_email"] = "ministor@126.com"
-		_map_update["phone"] = "13811111111"
-		v := svc.UpdateResumeBase(*_defaultObjectId, _map_update)
+		_mapUpdate := make(map[string]string)
+		_mapUpdate["auth_email"] = "ministor@126.com"
+		_mapUpdate["phone"] = "13811111111"
+		v := svc.UpdateResumeBase(*_defaultObjectID, _mapUpdate)
 		logger.Log("method", "UpdateResumeBase", "v", v, "took", time.Since(begin))
 
 	case "updatetools":
@@ -167,7 +167,7 @@ func main() {
 
 		b, _ := json.Marshal(lsToolandArchs)
 
-		v := svc.UpdateResumeToolandArchs(*_defaultObjectId, string(b))
+		v := svc.UpdateResumeToolandArchs(*_defaultObjectID, string(b))
 		logger.Log("method", "UpdateResumeToolandArchs", "v", v, "took", time.Since(begin))
 
 	default:

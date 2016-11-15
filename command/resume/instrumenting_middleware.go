@@ -9,96 +9,118 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.ResumeService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.ResumeService
 }
 
-func (m instrumentingMiddleware) Ping() (r string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) AddResume(resume string) (r string) {
+func (mw instrumentingMiddleware) AddResume(resume string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "AddResume"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "AddResume", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.AddResume(resume)
+
+	r = mw.next.AddResume(resume)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateResume(userid string, resume string) (r string) {
+func (mw instrumentingMiddleware) UpdateResume(userID string, resume string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateResume"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateResume", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.UpdateResume(userid, resume)
+
+	r = mw.next.UpdateResume(userID, resume)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateResumeBase(userid string, mmap map[string]string) (r string) {
+func (mw instrumentingMiddleware) UpdateResumeBase(userID string, mmap map[string]string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateResumeBase"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateResumeBase", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeBase(userid, mmap)
+
+	r = mw.next.UpdateResumeBase(userID, mmap)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateResumeSkillExperience(userid string, experience_levels string) (r string) {
+func (mw instrumentingMiddleware) UpdateResumeSkillExperience(userID string, experienceLevels string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateResumeSkillExperience"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateResumeSkillExperience", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeSkillExperience(userid, experience_levels)
+
+	r = mw.next.UpdateResumeSkillExperience(userID, experienceLevels)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateResumeToolandArchs(userid string, tool_archs string) (r string) {
+func (mw instrumentingMiddleware) UpdateResumeToolandArchs(userID string, toolArchs string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateResumeToolandArchs"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateResumeSkillExperience", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeToolandArchs(userid, tool_archs)
+
+	r = mw.next.UpdateResumeToolandArchs(userID, toolArchs)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateResumePortfolioes(userid string, portfolioes string) (r string) {
+func (mw instrumentingMiddleware) UpdateResumePortfolioes(userID string, portfolioes string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateResumePortfolioes"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateResumeSkillExperience", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.UpdateResumePortfolioes(userid, portfolioes)
+
+	r = mw.next.UpdateResumePortfolioes(userID, portfolioes)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateResumeEmploymentHistories(userid string, employment_histories string) (r string) {
+func (mw instrumentingMiddleware) UpdateResumeEmploymentHistories(userID string, employmentHistories string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateResumeEmploymentHistories"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateResumeEmploymentHistories", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeEmploymentHistories(userid, employment_histories)
+
+	r = mw.next.UpdateResumeEmploymentHistories(userID, employmentHistories)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateResumeEducations(userid string, educations string) (r string) {
+func (mw instrumentingMiddleware) UpdateResumeEducations(userID string, educations string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateResumeEducations"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateResumeEducations", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeEducations(userid, educations)
+
+	r = mw.next.UpdateResumeEducations(userID, educations)
 	return
 }
 
-func (m instrumentingMiddleware) UpdateResumeOtherExperiences(userid string, other_experiences string) (r string) {
+func (mw instrumentingMiddleware) UpdateResumeOtherExperiences(userID string, otherExperiences string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateResumeOtherExperiences"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateResumeOtherExperiences", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.ResumeService.UpdateResumeOtherExperiences(userid, other_experiences)
+
+	r = mw.next.UpdateResumeOtherExperiences(userID, otherExperiences)
 	return
 }
