@@ -9,33 +9,41 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.TokenService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.TokenService
 }
 
-func (m instrumentingMiddleware) Ping() (v string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.TokenService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) NewToken_(key string, ttype int64) (v string) {
+func (mw instrumentingMiddleware) CreateToken(key string, ttype int64) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "NewToken_"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "CreateToken", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.TokenService.NewToken_(key, ttype)
+
+	r = mw.next.CreateToken(key, ttype)
 	return
 }
 
-func (m instrumentingMiddleware) DeleteToken(key string, ttype int64) (v bool) {
+func (mw instrumentingMiddleware) DeleteToken(key string, ttype int64) (r bool) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "DeleteToken"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "DeleteToken", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.TokenService.DeleteToken(key, ttype)
+
+	r = mw.next.DeleteToken(key, ttype)
 	return
 }

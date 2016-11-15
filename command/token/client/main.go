@@ -35,7 +35,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, s1, s2 := flag.Arg(0), flag.Arg(1), flag.Arg(2)
 	_i64, _ := strconv.ParseInt(s2, 10, 64)
@@ -68,7 +68,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -89,8 +89,8 @@ func main() {
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
 	case "new":
-		v := svc.NewToken_(s1, _i64)
-		logger.Log("method", "NewToken_", "s1", s1, "s2", _i64, "v", v, "took", time.Since(begin))
+		v := svc.CreateToken(s1, _i64)
+		logger.Log("method", "CreateToken", "s1", s1, "s2", _i64, "v", v, "took", time.Since(begin))
 
 	case "del":
 		v := svc.DeleteToken(s1, _i64)

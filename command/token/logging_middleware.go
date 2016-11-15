@@ -25,17 +25,17 @@ func (m loggingMiddleware) Ping() (v string) {
 	return
 }
 
-func (m loggingMiddleware) NewToken_(key string, ttype int64) (v string) {
+func (m loggingMiddleware) CreateToken(key string, ttype int64) (v string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
-			"method", "NewToken_",
+			"method", "CreateToken",
 			"key", key,
 			"ttype", ttype,
 			"v", v,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	v = m.TokenService.NewToken_(key, ttype)
+	v = m.TokenService.CreateToken(key, ttype)
 	return
 }
 

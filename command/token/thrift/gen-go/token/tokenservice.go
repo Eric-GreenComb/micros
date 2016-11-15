@@ -19,7 +19,7 @@ type TokenService interface {
 	// Parameters:
 	//  - Key
 	//  - Ttype
-	NewToken_(key string, ttype int64) (r string, err error)
+	CreateToken(key string, ttype int64) (r string, err error)
 	// Parameters:
 	//  - Key
 	//  - Ttype
@@ -128,24 +128,24 @@ func (p *TokenServiceClient) recvPing() (value string, err error) {
 // Parameters:
 //  - Key
 //  - Ttype
-func (p *TokenServiceClient) NewToken_(key string, ttype int64) (r string, err error) {
-	if err = p.sendNewToken_(key, ttype); err != nil {
+func (p *TokenServiceClient) CreateToken(key string, ttype int64) (r string, err error) {
+	if err = p.sendCreateToken(key, ttype); err != nil {
 		return
 	}
-	return p.recvNewToken_()
+	return p.recvCreateToken()
 }
 
-func (p *TokenServiceClient) sendNewToken_(key string, ttype int64) (err error) {
+func (p *TokenServiceClient) sendCreateToken(key string, ttype int64) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
 		p.OutputProtocol = oprot
 	}
 	p.SeqId++
-	if err = oprot.WriteMessageBegin("NewToken", thrift.CALL, p.SeqId); err != nil {
+	if err = oprot.WriteMessageBegin("CreateToken", thrift.CALL, p.SeqId); err != nil {
 		return
 	}
-	args := TokenServiceNewTokenArgs_{
+	args := TokenServiceCreateTokenArgs{
 		Key:   key,
 		Ttype: ttype,
 	}
@@ -158,7 +158,7 @@ func (p *TokenServiceClient) sendNewToken_(key string, ttype int64) (err error) 
 	return oprot.Flush()
 }
 
-func (p *TokenServiceClient) recvNewToken_() (value string, err error) {
+func (p *TokenServiceClient) recvCreateToken() (value string, err error) {
 	iprot := p.InputProtocol
 	if iprot == nil {
 		iprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -168,12 +168,12 @@ func (p *TokenServiceClient) recvNewToken_() (value string, err error) {
 	if err != nil {
 		return
 	}
-	if method != "NewToken" {
-		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "NewToken failed: wrong method name")
+	if method != "CreateToken" {
+		err = thrift.NewTApplicationException(thrift.WRONG_METHOD_NAME, "CreateToken failed: wrong method name")
 		return
 	}
 	if p.SeqId != seqId {
-		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "NewToken failed: out of sequence response")
+		err = thrift.NewTApplicationException(thrift.BAD_SEQUENCE_ID, "CreateToken failed: out of sequence response")
 		return
 	}
 	if mTypeId == thrift.EXCEPTION {
@@ -190,10 +190,10 @@ func (p *TokenServiceClient) recvNewToken_() (value string, err error) {
 		return
 	}
 	if mTypeId != thrift.REPLY {
-		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "NewToken failed: invalid message type")
+		err = thrift.NewTApplicationException(thrift.INVALID_MESSAGE_TYPE_EXCEPTION, "CreateToken failed: invalid message type")
 		return
 	}
-	result := TokenServiceNewTokenResult_{}
+	result := TokenServiceCreateTokenResult{}
 	if err = result.Read(iprot); err != nil {
 		return
 	}
@@ -305,7 +305,7 @@ func NewTokenServiceProcessor(handler TokenService) *TokenServiceProcessor {
 
 	self6 := &TokenServiceProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
 	self6.processorMap["Ping"] = &tokenServiceProcessorPing{handler: handler}
-	self6.processorMap["NewToken"] = &tokenServiceProcessorNewToken_{handler: handler}
+	self6.processorMap["CreateToken"] = &tokenServiceProcessorCreateToken{handler: handler}
 	self6.processorMap["DeleteToken"] = &tokenServiceProcessorDeleteToken{handler: handler}
 	return self6
 }
@@ -377,16 +377,16 @@ func (p *tokenServiceProcessorPing) Process(seqId int32, iprot, oprot thrift.TPr
 	return true, err
 }
 
-type tokenServiceProcessorNewToken_ struct {
+type tokenServiceProcessorCreateToken struct {
 	handler TokenService
 }
 
-func (p *tokenServiceProcessorNewToken_) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := TokenServiceNewTokenArgs_{}
+func (p *tokenServiceProcessorCreateToken) Process(seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := TokenServiceCreateTokenArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("NewToken", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("CreateToken", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -394,12 +394,12 @@ func (p *tokenServiceProcessorNewToken_) Process(seqId int32, iprot, oprot thrif
 	}
 
 	iprot.ReadMessageEnd()
-	result := TokenServiceNewTokenResult_{}
+	result := TokenServiceCreateTokenResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.NewToken_(args.Key, args.Ttype); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing NewToken: "+err2.Error())
-		oprot.WriteMessageBegin("NewToken", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.CreateToken(args.Key, args.Ttype); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing CreateToken: "+err2.Error())
+		oprot.WriteMessageBegin("CreateToken", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush()
@@ -407,7 +407,7 @@ func (p *tokenServiceProcessorNewToken_) Process(seqId int32, iprot, oprot thrif
 	} else {
 		result.Success = &retval
 	}
-	if err2 = oprot.WriteMessageBegin("NewToken", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("CreateToken", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -633,23 +633,23 @@ func (p *TokenServicePingResult) String() string {
 // Attributes:
 //  - Key
 //  - Ttype
-type TokenServiceNewTokenArgs_ struct {
+type TokenServiceCreateTokenArgs struct {
 	Key   string `thrift:"key,1" json:"key"`
 	Ttype int64  `thrift:"ttype,2" json:"ttype"`
 }
 
-func NewTokenServiceNewTokenArgs_() *TokenServiceNewTokenArgs_ {
-	return &TokenServiceNewTokenArgs_{}
+func NewTokenServiceCreateTokenArgs() *TokenServiceCreateTokenArgs {
+	return &TokenServiceCreateTokenArgs{}
 }
 
-func (p *TokenServiceNewTokenArgs_) GetKey() string {
+func (p *TokenServiceCreateTokenArgs) GetKey() string {
 	return p.Key
 }
 
-func (p *TokenServiceNewTokenArgs_) GetTtype() int64 {
+func (p *TokenServiceCreateTokenArgs) GetTtype() int64 {
 	return p.Ttype
 }
-func (p *TokenServiceNewTokenArgs_) Read(iprot thrift.TProtocol) error {
+func (p *TokenServiceCreateTokenArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -686,7 +686,7 @@ func (p *TokenServiceNewTokenArgs_) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TokenServiceNewTokenArgs_) readField1(iprot thrift.TProtocol) error {
+func (p *TokenServiceCreateTokenArgs) readField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
@@ -695,7 +695,7 @@ func (p *TokenServiceNewTokenArgs_) readField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TokenServiceNewTokenArgs_) readField2(iprot thrift.TProtocol) error {
+func (p *TokenServiceCreateTokenArgs) readField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return thrift.PrependError("error reading field 2: ", err)
 	} else {
@@ -704,8 +704,8 @@ func (p *TokenServiceNewTokenArgs_) readField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TokenServiceNewTokenArgs_) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("NewToken_args"); err != nil {
+func (p *TokenServiceCreateTokenArgs) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("CreateToken_args"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField1(oprot); err != nil {
@@ -723,7 +723,7 @@ func (p *TokenServiceNewTokenArgs_) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TokenServiceNewTokenArgs_) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *TokenServiceCreateTokenArgs) writeField1(oprot thrift.TProtocol) (err error) {
 	if err := oprot.WriteFieldBegin("key", thrift.STRING, 1); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:key: ", p), err)
 	}
@@ -736,7 +736,7 @@ func (p *TokenServiceNewTokenArgs_) writeField1(oprot thrift.TProtocol) (err err
 	return err
 }
 
-func (p *TokenServiceNewTokenArgs_) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *TokenServiceCreateTokenArgs) writeField2(oprot thrift.TProtocol) (err error) {
 	if err := oprot.WriteFieldBegin("ttype", thrift.I64, 2); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:ttype: ", p), err)
 	}
@@ -749,36 +749,36 @@ func (p *TokenServiceNewTokenArgs_) writeField2(oprot thrift.TProtocol) (err err
 	return err
 }
 
-func (p *TokenServiceNewTokenArgs_) String() string {
+func (p *TokenServiceCreateTokenArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("TokenServiceNewTokenArgs_(%+v)", *p)
+	return fmt.Sprintf("TokenServiceCreateTokenArgs(%+v)", *p)
 }
 
 // Attributes:
 //  - Success
-type TokenServiceNewTokenResult_ struct {
+type TokenServiceCreateTokenResult struct {
 	Success *string `thrift:"success,0" json:"success,omitempty"`
 }
 
-func NewTokenServiceNewTokenResult_() *TokenServiceNewTokenResult_ {
-	return &TokenServiceNewTokenResult_{}
+func NewTokenServiceCreateTokenResult() *TokenServiceCreateTokenResult {
+	return &TokenServiceCreateTokenResult{}
 }
 
-var TokenServiceNewTokenResult__Success_DEFAULT string
+var TokenServiceCreateTokenResult_Success_DEFAULT string
 
-func (p *TokenServiceNewTokenResult_) GetSuccess() string {
+func (p *TokenServiceCreateTokenResult) GetSuccess() string {
 	if !p.IsSetSuccess() {
-		return TokenServiceNewTokenResult__Success_DEFAULT
+		return TokenServiceCreateTokenResult_Success_DEFAULT
 	}
 	return *p.Success
 }
-func (p *TokenServiceNewTokenResult_) IsSetSuccess() bool {
+func (p *TokenServiceCreateTokenResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *TokenServiceNewTokenResult_) Read(iprot thrift.TProtocol) error {
+func (p *TokenServiceCreateTokenResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -811,7 +811,7 @@ func (p *TokenServiceNewTokenResult_) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TokenServiceNewTokenResult_) readField0(iprot thrift.TProtocol) error {
+func (p *TokenServiceCreateTokenResult) readField0(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return thrift.PrependError("error reading field 0: ", err)
 	} else {
@@ -820,8 +820,8 @@ func (p *TokenServiceNewTokenResult_) readField0(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TokenServiceNewTokenResult_) Write(oprot thrift.TProtocol) error {
-	if err := oprot.WriteStructBegin("NewToken_result"); err != nil {
+func (p *TokenServiceCreateTokenResult) Write(oprot thrift.TProtocol) error {
+	if err := oprot.WriteStructBegin("CreateToken_result"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
 	if err := p.writeField0(oprot); err != nil {
@@ -836,7 +836,7 @@ func (p *TokenServiceNewTokenResult_) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TokenServiceNewTokenResult_) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *TokenServiceCreateTokenResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err := oprot.WriteFieldBegin("success", thrift.STRING, 0); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 0:success: ", p), err)
@@ -851,11 +851,11 @@ func (p *TokenServiceNewTokenResult_) writeField0(oprot thrift.TProtocol) (err e
 	return err
 }
 
-func (p *TokenServiceNewTokenResult_) String() string {
+func (p *TokenServiceCreateTokenResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("TokenServiceNewTokenResult_(%+v)", *p)
+	return fmt.Sprintf("TokenServiceCreateTokenResult(%+v)", *p)
 }
 
 // Attributes:

@@ -8,7 +8,7 @@ type TokenService interface {
 	// Parameters:
 	//  - Key
 	//  - Ttype
-	NewToken_(key string, ttype int64) string
+	CreateToken(key string, ttype int64) string
 	// Parameters:
 	//  - Key
 	//  - Ttype

@@ -21,7 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string NewToken(string key, i64 ttype)")
+	fmt.Fprintln(os.Stderr, "  string CreateToken(string key, i64 ttype)")
 	fmt.Fprintln(os.Stderr, "  bool DeleteToken(string key, i64 ttype)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
@@ -125,9 +125,9 @@ func main() {
 		fmt.Print(client.Ping())
 		fmt.Print("\n")
 		break
-	case "NewToken":
+	case "CreateToken":
 		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "NewToken_ requires 2 args")
+			fmt.Fprintln(os.Stderr, "CreateToken requires 2 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
@@ -138,7 +138,7 @@ func main() {
 			return
 		}
 		value1 := argvalue1
-		fmt.Print(client.NewToken_(value0, value1))
+		fmt.Print(client.CreateToken(value0, value1))
 		fmt.Print("\n")
 		break
 	case "DeleteToken":

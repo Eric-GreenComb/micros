@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) NewToken_(key string, ttype int64) string {
-	reply, err := c.TokenServiceClient.NewToken_(key, ttype)
+func (c client) CreateToken(key string, ttype int64) string {
+	reply, err := c.TokenServiceClient.CreateToken(key, ttype)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
