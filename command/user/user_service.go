@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/banerwai/global"
 	"github.com/banerwai/global/bean"
+	global "github.com/banerwai/global/constant"
 	"github.com/banerwai/gommon/crypto"
 	"github.com/banerwai/micros/command/user/service"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 	"time"
 )
 
@@ -75,34 +75,34 @@ func (ims *inmemService) CreateUser(mmap map[string]string) (r string) {
 
 func (ims *inmemService) createAccount(userID bson.ObjectId, email string) error {
 	var _account bean.Account
-	_account.UserId = userID
+	_account.UserID = userID
 	_account.Email = email
 	_account.CreatedTime = time.Now()
 
 	var _lsMultiCurrencyAccount []bean.MultiCurrencyAccount
 
 	var _beanMultiCurrencyAccount01 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount01.Currency = global.CURRENCY_USD
+	_beanMultiCurrencyAccount01.Currency = global.CurrencyUSD
 	_beanMultiCurrencyAccount01.Amount = 0
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount01)
 
 	var _beanMultiCurrencyAccount02 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount02.Currency = global.CURRENCY_CNY
+	_beanMultiCurrencyAccount02.Currency = global.CurrencyCNY
 	_beanMultiCurrencyAccount02.Amount = 0
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount02)
 
 	var _beanMultiCurrencyAccount03 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount03.Currency = global.CURRENCY_EUR
+	_beanMultiCurrencyAccount03.Currency = global.CurrencyEUR
 	_beanMultiCurrencyAccount03.Amount = 0
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount03)
 
 	var _beanMultiCurrencyAccount04 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount04.Currency = global.CURRENCY_JPY
+	_beanMultiCurrencyAccount04.Currency = global.CurrencyJPY
 	_beanMultiCurrencyAccount04.Amount = 0
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount04)
 
 	var _beanMultiCurrencyAccount05 bean.MultiCurrencyAccount
-	_beanMultiCurrencyAccount05.Currency = global.CURRENCY_GBP
+	_beanMultiCurrencyAccount05.Currency = global.CurrencyGBP
 	_beanMultiCurrencyAccount05.Amount = 0
 	_lsMultiCurrencyAccount = append(_lsMultiCurrencyAccount, _beanMultiCurrencyAccount05)
 

@@ -21,7 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string UpdateWorkHistory(string profile_id, string json_workhistory)")
+	fmt.Fprintln(os.Stderr, "  string UpdateWorkHistory(string profileID, string jsonWorkhistory)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }

@@ -25,15 +25,15 @@ func (m loggingMiddleware) Ping() (r string) {
 	return
 }
 
-func (m loggingMiddleware) UpdateWorkHistory(profile_id, json_workhistory string) (r string) {
+func (m loggingMiddleware) UpdateWorkHistory(profileID, jsonWorkhistory string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "UpdateWorkHistory",
-			"json_workhistory", json_workhistory,
+			"jsonWorkhistory", jsonWorkhistory,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.WorkHistoryService.UpdateWorkHistory(profile_id, json_workhistory)
+	r = m.WorkHistoryService.UpdateWorkHistory(profileID, jsonWorkhistory)
 	return
 }

@@ -9,24 +9,30 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.WorkHistoryService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.WorkHistoryService
 }
 
-func (m instrumentingMiddleware) Ping() (r string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.WorkHistoryService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) UpdateWorkHistory(profile_id, json_workhistory string) (r string) {
+func (mw instrumentingMiddleware) UpdateWorkHistory(profileID, jsonWorkhistory string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "UpdateWorkHistory"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "UpdateWorkHistory", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.WorkHistoryService.UpdateWorkHistory(profile_id, json_workhistory)
+
+	r = mw.next.UpdateWorkHistory(profileID, jsonWorkhistory)
 	return
 }

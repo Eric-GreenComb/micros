@@ -14,16 +14,14 @@ import (
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 
 	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/metrics"
-	"github.com/go-kit/kit/metrics/expvar"
-	"github.com/go-kit/kit/metrics/prometheus"
+	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 
 	"github.com/banerwai/micros/command/user/service"
 	thriftuser "github.com/banerwai/micros/command/user/thrift/gen-go/user"
 
-	"labix.org/v2/mgo"
+	"gopkg.in/mgo.v2"
 
-	banerwaiglobal "github.com/banerwai/global"
+	banerwaiglobal "github.com/banerwai/global/constant"
 	"github.com/banerwai/gommon/etcd"
 )
 
@@ -76,26 +74,32 @@ func main() {
 	}
 
 	// package metrics
-	var requestDuration metrics.TimeHistogram
-	{
-		requestDuration = metrics.NewTimeHistogram(time.Nanosecond, metrics.NewMultiHistogram(
-			"request_duration_ns",
-			expvar.NewHistogram("request_duration_ns", 0, 5e9, 1, 50, 95, 99),
-			prometheus.NewSummary(stdprometheus.SummaryOpts{
-				Namespace: "banerwai",
-				Subsystem: "query",
-				Name:      "auth",
-				Help:      "Request duration in nanoseconds.",
-			}, []string{"method"}),
-		))
-	}
+	fieldKeys := []string{"method", "error"}
+	requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "request_count",
+		Help:      "Number of requests received.",
+	}, fieldKeys)
+	requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "request_latency_microseconds",
+		Help:      "Total duration of requests in microseconds.",
+	}, fieldKeys)
+	countResult := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "count_result",
+		Help:      "The result of each count method.",
+	}, []string{}) // no fields here
 
 	// Business domain
 	var svc service.UserService
 	{
 		svc = newInmemService()
 		svc = loggingMiddleware{svc, logger}
-		svc = instrumentingMiddleware{svc, requestDuration}
+		svc = instrumentingMiddleware{requestCount, requestLatency, countResult, svc}
 	}
 
 	// Mechanical stuff
@@ -106,9 +110,9 @@ func main() {
 		errc <- interrupt()
 	}()
 
-	client := etcd.EtcdReigistryClient{
-		etcd.EtcdRegistryConfig{
-			ServiceName:  banerwaiglobal.ETCD_KEY_MICROS_COMMAND_USER,
+	client := etcd.ReigistryClient{
+		etcd.RegistryConfig{
+			ServiceName:  banerwaiglobal.EtcdKeyMicrosCommandUser,
 			InstanceName: *thriftAddr,
 			BaseURL:      *thriftAddr,
 		},

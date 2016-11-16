@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 	"os"
 	"path/filepath"
 	"strings"
@@ -30,7 +30,7 @@ func main() {
 		thriftBufferSize = flag.Int("thrift.buffer.size", 0, "0 for unbuffered")
 		thriftFramed     = flag.Bool("thrift.framed", false, "true to enable framing")
 
-		_defaultObjectId = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
+		_defaultObjectID = flag.String("default.user.ojbectid", "5707cb10ae6faa1d1071a189", "default user ojbectid")
 	)
 	flag.Parse()
 	if len(os.Args) < 2 {
@@ -40,7 +40,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method := flag.Arg(0)
 
@@ -73,7 +73,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -96,8 +96,8 @@ func main() {
 	case "upsert":
 
 		var _obj bean.WorkHistory
-		_obj.Id = bson.ObjectIdHex(*_defaultObjectId)
-		_obj.ProfileID = bson.ObjectIdHex(*_defaultObjectId)
+		_obj.ID = bson.ObjectIdHex(*_defaultObjectID)
+		_obj.ProfileID = bson.ObjectIdHex(*_defaultObjectID)
 
 		var lsWorkHistoryAndFeedbacks []bean.WorkHistoryAndFeedback
 
@@ -127,7 +127,7 @@ func main() {
 
 		b, _ := json.Marshal(_obj)
 
-		v := svc.UpdateWorkHistory(*_defaultObjectId, string(b))
+		v := svc.UpdateWorkHistory(*_defaultObjectID, string(b))
 		logger.Log("method", "UpdateWorkHistory", "v", v, "took", time.Since(begin))
 
 	default:

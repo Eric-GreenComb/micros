@@ -13,7 +13,7 @@ func (tb thriftBinding) Ping() (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) UpdateWorkHistory(profile_id, json_workhistory string) (string, error) {
-	r := tb.WorkHistoryService.UpdateWorkHistory(profile_id, json_workhistory)
+func (tb thriftBinding) UpdateWorkHistory(profileID, jsonWorkhistory string) (string, error) {
+	r := tb.WorkHistoryService.UpdateWorkHistory(profileID, jsonWorkhistory)
 	return r, nil
 }
