@@ -93,6 +93,7 @@ func main() {
 		Name:      "count_result",
 		Help:      "The result of each count method.",
 	}, []string{}) // no fields here
+
 	// Business domain
 	var svc service.AccountService
 	{

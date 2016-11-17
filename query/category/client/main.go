@@ -36,7 +36,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, s1 := flag.Arg(0), flag.Arg(1)
 
@@ -69,7 +69,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -89,22 +89,6 @@ func main() {
 	case "ping":
 		v := svc.Ping()
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
-
-	case "hi":
-		name := s1
-		v := svc.SayHi(name)
-		logger.Log("method", "SayHi", "name", name, "v", v, "took", time.Since(begin))
-
-	case "demosub":
-		id := s1
-		v := svc.GetDemoSubCategory(id)
-
-		logger.Log("method", "GetSubCategory", "id", id, "v", v, "took", time.Since(begin))
-
-	case "demosubs":
-		category_id := s1
-		v := svc.GetDemoSubCategories(category_id)
-		logger.Log("method", "GetSubCategory", "category_id", category_id, "v", v, "took", time.Since(begin))
 
 	case "load":
 		path := s1

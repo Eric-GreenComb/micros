@@ -9,69 +9,52 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.CategoryService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.CategoryService
 }
 
-func (m instrumentingMiddleware) Ping() (v string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.CategoryService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) SayHi(name string) (v string) {
+func (mw instrumentingMiddleware) LoadCategory(path string) (r bool) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "SayHi"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "LoadCategory", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.CategoryService.SayHi(name)
+
+	r = mw.next.LoadCategory(path)
 	return
 }
 
-func (m instrumentingMiddleware) GetDemoSubCategory(id string) (v string) {
+func (mw instrumentingMiddleware) GetCategories() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetDemoSubCategory"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetCategories", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.CategoryService.GetDemoSubCategory(id)
+
+	r = mw.next.GetCategories()
 	return
 }
 
-func (m instrumentingMiddleware) GetDemoSubCategories(category_id string) (v string) {
+func (mw instrumentingMiddleware) GetSubCategories(serialnumber int32) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetDemoSubCategories"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetSubCategories", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.CategoryService.GetDemoSubCategories(category_id)
-	return
-}
 
-func (m instrumentingMiddleware) LoadCategory(path string) (v bool) {
-	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "LoadCategory"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
-	}(time.Now())
-	v = m.CategoryService.LoadCategory(path)
-	return
-}
-
-func (m instrumentingMiddleware) GetCategories() (v string) {
-	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetCategories"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
-	}(time.Now())
-	v = m.CategoryService.GetCategories()
-	return
-}
-
-func (m instrumentingMiddleware) GetSubCategories(serialnumber int32) (v string) {
-	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetSubCategories"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
-	}(time.Now())
-	v = m.CategoryService.GetSubCategories(serialnumber)
+	r = mw.next.GetSubCategories(serialnumber)
 	return
 }

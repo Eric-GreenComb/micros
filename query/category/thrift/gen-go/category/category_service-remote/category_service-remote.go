@@ -21,9 +21,6 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string SayHi(string name)")
-	fmt.Fprintln(os.Stderr, "  string GetDemoSubCategory(string id)")
-	fmt.Fprintln(os.Stderr, "  string GetDemoSubCategories(string category_id)")
 	fmt.Fprintln(os.Stderr, "  bool LoadCategory(string path)")
 	fmt.Fprintln(os.Stderr, "  string GetCategories()")
 	fmt.Fprintln(os.Stderr, "  string GetSubCategories(i32 serialnumber)")
@@ -129,36 +126,6 @@ func main() {
 		fmt.Print(client.Ping())
 		fmt.Print("\n")
 		break
-	case "SayHi":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "SayHi requires 1 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		fmt.Print(client.SayHi(value0))
-		fmt.Print("\n")
-		break
-	case "GetDemoSubCategory":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetDemoSubCategory requires 1 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		fmt.Print(client.GetDemoSubCategory(value0))
-		fmt.Print("\n")
-		break
-	case "GetDemoSubCategories":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetDemoSubCategories requires 1 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		fmt.Print(client.GetDemoSubCategories(value0))
-		fmt.Print("\n")
-		break
 	case "LoadCategory":
 		if flag.NArg()-1 != 1 {
 			fmt.Fprintln(os.Stderr, "LoadCategory requires 1 args")
@@ -182,8 +149,8 @@ func main() {
 			fmt.Fprintln(os.Stderr, "GetSubCategories requires 1 args")
 			flag.Usage()
 		}
-		tmp0, err20 := (strconv.Atoi(flag.Arg(1)))
-		if err20 != nil {
+		tmp0, err11 := (strconv.Atoi(flag.Arg(1)))
+		if err11 != nil {
 			Usage()
 			return
 		}

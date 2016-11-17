@@ -7,8 +7,8 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/banerwai/global"
 	"github.com/banerwai/global/bean"
+	"github.com/banerwai/global/constant"
 	"github.com/banerwai/gommon/etcd"
 	"github.com/banerwai/micros/query/category/service"
 )
@@ -32,34 +32,10 @@ func newInmemService() service.CategoryService {
 	}
 }
 
-func (self *inmemService) Ping() string { return "pong" }
+func (ims *inmemService) Ping() string { return "pong" }
 
-func (self *inmemService) SayHi(name string) string { return "hi," + name }
-
-func (self *inmemService) GetDemoSubCategory(id string) string {
-
-	b, err := json.Marshal(bean.SubCategory{"001", 10, "name-001", "desc-001"})
-	if err != nil {
-		return err.Error()
-	}
-	return string(b)
-}
-
-func (self *inmemService) GetDemoSubCategories(category_id string) string {
-	var subs []bean.SubCategory
-
-	subs = append(subs, bean.SubCategory{"001", 1001, "name-001", "desc-001"})
-	subs = append(subs, bean.SubCategory{"002", 1002, "name-002", "desc-0012"})
-
-	b, err := json.Marshal(subs)
-	if err != nil {
-		return err.Error()
-	}
-	return string(b)
-}
-
-func (self *inmemService) LoadCategory(path string) bool {
-	_json, _err := self.getJsonFromEtcd(path)
+func (ims *inmemService) LoadCategory(path string) bool {
+	_json, _err := ims.getJSONFromEtcd(path)
 	if _err != nil {
 		fmt.Println("error:", _err)
 		return false
@@ -71,11 +47,11 @@ func (self *inmemService) LoadCategory(path string) bool {
 		return false
 	}
 
-	return self.initCategories(categories)
+	return ims.initCategories(categories)
 }
 
-func (self *inmemService) getJsonFromEtcd(jsonname string) (string, error) {
-	_key := global.ETCD_KEY_JSON_CATEGORY + jsonname
+func (ims *inmemService) getJSONFromEtcd(jsonname string) (string, error) {
+	_key := constant.EtcdKeyJSONCategory + jsonname
 	_json, _err := etcd.GetValue(_key)
 	if _err != nil {
 		return "", _err
@@ -83,37 +59,37 @@ func (self *inmemService) getJsonFromEtcd(jsonname string) (string, error) {
 	return _json, nil
 }
 
-func (self *inmemService) initCategories(categories []bean.Category) bool {
-	self.mtx.Lock()
-	defer self.mtx.Unlock()
+func (ims *inmemService) initCategories(categories []bean.Category) bool {
+	ims.mtx.Lock()
+	defer ims.mtx.Unlock()
 
-	for k := range self.m {
-		delete(self.m, k)
+	for k := range ims.m {
+		delete(ims.m, k)
 	}
 
 	for _, _category := range categories {
-		if _, ok := self.m[int(_category.SerialNumber)]; ok {
+		if _, ok := ims.m[int(_category.SerialNumber)]; ok {
 			continue // don't overwrite
 		}
-		self.m[int(_category.SerialNumber)] = _category
+		ims.m[int(_category.SerialNumber)] = _category
 	}
 
-	self.sortkey = make([]int, 0)
-	for _k, _ := range self.m {
-		self.sortkey = append(self.sortkey, _k)
+	ims.sortkey = make([]int, 0)
+	for _k := range ims.m {
+		ims.sortkey = append(ims.sortkey, _k)
 	}
-	sort.Ints(self.sortkey)
+	sort.Ints(ims.sortkey)
 
 	return true
 }
 
-func (self *inmemService) GetCategories() string {
-	self.mtx.RLock()
-	defer self.mtx.RUnlock()
+func (ims *inmemService) GetCategories() string {
+	ims.mtx.RLock()
+	defer ims.mtx.RUnlock()
 
 	var _categories []bean.Category
-	for _, _k := range self.sortkey {
-		_cat := self.m[_k]
+	for _, _k := range ims.sortkey {
+		_cat := ims.m[_k]
 		_categories = append(_categories, _cat)
 	}
 
@@ -124,11 +100,11 @@ func (self *inmemService) GetCategories() string {
 	return string(b)
 }
 
-func (self *inmemService) GetSubCategories(serialnumber int32) string {
-	self.mtx.RLock()
-	defer self.mtx.RUnlock()
+func (ims *inmemService) GetSubCategories(serialnumber int32) string {
+	ims.mtx.RLock()
+	defer ims.mtx.RUnlock()
 
-	p, ok := self.m[int(serialnumber)]
+	p, ok := ims.m[int(serialnumber)]
 	if !ok {
 		return ""
 	}

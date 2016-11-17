@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/banerwai/gommon/crypto"
 	"github.com/banerwai/micros/query/auth/service"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type inmemService struct {
@@ -13,32 +13,32 @@ func newInmemService() service.AuthService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() (r string) {
+func (ims *inmemService) Ping() (r string) {
 	r = "pong"
 	return
 }
 
-func (self *inmemService) Login(email string, pwd string) (r string) {
-	var _bson_m bson.M
-	err := UsersCollection.Find(bson.M{"email": email}).One(&_bson_m)
+func (ims *inmemService) Login(email string, pwd string) (r string) {
+	var _bsonM bson.M
+	err := UsersCollection.Find(bson.M{"email": email}).One(&_bsonM)
 
 	if err != nil {
 		return "error:" + err.Error()
 	}
 
-	_active := _bson_m["actived"].(bool)
+	_active := _bsonM["actived"].(bool)
 	if !_active {
 		return "error: user email need active"
 	}
 
-	_pwd := _bson_m["pwd"].(string)
+	_pwd := _bsonM["pwd"].(string)
 
 	_is := crypto.CompareHash([]byte(_pwd), pwd)
 	if !_is {
 		return "error: compare false"
 	}
 
-	_data, _err := bson.Marshal(_bson_m)
+	_data, _err := bson.Marshal(_bsonM)
 	if _err != nil {
 		return "error: bson.Marshal error"
 	}

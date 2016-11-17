@@ -12,18 +12,6 @@ func (tb thriftBinding) Ping() (string, error) {
 	return tb.CategoryService.Ping(), nil
 }
 
-func (tb thriftBinding) SayHi(name string) (string, error) {
-	return tb.CategoryService.SayHi(name), nil
-}
-
-func (tb thriftBinding) GetDemoSubCategory(id string) (string, error) {
-	return tb.CategoryService.GetDemoSubCategory(id), nil
-}
-
-func (tb thriftBinding) GetDemoSubCategories(category_id string) (string, error) {
-	return tb.CategoryService.GetDemoSubCategories(category_id), nil
-}
-
 func (tb thriftBinding) LoadCategory(path string) (bool, error) {
 	return tb.CategoryService.LoadCategory(path), nil
 }

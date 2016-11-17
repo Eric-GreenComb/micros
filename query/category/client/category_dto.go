@@ -2,7 +2,7 @@ package main
 
 import ()
 
-// Attributes:
+// Category Attributes:
 //  - ID
 //  - Name
 //  - Desc
@@ -16,7 +16,7 @@ type Category struct {
 	Subcategories []SubCategory `json:"subcategories"`
 }
 
-// Attributes:
+// SubCategory Attributes:
 //  - ID
 //  - Name
 //  - Desc

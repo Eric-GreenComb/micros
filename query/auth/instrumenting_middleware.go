@@ -9,24 +9,30 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.AuthService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.AuthService
 }
 
-func (m instrumentingMiddleware) Ping() (r string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AuthService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) Login(email string, pwd string) (r string) {
+func (mw instrumentingMiddleware) Login(email string, pwd string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Login"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Login", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.AuthService.Login(email, pwd)
+
+	r = mw.next.Login(email, pwd)
 	return
 }

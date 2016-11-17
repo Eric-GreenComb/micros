@@ -26,35 +26,6 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) SayHi(name string) string {
-	reply, err := c.CategoryServiceClient.SayHi(name)
-	if err != nil {
-		c.Logger.Log("err", err)
-		return ""
-	}
-	return reply
-}
-
-func (c client) GetDemoSubCategory(id string) string {
-	reply, err := c.CategoryServiceClient.GetDemoSubCategory(id)
-	if err != nil {
-		c.Logger.Log("err", err)
-		return ""
-	}
-	return reply
-}
-
-func (c client) GetDemoSubCategories(category_id string) string {
-	_subs, err := c.CategoryServiceClient.GetDemoSubCategories(category_id)
-
-	if err != nil {
-		c.Logger.Log("err", err)
-		return ""
-	}
-
-	return _subs
-}
-
 func (c client) LoadCategory(path string) bool {
 	reply, err := c.CategoryServiceClient.LoadCategory(path)
 	if err != nil {
