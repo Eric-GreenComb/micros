@@ -14,7 +14,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	banerwaiglobal "github.com/banerwai/global"
+	banerwaiglobal "github.com/banerwai/global/constant"
 	thriftclient "github.com/banerwai/micros/query/profile/client/thrift"
 	"github.com/banerwai/micros/query/profile/service"
 	thriftprofile "github.com/banerwai/micros/query/profile/thrift/gen-go/profile"
@@ -38,7 +38,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, s1 := flag.Arg(0), flag.Arg(1)
 
@@ -71,7 +71,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -93,24 +93,24 @@ func main() {
 		logger.Log("method", "Ping", "v", v, "took", time.Since(begin))
 
 	case "prof":
-		profile_id := s1
-		v := svc.GetProfile(profile_id)
+		profileID := s1
+		v := svc.GetProfile(profileID)
 		var _profile bean.Profile
 		json.Unmarshal([]byte(v), &_profile)
 		fmt.Println(_profile)
-		logger.Log("method", "GetProfile", "profile_id", profile_id, "v", v, "took", time.Since(begin))
+		logger.Log("method", "GetProfile", "profileID", profileID, "v", v, "took", time.Since(begin))
 
 	case "profs":
 		_userid := s1
-		v := svc.GetProfilesByUserId(_userid)
+		v := svc.GetProfilesByUserID(_userid)
 		var _profiles []bean.Profile
 		json.Unmarshal([]byte(v), &_profiles)
 		fmt.Println(_profiles)
 		logger.Log("method", "GetProfilesByUserId", "v", v, "took", time.Since(begin))
 
 	case "cat":
-		_cat_id, _ := strconv.ParseInt(s1, 10, 64)
-		v := svc.GetProfilesByCategory(_cat_id, time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
+		_catID, _ := strconv.ParseInt(s1, 10, 64)
+		v := svc.GetProfilesByCategory(_catID, time.Now().Unix(), banerwaiglobal.DefaultPageSize)
 		var _profiles []bean.Profile
 		json.Unmarshal([]byte(v), &_profiles)
 		for _, _prof := range _profiles {
@@ -119,8 +119,8 @@ func main() {
 		logger.Log("method", "GetProfilesByUserId", "took", time.Since(begin))
 
 	case "subcat":
-		_subcat_id, _ := strconv.ParseInt(s1, 10, 64)
-		v := svc.GetProfilesBySubCategory(_subcat_id, 1464785330, banerwaiglobal.Pagination_PAGESIZE_Web)
+		_subcatID, _ := strconv.ParseInt(s1, 10, 64)
+		v := svc.GetProfilesBySubCategory(_subcatID, 1464785330, banerwaiglobal.DefaultPageSize)
 		var _profiles []bean.Profile
 		json.Unmarshal([]byte(v), &_profiles)
 		for _, _prof := range _profiles {
@@ -131,15 +131,15 @@ func main() {
 	case "search":
 		_key := s1
 
-		option_mmap := make(map[string]int64)
+		optionMap := make(map[string]int64)
 
-		option_mmap["freelancer_type"] = 0
-		option_mmap["job_success"] = 0
+		optionMap["freelancer_type"] = 0
+		optionMap["job_success"] = 0
 
-		key_mmap := make(map[string]string)
-		key_mmap["job_title"] = _key
+		keyMap := make(map[string]string)
+		keyMap["job_title"] = _key
 
-		v := svc.SearchProfiles(option_mmap, key_mmap, time.Now().Unix(), banerwaiglobal.Pagination_PAGESIZE_Web)
+		v := svc.SearchProfiles(optionMap, keyMap, time.Now().Unix(), banerwaiglobal.DefaultPageSize)
 
 		var _profiles []bean.Profile
 		json.Unmarshal([]byte(v), &_profiles)

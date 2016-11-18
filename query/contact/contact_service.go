@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 
-	"github.com/banerwai/global"
 	"github.com/banerwai/global/bean"
+	"github.com/banerwai/global/constant"
 	"github.com/banerwai/gommon/etcd"
 	"github.com/banerwai/micros/query/contact/service"
 )
@@ -17,13 +17,13 @@ func newInmemService() service.ContactService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() (r string) {
+func (ims *inmemService) Ping() (r string) {
 	r = "pong"
 	return
 }
 
-func (self *inmemService) GetContactTpl(tplname string) (r string) {
-	_tpl, _err := self.getTplFromEtcd(tplname)
+func (ims *inmemService) GetContactTpl(tplname string) (r string) {
+	_tpl, _err := ims.getTplFromEtcd(tplname)
 	if _err != nil {
 		return ""
 	}
@@ -31,7 +31,7 @@ func (self *inmemService) GetContactTpl(tplname string) (r string) {
 	return _tpl
 }
 
-func (self *inmemService) GetContact(contactid string) (r string) {
+func (ims *inmemService) GetContact(contactid string) (r string) {
 	if !bson.IsObjectIdHex(contactid) {
 		return ""
 	}
@@ -49,22 +49,22 @@ func (self *inmemService) GetContact(contactid string) (r string) {
 	return
 }
 
-func (self *inmemService) GetContactSignStatus(contactid string) (r string) {
+func (ims *inmemService) GetContactSignStatus(contactid string) (r string) {
 	if !bson.IsObjectIdHex(contactid) {
 		return ""
 	}
 
-	var _bson_m bson.M
+	var _bsonM bson.M
 	_selector := bson.M{}
 	_selector["client_signup"] = 1
 	_selector["freelancer_signup"] = 1
 
-	err := ContactCollection.Find(bson.M{"_id": bson.ObjectIdHex(contactid)}).Select(_selector).One(&_bson_m)
+	err := ContactCollection.Find(bson.M{"_id": bson.ObjectIdHex(contactid)}).Select(_selector).One(&_bsonM)
 	if err != nil {
 		return err.Error()
 	}
 
-	_data, _err := bson.Marshal(_bson_m)
+	_data, _err := bson.Marshal(_bsonM)
 	if _err != nil {
 		return _err.Error()
 	}
@@ -73,7 +73,7 @@ func (self *inmemService) GetContactSignStatus(contactid string) (r string) {
 	return
 }
 
-func (self *inmemService) GetClientContact(clientemail string) (r string) {
+func (ims *inmemService) GetClientContact(clientemail string) (r string) {
 	var _contacts []bean.Contact
 
 	query := bson.M{}
@@ -91,7 +91,7 @@ func (self *inmemService) GetClientContact(clientemail string) (r string) {
 	return
 }
 
-func (self *inmemService) GetFreelancerContact(freelanceremail string) (r string) {
+func (ims *inmemService) GetFreelancerContact(freelanceremail string) (r string) {
 	var _contacts []bean.Contact
 
 	query := bson.M{}
@@ -109,15 +109,15 @@ func (self *inmemService) GetFreelancerContact(freelanceremail string) (r string
 	return
 }
 
-func (self *inmemService) getTplFromEtcd(tplname string) (string, error) {
-	_key := global.ETCD_KEY_TPL_CONTACT + tplname
+func (ims *inmemService) getTplFromEtcd(tplname string) (string, error) {
+	_key := constant.EtcdKeyTplContact + tplname
 	_tpl, _err := etcd.GetValue(_key)
 
 	if _err == nil {
 		return _tpl, nil
 	}
 
-	_key = global.ETCD_KEY_TPL_CONTACT + "default"
+	_key = constant.EtcdKeyTplContact + "default"
 	_tpl, _err = etcd.GetValue(_key)
 	if _err != nil {
 		return "", _err

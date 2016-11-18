@@ -2,7 +2,7 @@ package service
 
 import ()
 
-// CategoryService is the abstract representation of this service.
+// ContactService is the abstract representation of this service.
 type ContactService interface {
 	Ping() string
 	// Parameters:

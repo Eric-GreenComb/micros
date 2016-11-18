@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) GetProfile(profile_id string) string {
-	reply, err := c.ProfileServiceClient.GetProfile(profile_id)
+func (c client) GetProfile(profileID string) string {
+	reply, err := c.ProfileServiceClient.GetProfile(profileID)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -35,8 +35,8 @@ func (c client) GetProfile(profile_id string) string {
 	return reply
 }
 
-func (c client) GetProfilesByUserId(user_id string) string {
-	reply, err := c.ProfileServiceClient.GetProfilesByUserId(user_id)
+func (c client) GetProfilesByUserID(userID string) string {
+	reply, err := c.ProfileServiceClient.GetProfilesByUserID(userID)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -44,8 +44,8 @@ func (c client) GetProfilesByUserId(user_id string) string {
 	return reply
 }
 
-func (c client) GetProfilesByCategory(category_id int64, timestamp int64, pagesize int64) string {
-	reply, err := c.ProfileServiceClient.GetProfilesByCategory(category_id, timestamp, pagesize)
+func (c client) GetProfilesByCategory(categoryID int64, timestamp int64, pagesize int64) string {
+	reply, err := c.ProfileServiceClient.GetProfilesByCategory(categoryID, timestamp, pagesize)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -53,8 +53,8 @@ func (c client) GetProfilesByCategory(category_id int64, timestamp int64, pagesi
 	return reply
 }
 
-func (c client) GetProfilesBySubCategory(subcategory_id int64, timestamp int64, pagesize int64) string {
-	reply, err := c.ProfileServiceClient.GetProfilesBySubCategory(subcategory_id, timestamp, pagesize)
+func (c client) GetProfilesBySubCategory(subcategoryID int64, timestamp int64, pagesize int64) string {
+	reply, err := c.ProfileServiceClient.GetProfilesBySubCategory(subcategoryID, timestamp, pagesize)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""
@@ -62,8 +62,8 @@ func (c client) GetProfilesBySubCategory(subcategory_id int64, timestamp int64, 
 	return reply
 }
 
-func (c client) SearchProfiles(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64, pagesize int64) string {
-	reply, err := c.ProfileServiceClient.SearchProfiles(option_mmap, key_mmap, timestamp, pagesize)
+func (c client) SearchProfiles(optionMap map[string]int64, keyMap map[string]string, timestamp int64, pagesize int64) string {
+	reply, err := c.ProfileServiceClient.SearchProfiles(optionMap, keyMap, timestamp, pagesize)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

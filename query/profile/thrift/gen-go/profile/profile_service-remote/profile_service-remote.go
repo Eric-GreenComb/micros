@@ -21,11 +21,11 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string GetProfile(string profile_id)")
-	fmt.Fprintln(os.Stderr, "  string GetProfilesByUserId(string user_id)")
-	fmt.Fprintln(os.Stderr, "  string GetProfilesByCategory(i64 category_id, i64 timestamp, i64 pagesize)")
-	fmt.Fprintln(os.Stderr, "  string GetProfilesBySubCategory(i64 subcategory_id, i64 timestamp, i64 pagesize)")
-	fmt.Fprintln(os.Stderr, "  string SearchProfiles( option_mmap,  key_mmap, i64 timestamp, i64 pagesize)")
+	fmt.Fprintln(os.Stderr, "  string GetProfile(string profileID)")
+	fmt.Fprintln(os.Stderr, "  string GetProfilesByUserID(string userID)")
+	fmt.Fprintln(os.Stderr, "  string GetProfilesByCategory(i64 categoryID, i64 timestamp, i64 pagesize)")
+	fmt.Fprintln(os.Stderr, "  string GetProfilesBySubCategory(i64 subcategoryID, i64 timestamp, i64 pagesize)")
+	fmt.Fprintln(os.Stderr, "  string SearchProfiles( optionMap,  keyMap, i64 timestamp, i64 pagesize)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -138,14 +138,14 @@ func main() {
 		fmt.Print(client.GetProfile(value0))
 		fmt.Print("\n")
 		break
-	case "GetProfilesByUserId":
+	case "GetProfilesByUserID":
 		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetProfilesByUserId requires 1 args")
+			fmt.Fprintln(os.Stderr, "GetProfilesByUserID requires 1 args")
 			flag.Usage()
 		}
 		argvalue0 := flag.Arg(1)
 		value0 := argvalue0
-		fmt.Print(client.GetProfilesByUserId(value0))
+		fmt.Print(client.GetProfilesByUserID(value0))
 		fmt.Print("\n")
 		break
 	case "GetProfilesByCategory":
@@ -221,7 +221,7 @@ func main() {
 			Usage()
 			return
 		}
-		argvalue0 := containerStruct0.OptionMmap
+		argvalue0 := containerStruct0.OptionMap
 		value0 := argvalue0
 		arg32 := flag.Arg(2)
 		mbTrans33 := thrift.NewTMemoryBufferLen(len(arg32))
@@ -239,7 +239,7 @@ func main() {
 			Usage()
 			return
 		}
-		argvalue1 := containerStruct1.KeyMmap
+		argvalue1 := containerStruct1.KeyMap
 		value1 := argvalue1
 		argvalue2, err38 := (strconv.ParseInt(flag.Arg(3), 10, 64))
 		if err38 != nil {

@@ -13,27 +13,27 @@ func (tb thriftBinding) Ping() (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) GetProfile(profile_id string) (string, error) {
-	r := tb.ProfileService.GetProfile(profile_id)
+func (tb thriftBinding) GetProfile(profileID string) (string, error) {
+	r := tb.ProfileService.GetProfile(profileID)
 	return r, nil
 }
 
-func (tb thriftBinding) GetProfilesByUserId(user_id string) (string, error) {
-	r := tb.ProfileService.GetProfilesByUserId(user_id)
+func (tb thriftBinding) GetProfilesByUserID(userID string) (string, error) {
+	r := tb.ProfileService.GetProfilesByUserID(userID)
 	return r, nil
 }
 
-func (tb thriftBinding) GetProfilesByCategory(category_id int64, timestamp int64, pagesize int64) (string, error) {
-	r := tb.ProfileService.GetProfilesByCategory(category_id, timestamp, pagesize)
+func (tb thriftBinding) GetProfilesByCategory(categoryID int64, timestamp int64, pagesize int64) (string, error) {
+	r := tb.ProfileService.GetProfilesByCategory(categoryID, timestamp, pagesize)
 	return r, nil
 }
 
-func (tb thriftBinding) GetProfilesBySubCategory(subcategory_id int64, timestamp int64, pagesize int64) (string, error) {
-	r := tb.ProfileService.GetProfilesBySubCategory(subcategory_id, timestamp, pagesize)
+func (tb thriftBinding) GetProfilesBySubCategory(subcategoryID int64, timestamp int64, pagesize int64) (string, error) {
+	r := tb.ProfileService.GetProfilesBySubCategory(subcategoryID, timestamp, pagesize)
 	return r, nil
 }
 
-func (tb thriftBinding) SearchProfiles(option_mmap map[string]int64, key_mmap map[string]string, timestamp int64, pagesize int64) (string, error) {
-	r := tb.ProfileService.SearchProfiles(option_mmap, key_mmap, timestamp, pagesize)
+func (tb thriftBinding) SearchProfiles(optionMap map[string]int64, keyMap map[string]string, timestamp int64, pagesize int64) (string, error) {
+	r := tb.ProfileService.SearchProfiles(optionMap, keyMap, timestamp, pagesize)
 	return r, nil
 }

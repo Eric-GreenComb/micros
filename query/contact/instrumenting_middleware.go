@@ -9,60 +9,74 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.ContactService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.ContactService
 }
 
-func (m instrumentingMiddleware) Ping() (v string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.ContactService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) GetContactTpl(tplname string) (v string) {
+func (mw instrumentingMiddleware) GetContactTpl(tplname string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetContactTpl"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetContactTpl", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.ContactService.GetContactTpl(tplname)
+
+	r = mw.next.GetContactTpl(tplname)
 	return
 }
 
-func (m instrumentingMiddleware) GetContact(contactid string) (v string) {
+func (mw instrumentingMiddleware) GetContact(contactid string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetContact"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetContact", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.ContactService.GetContact(contactid)
+
+	r = mw.next.GetContact(contactid)
 	return
 }
 
-func (m instrumentingMiddleware) GetContactSignStatus(contactid string) (v string) {
+func (mw instrumentingMiddleware) GetContactSignStatus(contactid string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetContactSignStatus"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetContactSignStatus", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.ContactService.GetContactSignStatus(contactid)
+
+	r = mw.next.GetContactSignStatus(contactid)
 	return
 }
 
-func (m instrumentingMiddleware) GetClientContact(clientemail string) (v string) {
+func (mw instrumentingMiddleware) GetClientContact(clientemail string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetClientContact"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetClientContact", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.ContactService.GetClientContact(clientemail)
+
+	r = mw.next.GetClientContact(clientemail)
 	return
 }
 
-func (m instrumentingMiddleware) GetFreelancerContact(freelanceremail string) (v string) {
+func (mw instrumentingMiddleware) GetFreelancerContact(freelanceremail string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetFreelancerContact"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetFreelancerContact", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.ContactService.GetFreelancerContact(freelanceremail)
+
+	r = mw.next.GetFreelancerContact(freelanceremail)
 	return
 }
