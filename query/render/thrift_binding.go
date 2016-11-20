@@ -13,7 +13,7 @@ func (tb thriftBinding) Ping() (string, error) {
 	return v, nil
 }
 
-func (tb thriftBinding) RenderTpl(tplname string, key_mmap map[string]string) (string, error) {
-	v := tb.RenderService.RenderTpl(tplname, key_mmap)
+func (tb thriftBinding) RenderTpl(tplname string, keyMap map[string]string) (string, error) {
+	v := tb.RenderService.RenderTpl(tplname, keyMap)
 	return v, nil
 }

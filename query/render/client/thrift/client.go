@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) RenderTpl(tplname string, key_mmap map[string]string) string {
-	reply, err := c.RenderServiceClient.RenderTpl(tplname, key_mmap)
+func (c client) RenderTpl(tplname string, keyMap map[string]string) string {
+	reply, err := c.RenderServiceClient.RenderTpl(tplname, keyMap)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

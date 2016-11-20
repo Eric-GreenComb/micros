@@ -21,7 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string RenderTpl(string tplname,  key_mmap)")
+	fmt.Fprintln(os.Stderr, "  string RenderTpl(string tplname,  keyMap)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -147,7 +147,7 @@ func main() {
 			Usage()
 			return
 		}
-		argvalue1 := containerStruct1.KeyMmap
+		argvalue1 := containerStruct1.KeyMap
 		value1 := argvalue1
 		fmt.Print(client.RenderTpl(value0, value1))
 		fmt.Print("\n")

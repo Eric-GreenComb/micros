@@ -13,28 +13,28 @@ type loggingMiddleware struct {
 	log.Logger
 }
 
-func (m loggingMiddleware) Ping() (v string) {
+func (m loggingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "Ping",
-			"v", v,
+			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	v = m.RenderService.Ping()
+	r = m.RenderService.Ping()
 	return
 }
 
-func (m loggingMiddleware) RenderTpl(tplname string, key_mmap map[string]string) (v string) {
+func (m loggingMiddleware) RenderTpl(tplname string, keyMap map[string]string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "RenderTpl",
 			"tplname", tplname,
-			"key_mmap", key_mmap,
-			"v", v,
+			"keyMap", keyMap,
+			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	v = m.RenderService.RenderTpl(tplname, key_mmap)
+	r = m.RenderService.RenderTpl(tplname, keyMap)
 	return
 }

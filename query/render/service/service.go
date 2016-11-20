@@ -8,5 +8,5 @@ type RenderService interface {
 	// Parameters:
 	//  - Tplname
 	//  - KeyMmap
-	RenderTpl(tplname string, key_mmap map[string]string) string
+	RenderTpl(tplname string, keyMap map[string]string) string
 }

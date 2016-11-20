@@ -9,24 +9,30 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.RenderService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.RenderService
 }
 
-func (m instrumentingMiddleware) Ping() (v string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.RenderService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) RenderTpl(tplname string, key_mmap map[string]string) (v string) {
+func (mw instrumentingMiddleware) RenderTpl(tplname string, keyMap map[string]string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "RenderTpl"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "RenderTpl", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.RenderService.RenderTpl(tplname, key_mmap)
+
+	r = mw.next.RenderTpl(tplname, keyMap)
 	return
 }

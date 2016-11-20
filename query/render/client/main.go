@@ -34,7 +34,7 @@ func main() {
 	}
 
 	_instances := strings.Split(*thriftAddr, ",")
-	_instances_random_index := banerwaicrypto.GetRandomItNum(len(_instances))
+	_instancesRandomIndex := banerwaicrypto.GetRandomItNum(len(_instances))
 
 	method, s1 := flag.Arg(0), flag.Arg(1)
 
@@ -67,7 +67,7 @@ func main() {
 	if *thriftFramed {
 		transportFactory = thrift.NewTFramedTransportFactory(transportFactory)
 	}
-	transportSocket, err := thrift.NewTSocket(_instances[_instances_random_index])
+	transportSocket, err := thrift.NewTSocket(_instances[_instancesRandomIndex])
 	if err != nil {
 		logger.Log("during", "thrift.NewTSocket", "err", err)
 		os.Exit(1)
@@ -90,10 +90,10 @@ func main() {
 
 	case "render":
 		_tplname := s1
-		_map_parse := make(map[string]string)
-		_map_parse["Hi"] = "Hello"
-		_map_parse["Name"] = "Eric"
-		v := svc.RenderTpl(_tplname, _map_parse)
+		_mapParse := make(map[string]string)
+		_mapParse["Hi"] = "Hello"
+		_mapParse["Name"] = "Eric"
+		v := svc.RenderTpl(_tplname, _mapParse)
 		fmt.Println(v)
 		logger.Log("method", "Render", "took", time.Since(begin))
 

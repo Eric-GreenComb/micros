@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"sync"
 
-	"github.com/banerwai/global"
+	"github.com/banerwai/global/constant"
 	"github.com/banerwai/gommon/etcd"
 	"github.com/banerwai/micros/query/render/service"
 )
@@ -21,13 +21,13 @@ func newInmemService() service.RenderService {
 	}
 }
 
-func (self *inmemService) Ping() string {
+func (ims *inmemService) Ping() string {
 	return "pong"
 }
 
-func (self *inmemService) RenderTpl(tplname string, key_mmap map[string]string) string {
+func (ims *inmemService) RenderTpl(tplname string, keyMap map[string]string) string {
 
-	_tpl, err := self.cachedTpl(tplname)
+	_tpl, err := ims.cachedTpl(tplname)
 	if err != nil {
 		return ""
 	}
@@ -36,34 +36,34 @@ func (self *inmemService) RenderTpl(tplname string, key_mmap map[string]string) 
 
 	b := bytes.NewBuffer(make([]byte, 0))
 
-	err = tpl.Execute(b, key_mmap)
+	err = tpl.Execute(b, keyMap)
 	if err != nil {
 		return ""
 	}
 	return b.String()
 }
 
-func (self *inmemService) cachedTpl(tplname string) (string, error) {
-	self.mtx.RLock()
-	defer self.mtx.RUnlock()
+func (ims *inmemService) cachedTpl(tplname string) (string, error) {
+	ims.mtx.RLock()
+	defer ims.mtx.RUnlock()
 
-	v, ok := self.m[tplname]
+	v, ok := ims.m[tplname]
 	if ok {
 		return v, nil
 	}
 
-	_tpl, _err := self.getTplFromEtcd(tplname)
+	_tpl, _err := ims.getTplFromEtcd(tplname)
 	if _err != nil {
 		return "", _err
 	}
 
-	self.m[tplname] = _tpl
+	ims.m[tplname] = _tpl
 
 	return _tpl, nil
 }
 
-func (self *inmemService) getTplFromEtcd(tplname string) (string, error) {
-	_key := global.ETCD_KEY_TPL_WEB + tplname
+func (ims *inmemService) getTplFromEtcd(tplname string) (string, error) {
+	_key := constant.EtcdKeyTplWeb + tplname
 	_tpl, _err := etcd.GetValue(_key)
 	if _err != nil {
 		return "", _err

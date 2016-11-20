@@ -18,8 +18,8 @@ type RenderService interface {
 	Ping() (r string, err error)
 	// Parameters:
 	//  - Tplname
-	//  - KeyMmap
-	RenderTpl(tplname string, key_mmap map[string]string) (r string, err error)
+	//  - KeyMap
+	RenderTpl(tplname string, keyMap map[string]string) (r string, err error)
 }
 
 type RenderServiceClient struct {
@@ -123,15 +123,15 @@ func (p *RenderServiceClient) recvPing() (value string, err error) {
 
 // Parameters:
 //  - Tplname
-//  - KeyMmap
-func (p *RenderServiceClient) RenderTpl(tplname string, key_mmap map[string]string) (r string, err error) {
-	if err = p.sendRenderTpl(tplname, key_mmap); err != nil {
+//  - KeyMap
+func (p *RenderServiceClient) RenderTpl(tplname string, keyMap map[string]string) (r string, err error) {
+	if err = p.sendRenderTpl(tplname, keyMap); err != nil {
 		return
 	}
 	return p.recvRenderTpl()
 }
 
-func (p *RenderServiceClient) sendRenderTpl(tplname string, key_mmap map[string]string) (err error) {
+func (p *RenderServiceClient) sendRenderTpl(tplname string, keyMap map[string]string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -143,7 +143,7 @@ func (p *RenderServiceClient) sendRenderTpl(tplname string, key_mmap map[string]
 	}
 	args := RenderServiceRenderTplArgs{
 		Tplname: tplname,
-		KeyMmap: key_mmap,
+		KeyMap:  keyMap,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -313,7 +313,7 @@ func (p *renderServiceProcessorRenderTpl) Process(seqId int32, iprot, oprot thri
 	result := RenderServiceRenderTplResult{}
 	var retval string
 	var err2 error
-	if retval, err2 = p.handler.RenderTpl(args.Tplname, args.KeyMmap); err2 != nil {
+	if retval, err2 = p.handler.RenderTpl(args.Tplname, args.KeyMap); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing RenderTpl: "+err2.Error())
 		oprot.WriteMessageBegin("RenderTpl", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
@@ -500,10 +500,10 @@ func (p *RenderServicePingResult) String() string {
 
 // Attributes:
 //  - Tplname
-//  - KeyMmap
+//  - KeyMap
 type RenderServiceRenderTplArgs struct {
 	Tplname string            `thrift:"tplname,1" json:"tplname"`
-	KeyMmap map[string]string `thrift:"key_mmap,2" json:"key_mmap"`
+	KeyMap  map[string]string `thrift:"keyMap,2" json:"keyMap"`
 }
 
 func NewRenderServiceRenderTplArgs() *RenderServiceRenderTplArgs {
@@ -514,8 +514,8 @@ func (p *RenderServiceRenderTplArgs) GetTplname() string {
 	return p.Tplname
 }
 
-func (p *RenderServiceRenderTplArgs) GetKeyMmap() map[string]string {
-	return p.KeyMmap
+func (p *RenderServiceRenderTplArgs) GetKeyMap() map[string]string {
+	return p.KeyMap
 }
 func (p *RenderServiceRenderTplArgs) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
@@ -569,7 +569,7 @@ func (p *RenderServiceRenderTplArgs) readField2(iprot thrift.TProtocol) error {
 		return thrift.PrependError("error reading map begin: ", err)
 	}
 	tMap := make(map[string]string, size)
-	p.KeyMmap = tMap
+	p.KeyMap = tMap
 	for i := 0; i < size; i++ {
 		var _key6 string
 		if v, err := iprot.ReadString(); err != nil {
@@ -583,7 +583,7 @@ func (p *RenderServiceRenderTplArgs) readField2(iprot thrift.TProtocol) error {
 		} else {
 			_val7 = v
 		}
-		p.KeyMmap[_key6] = _val7
+		p.KeyMap[_key6] = _val7
 	}
 	if err := iprot.ReadMapEnd(); err != nil {
 		return thrift.PrependError("error reading map end: ", err)
@@ -624,13 +624,13 @@ func (p *RenderServiceRenderTplArgs) writeField1(oprot thrift.TProtocol) (err er
 }
 
 func (p *RenderServiceRenderTplArgs) writeField2(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("key_mmap", thrift.MAP, 2); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:key_mmap: ", p), err)
+	if err := oprot.WriteFieldBegin("keyMap", thrift.MAP, 2); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:keyMap: ", p), err)
 	}
-	if err := oprot.WriteMapBegin(thrift.STRING, thrift.STRING, len(p.KeyMmap)); err != nil {
+	if err := oprot.WriteMapBegin(thrift.STRING, thrift.STRING, len(p.KeyMap)); err != nil {
 		return thrift.PrependError("error writing map begin: ", err)
 	}
-	for k, v := range p.KeyMmap {
+	for k, v := range p.KeyMap {
 		if err := oprot.WriteString(string(k)); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T. (0) field write error: ", p), err)
 		}
@@ -642,7 +642,7 @@ func (p *RenderServiceRenderTplArgs) writeField2(oprot thrift.TProtocol) (err er
 		return thrift.PrependError("error writing map end: ", err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:key_mmap: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 2:keyMap: ", p), err)
 	}
 	return err
 }
