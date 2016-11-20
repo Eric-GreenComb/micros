@@ -26,8 +26,8 @@ func (c client) Ping() string {
 	return reply
 }
 
-func (c client) GetResume(userid string) string {
-	reply, err := c.ResumeServiceClient.GetResume(userid)
+func (c client) GetResume(userID string) string {
+	reply, err := c.ResumeServiceClient.GetResume(userID)
 	if err != nil {
 		c.Logger.Log("err", err)
 		return ""

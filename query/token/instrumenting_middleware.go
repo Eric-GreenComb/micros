@@ -9,24 +9,30 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.TokenService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.TokenService
 }
 
-func (m instrumentingMiddleware) Ping() (v string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.TokenService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) VerifyToken(key string, ttype int64, overhour float64) (v int64) {
+func (mw instrumentingMiddleware) VerifyToken(key string, ttype int64, overhour float64) (r int64) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "VerifyToken"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "VerifyToken", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	v = m.TokenService.VerifyToken(key, ttype, overhour)
+
+	r = mw.next.VerifyToken(key, ttype, overhour)
 	return
 }

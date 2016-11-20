@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/banerwai/micros/query/token/service"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type inmemService struct {
@@ -14,7 +14,7 @@ func newInmemService() service.TokenService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() string {
+func (ims *inmemService) Ping() string {
 	return "pong"
 }
 
@@ -23,17 +23,17 @@ func (self *inmemService) Ping() string {
 // return -3 db error
 // return 1 验证pass
 
-func (self *inmemService) VerifyToken(key string, ttype int64, overhour float64) int64 {
+func (ims *inmemService) VerifyToken(key string, ttype int64, overhour float64) int64 {
 
-	var _bson_m bson.M
-	err := TokenCollection.Find(bson.M{"key": key, "type": ttype}).One(&_bson_m)
+	var _bsonM bson.M
+	err := TokenCollection.Find(bson.M{"key": key, "type": ttype}).One(&_bsonM)
 
 	if err != nil {
 		return -1
 	}
 
 	// 验证是否过时
-	_token := _bson_m["createdtime"]
+	_token := _bsonM["createdtime"]
 	_duration := time.Now().Sub(_token.(time.Time))
 	if _duration.Hours() > overhour {
 		return -2

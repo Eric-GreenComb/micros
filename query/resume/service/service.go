@@ -7,5 +7,5 @@ type ResumeService interface {
 	Ping() string
 	// Parameters:
 	//  - Userid
-	GetResume(userid string) string
+	GetResume(userID string) string
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 
 	"github.com/banerwai/micros/query/resume/service"
 )
@@ -13,23 +13,23 @@ func newInmemService() service.ResumeService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() (r string) {
+func (ims *inmemService) Ping() (r string) {
 	r = "pong"
 	return
 }
 
-func (self *inmemService) GetResume(userid string) (r string) {
-	if !bson.IsObjectIdHex(userid) {
+func (ims *inmemService) GetResume(userID string) (r string) {
+	if !bson.IsObjectIdHex(userID) {
 		return ""
 	}
-	var _bson_m bson.M
-	err := ResumeCollection.Find(bson.M{"userid": bson.ObjectIdHex(userid)}).One(&_bson_m)
+	var _bsonM bson.M
+	err := ResumeCollection.Find(bson.M{"userid": bson.ObjectIdHex(userID)}).One(&_bsonM)
 
 	if err != nil {
 		return ""
 	}
 
-	_data, _err := bson.Marshal(_bson_m)
+	_data, _err := bson.Marshal(_bsonM)
 	if _err != nil {
 		return ""
 	}

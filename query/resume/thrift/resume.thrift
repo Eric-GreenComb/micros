@@ -1,5 +1,5 @@
 
 service ResumeService {
     string Ping()
-	string GetResume(1: string userid)
+	string GetResume(1: string userID)
 }

@@ -13,7 +13,7 @@ func (tb thriftBinding) Ping() (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) GetResume(userid string) (string, error) {
-	r := tb.ResumeService.GetResume(userid)
+func (tb thriftBinding) GetResume(userID string) (string, error) {
+	r := tb.ResumeService.GetResume(userID)
 	return r, nil
 }

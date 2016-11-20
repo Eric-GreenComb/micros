@@ -21,7 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  string GetResume(string userid)")
+	fmt.Fprintln(os.Stderr, "  string GetResume(string userID)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
