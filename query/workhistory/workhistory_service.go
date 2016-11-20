@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/banerwai/micros/query/workhistory/service"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type inmemService struct {
