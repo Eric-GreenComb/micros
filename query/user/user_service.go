@@ -1,7 +1,7 @@
 package main
 
 import (
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 
 	"github.com/banerwai/micros/query/user/service"
 )
@@ -13,19 +13,19 @@ func newInmemService() service.UserService {
 	return &inmemService{}
 }
 
-func (self *inmemService) Ping() string {
+func (ims *inmemService) Ping() string {
 	return "pong"
 }
 
-func (self *inmemService) GetUserByEmail(email string) (r string) {
-	var _bson_m bson.M
-	err := UsersCollection.Find(bson.M{"email": email}).One(&_bson_m)
+func (ims *inmemService) GetUserByEmail(email string) (r string) {
+	var _bsonM bson.M
+	err := UsersCollection.Find(bson.M{"email": email}).One(&_bsonM)
 
 	if err != nil {
 		return ""
 	}
 
-	_data, _err := bson.Marshal(_bson_m)
+	_data, _err := bson.Marshal(_bsonM)
 	if _err != nil {
 		return ""
 	}
@@ -34,18 +34,18 @@ func (self *inmemService) GetUserByEmail(email string) (r string) {
 	return
 }
 
-func (self *inmemService) GetUserByID(id string) (r string) {
-	if !bson.IsObjectIdHex(id) {
+func (ims *inmemService) GetUserByID(ID string) (r string) {
+	if !bson.IsObjectIdHex(ID) {
 		return ""
 	}
-	var _bson_m bson.M
-	err := UsersCollection.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&_bson_m)
+	var _bsonM bson.M
+	err := UsersCollection.Find(bson.M{"_id": bson.ObjectIdHex(ID)}).One(&_bsonM)
 
 	if err != nil {
 		return ""
 	}
 
-	_data, _err := bson.Marshal(_bson_m)
+	_data, _err := bson.Marshal(_bsonM)
 	if _err != nil {
 		return ""
 	}
@@ -54,6 +54,6 @@ func (self *inmemService) GetUserByID(id string) (r string) {
 	return
 }
 
-func (self *inmemService) CountUser() int64 {
+func (ims *inmemService) CountUser() int64 {
 	return 100
 }

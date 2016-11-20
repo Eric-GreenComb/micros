@@ -18,8 +18,8 @@ func (tb thriftBinding) GetUserByEmail(email string) (string, error) {
 	return r, nil
 }
 
-func (tb thriftBinding) GetUserByID(id string) (string, error) {
-	r := tb.UserService.GetUserByID(id)
+func (tb thriftBinding) GetUserByID(ID string) (string, error) {
+	r := tb.UserService.GetUserByID(ID)
 	return r, nil
 }
 

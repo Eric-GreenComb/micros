@@ -22,7 +22,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
 	fmt.Fprintln(os.Stderr, "  string GetUserByEmail(string email)")
-	fmt.Fprintln(os.Stderr, "  string GetUserByID(string id)")
+	fmt.Fprintln(os.Stderr, "  string GetUserByID(string ID)")
 	fmt.Fprintln(os.Stderr, "  i64 CountUser()")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)

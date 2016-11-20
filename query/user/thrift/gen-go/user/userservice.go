@@ -21,7 +21,7 @@ type UserService interface {
 	GetUserByEmail(email string) (r string, err error)
 	// Parameters:
 	//  - ID
-	GetUserByID(id string) (r string, err error)
+	GetUserByID(ID string) (r string, err error)
 	CountUser() (r int64, err error)
 }
 
@@ -203,14 +203,14 @@ func (p *UserServiceClient) recvGetUserByEmail() (value string, err error) {
 
 // Parameters:
 //  - ID
-func (p *UserServiceClient) GetUserByID(id string) (r string, err error) {
-	if err = p.sendGetUserByID(id); err != nil {
+func (p *UserServiceClient) GetUserByID(ID string) (r string, err error) {
+	if err = p.sendGetUserByID(ID); err != nil {
 		return
 	}
 	return p.recvGetUserByID()
 }
 
-func (p *UserServiceClient) sendGetUserByID(id string) (err error) {
+func (p *UserServiceClient) sendGetUserByID(ID string) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -221,7 +221,7 @@ func (p *UserServiceClient) sendGetUserByID(id string) (err error) {
 		return
 	}
 	args := UserServiceGetUserByIDArgs{
-		ID: id,
+		ID: ID,
 	}
 	if err = args.Write(oprot); err != nil {
 		return
@@ -943,7 +943,7 @@ func (p *UserServiceGetUserByEmailResult) String() string {
 // Attributes:
 //  - ID
 type UserServiceGetUserByIDArgs struct {
-	ID string `thrift:"id,1" json:"id"`
+	ID string `thrift:"ID,1" json:"ID"`
 }
 
 func NewUserServiceGetUserByIDArgs() *UserServiceGetUserByIDArgs {
@@ -1012,14 +1012,14 @@ func (p *UserServiceGetUserByIDArgs) Write(oprot thrift.TProtocol) error {
 }
 
 func (p *UserServiceGetUserByIDArgs) writeField1(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("id", thrift.STRING, 1); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:id: ", p), err)
+	if err := oprot.WriteFieldBegin("ID", thrift.STRING, 1); err != nil {
+		return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:ID: ", p), err)
 	}
 	if err := oprot.WriteString(string(p.ID)); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T.id (1) field write error: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T.ID (1) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {
-		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:id: ", p), err)
+		return thrift.PrependError(fmt.Sprintf("%T write field end error 1:ID: ", p), err)
 	}
 	return err
 }

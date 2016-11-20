@@ -9,42 +9,52 @@ import (
 )
 
 type instrumentingMiddleware struct {
-	service.UserService
-	requestDuration metrics.TimeHistogram
+	requestCount   metrics.Counter
+	requestLatency metrics.Histogram
+	countResult    metrics.Histogram
+	next           service.UserService
 }
 
-func (m instrumentingMiddleware) Ping() (r string) {
+func (mw instrumentingMiddleware) Ping() (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "Ping"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "Ping", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.UserService.Ping()
+
+	r = mw.next.Ping()
 	return
 }
 
-func (m instrumentingMiddleware) GetUserByEmail(email string) (r string) {
+func (mw instrumentingMiddleware) GetUserByEmail(email string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetUserByEmail"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetUserByEmail", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.UserService.GetUserByEmail(email)
+
+	r = mw.next.GetUserByEmail(email)
 	return
 }
 
-func (m instrumentingMiddleware) GetUserByID(id string) (r string) {
+func (mw instrumentingMiddleware) GetUserByID(ID string) (r string) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "GetUserByID"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "GetUserByID", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.UserService.GetUserByID(id)
+
+	r = mw.next.GetUserByID(ID)
 	return
 }
 
-func (m instrumentingMiddleware) CountUser() (r int64) {
+func (mw instrumentingMiddleware) CountUser() (r int64) {
 	defer func(begin time.Time) {
-		methodField := metrics.Field{Key: "method", Value: "CountUser"}
-		m.requestDuration.With(methodField).Observe(time.Since(begin))
+		lvs := []string{"method", "CountUser", "error", "false"}
+		mw.requestCount.With(lvs...).Add(1)
+		mw.requestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	r = m.UserService.CountUser()
+
+	r = mw.next.CountUser()
 	return
 }

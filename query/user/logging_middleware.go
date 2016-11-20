@@ -38,16 +38,16 @@ func (m loggingMiddleware) GetUserByEmail(email string) (r string) {
 	return
 }
 
-func (m loggingMiddleware) GetUserByID(id string) (r string) {
+func (m loggingMiddleware) GetUserByID(ID string) (r string) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "GetUserByID",
-			"id", id,
+			"ID", ID,
 			"r", r,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
-	r = m.UserService.GetUserByID(id)
+	r = m.UserService.GetUserByID(ID)
 	return
 }
 
