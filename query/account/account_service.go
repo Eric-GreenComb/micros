@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"gopkg.in/mgo.v2/bson"
-	"time"
 
 	"github.com/banerwai/global/bean"
 	"github.com/banerwai/global/constant"
@@ -57,11 +56,14 @@ func (ims *inmemService) GetBillingByID(ID string) (r string) {
 }
 
 func (ims *inmemService) GetDealBillingByUserID(userID string, timestamp int64, pagesize int64) (r string) {
+	if !bson.IsObjectIdHex(userID) {
+		return ""
+	}
 	var _objs []bean.Billing
 
-	query := bson.M{"createdtime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	query := bson.M{"createdtime": bson.M{"$lt": timestamp}}
 	query["status"] = constant.BillingStatusDeal
-	query["user_id"] = userID
+	query["user_id"] = bson.ObjectIdHex(userID)
 
 	err := BillingCollection.Find(query).Sort("-createdtime").Limit(int(pagesize)).All(&_objs)
 
@@ -75,10 +77,13 @@ func (ims *inmemService) GetDealBillingByUserID(userID string, timestamp int64, 
 }
 
 func (ims *inmemService) GetBillingByUserID(userID string, timestamp int64, pagesize int64) (r string) {
+	if !bson.IsObjectIdHex(userID) {
+		return ""
+	}
 	var _objs []bean.Billing
 
-	query := bson.M{"createdtime": bson.M{"$lt": time.Unix(timestamp, 0)}}
-	query["user_id"] = userID
+	query := bson.M{"createdtime": bson.M{"$lt": timestamp}}
+	query["user_id"] = bson.ObjectIdHex(userID)
 
 	err := BillingCollection.Find(query).Sort("-createdtime").Limit(int(pagesize)).All(&_objs)
 

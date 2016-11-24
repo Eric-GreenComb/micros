@@ -116,28 +116,31 @@ func main() {
 		for _, _prof := range _profiles {
 			fmt.Println(_prof.JobTitle, _prof.SerialNumber)
 		}
-		logger.Log("method", "GetProfilesByUserId", "took", time.Since(begin))
+		logger.Log("method", "GetProfilesByCategory", "took", time.Since(begin))
 
 	case "subcat":
 		_subcatID, _ := strconv.ParseInt(s1, 10, 64)
-		v := svc.GetProfilesBySubCategory(_subcatID, 1464785330, banerwaiglobal.DefaultPageSize)
+		v := svc.GetProfilesBySubCategory(_subcatID, time.Now().Unix(), banerwaiglobal.DefaultPageSize)
 		var _profiles []bean.Profile
 		json.Unmarshal([]byte(v), &_profiles)
+		fmt.Println(v)
+		fmt.Println(len(_profiles))
 		for _, _prof := range _profiles {
-			fmt.Println(_prof.SerialNumber, _prof.LastActiveTime.Unix())
+			fmt.Println(_prof.SerialNumber, _prof.LastActiveTime)
 		}
-		logger.Log("method", "GetProfilesByUserId", "took", time.Since(begin))
+		logger.Log("method", "GetProfilesBySubCategory", "took", time.Since(begin))
 
 	case "search":
 		_key := s1
 
 		optionMap := make(map[string]int64)
 
-		optionMap["freelancer_type"] = 0
-		optionMap["job_success"] = 0
+		// optionMap["freelancer_type"] = 0
+		// optionMap["job_success"] = 0
+		optionMap["serial_number"] = 10101
 
 		keyMap := make(map[string]string)
-		keyMap["job_title"] = _key
+		keyMap["overview"] = _key
 
 		v := svc.SearchProfiles(optionMap, keyMap, time.Now().Unix(), banerwaiglobal.DefaultPageSize)
 

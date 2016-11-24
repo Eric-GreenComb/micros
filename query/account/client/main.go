@@ -110,7 +110,9 @@ func main() {
 
 	case "deal":
 		_userID := s1
-		v := svc.GetDealBillingByUserID(_userID, time.Now().Unix(), banerwaiglobal.DefaultPageSize)
+		_timestamp := time.Now().Unix()
+		fmt.Println(_timestamp)
+		v := svc.GetDealBillingByUserID(_userID, _timestamp, banerwaiglobal.DefaultPageSize)
 		var _billings []bean.Billing
 		json.Unmarshal([]byte(v), &_billings)
 		for _, _billing := range _billings {

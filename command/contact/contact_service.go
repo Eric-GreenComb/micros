@@ -29,10 +29,10 @@ func (ims *inmemService) CreateContact(jsonContact string) (r string) {
 	}
 	_contact.ID = bson.NewObjectId()
 
-	_time := time.Now()
+	_timestamp := time.Now().Unix()
 
-	_contact.CreatedTime = _time
-	_contact.DealedTime = _time
+	_contact.CreatedTime = _timestamp
+	_contact.DealedTime = _timestamp
 
 	_contact.ClientSignup = false
 	_contact.FreelancerSignup = false
@@ -93,7 +93,7 @@ func (ims *inmemService) DealContact(contactID string, status bool) (r string) {
 	_mongoM["client_signup"] = true
 	_mongoM["freelancer_signup"] = true
 	_mongoM["dealed"] = true
-	_mongoM["dealedtime"] = time.Now()
+	_mongoM["dealedtime"] = time.Now().Unix()
 
 	_err := ContactCollection.Update(bson.M{"_id": bson.ObjectIdHex(contactID)}, bson.M{"$set": _mongoM})
 	if nil != _err {

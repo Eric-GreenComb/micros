@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"gopkg.in/mgo.v2/bson"
 	"strings"
-	"time"
 
 	"github.com/banerwai/global/bean"
 	"github.com/banerwai/micros/query/profile/service"
@@ -59,7 +58,7 @@ func (ims *inmemService) GetProfilesByUserID(userID string) (r string) {
 func (ims *inmemService) GetProfilesByCategory(categoryID int64, timestamp int64, pagesize int64) (r string) {
 	var _profiles []bean.Profile
 
-	query := bson.M{"last_activetime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	query := bson.M{"last_activetime": bson.M{"$lt": timestamp}}
 	query["status"] = true
 	query["category_number"] = categoryID
 
@@ -71,13 +70,14 @@ func (ims *inmemService) GetProfilesByCategory(categoryID int64, timestamp int64
 
 	b, _ := json.Marshal(_profiles)
 	r = string(b)
+
 	return
 }
 
 func (ims *inmemService) GetProfilesBySubCategory(subcategoryID int64, timestamp int64, pagesize int64) (r string) {
 	var _profiles []bean.Profile
 
-	query := bson.M{"last_activetime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	query := bson.M{"last_activetime": bson.M{"$lt": timestamp}}
 	query["status"] = true
 	query["serial_number"] = subcategoryID
 
@@ -114,7 +114,7 @@ func (ims *inmemService) searchProfile(q interface{}, pagesize int64) (r string)
 
 //	query := bson.M{"serial_number": ...}
 func (ims *inmemService) genQuery(optionMap map[string]int64, keyMap map[string]string, timestamp int64) interface{} {
-	query := bson.M{"last_activetime": bson.M{"$lt": time.Unix(timestamp, 0)}}
+	query := bson.M{"last_activetime": bson.M{"$lt": timestamp}}
 	query["status"] = true
 	// query := bson.M{}
 
