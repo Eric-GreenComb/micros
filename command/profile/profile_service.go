@@ -29,7 +29,7 @@ func (ims *inmemService) AddProfile(jsonProfile string) (r string) {
 	}
 	_profile.ID = bson.NewObjectId()
 
-	_time := time.Now().Unix()
+	_time := time.Now().UnixNano()
 
 	_profile.CreatedTime = _time
 	_profile.LastActiveTime = _time

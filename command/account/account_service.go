@@ -30,7 +30,7 @@ func (ims *inmemService) CreateAccount(jsonAccount string) (r string) {
 	}
 	_account.ID = bson.NewObjectId()
 
-	_account.CreatedTime = time.Now().Unix()
+	_account.CreatedTime = time.Now().UnixNano()
 
 	_err := AccountCollection.Insert(_account)
 	if _err != nil {
@@ -47,7 +47,7 @@ func (ims *inmemService) CreateBilling(jsonBilling string) (r string) {
 	}
 	_billing.ID = bson.NewObjectId()
 
-	_billing.CreatedTime = time.Now().Unix()
+	_billing.CreatedTime = time.Now().UnixNano()
 	_billing.Status = constant.BillingStatusCreate
 
 	_err := BillingCollection.Insert(_billing)

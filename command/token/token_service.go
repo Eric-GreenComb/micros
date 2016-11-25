@@ -27,7 +27,7 @@ func (ims *inmemService) CreateToken(key string, ttype int64) string {
 	_mongoM["key"] = key
 	_mongoM["token"] = _uuid
 	_mongoM["type"] = ttype
-	_mongoM["createdtime"] = time.Now().Unix()
+	_mongoM["createdtime"] = time.Now().UnixNano()
 
 	_, _err := TokenCollection.Upsert(bson.M{"key": key, "type": ttype}, _mongoM)
 	if _err != nil {

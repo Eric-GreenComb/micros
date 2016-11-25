@@ -56,7 +56,7 @@ func (ims *inmemService) CreateUser(mmap map[string]string) (r string) {
 		}
 	}
 
-	_time := time.Now().Unix()
+	_time := time.Now().UnixNano()
 
 	_id := bson.NewObjectId()
 	_mongoM["_id"] = _id
@@ -77,7 +77,7 @@ func (ims *inmemService) createAccount(userID bson.ObjectId, email string) error
 	var _account bean.Account
 	_account.UserID = userID
 	_account.Email = email
-	_account.CreatedTime = time.Now().Unix()
+	_account.CreatedTime = time.Now().UnixNano()
 
 	var _lsMultiCurrencyAccount []bean.MultiCurrencyAccount
 
