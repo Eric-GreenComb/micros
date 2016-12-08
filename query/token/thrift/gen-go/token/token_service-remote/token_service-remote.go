@@ -21,7 +21,7 @@ func Usage() {
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
 	fmt.Fprintln(os.Stderr, "  string Ping()")
-	fmt.Fprintln(os.Stderr, "  i64 VerifyToken(string token, i64 ttype, double overhour)")
+	fmt.Fprintln(os.Stderr, "  i64 VerifyToken(string token, i64 ttype, i64 overhour)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -137,7 +137,7 @@ func main() {
 			return
 		}
 		value1 := argvalue1
-		argvalue2, err8 := (strconv.ParseFloat(flag.Arg(3), 64))
+		argvalue2, err8 := (strconv.ParseInt(flag.Arg(3), 10, 64))
 		if err8 != nil {
 			Usage()
 			return

@@ -23,7 +23,7 @@ func (ims *inmemService) Ping() string {
 // return -3 db error
 // return 1 验证pass
 
-func (ims *inmemService) VerifyToken(key string, ttype int64, overhour float64) int64 {
+func (ims *inmemService) VerifyToken(key string, ttype int64, overhour int64) int64 {
 
 	var _bsonM bson.M
 	err := TokenCollection.Find(bson.M{"key": key, "type": ttype}).One(&_bsonM)
@@ -34,8 +34,13 @@ func (ims *inmemService) VerifyToken(key string, ttype int64, overhour float64) 
 
 	// 验证是否过时
 	_token := _bsonM["createdtime"]
-	_duration := time.Now().Sub(_token.(time.Time))
-	if _duration.Hours() > overhour {
+	_iToken, _ok := _token.(int64)
+	if !_ok {
+		return -3
+	}
+
+	_duration := time.Now().Unix() - _iToken
+	if _duration > overhour {
 		return -2
 	}
 

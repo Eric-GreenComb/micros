@@ -26,7 +26,7 @@ func (mw instrumentingMiddleware) Ping() (r string) {
 	return
 }
 
-func (mw instrumentingMiddleware) VerifyToken(key string, ttype int64, overhour float64) (r int64) {
+func (mw instrumentingMiddleware) VerifyToken(key string, ttype int64, overhour int64) (r int64) {
 	defer func(begin time.Time) {
 		lvs := []string{"method", "VerifyToken", "error", "false"}
 		mw.requestCount.With(lvs...).Add(1)

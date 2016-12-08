@@ -20,7 +20,7 @@ type TokenService interface {
 	//  - Token
 	//  - Ttype
 	//  - Overhour
-	VerifyToken(token string, ttype int64, overhour float64) (r int64, err error)
+	VerifyToken(token string, ttype int64, overhour int64) (r int64, err error)
 }
 
 type TokenServiceClient struct {
@@ -126,14 +126,14 @@ func (p *TokenServiceClient) recvPing() (value string, err error) {
 //  - Token
 //  - Ttype
 //  - Overhour
-func (p *TokenServiceClient) VerifyToken(token string, ttype int64, overhour float64) (r int64, err error) {
+func (p *TokenServiceClient) VerifyToken(token string, ttype int64, overhour int64) (r int64, err error) {
 	if err = p.sendVerifyToken(token, ttype, overhour); err != nil {
 		return
 	}
 	return p.recvVerifyToken()
 }
 
-func (p *TokenServiceClient) sendVerifyToken(token string, ttype int64, overhour float64) (err error) {
+func (p *TokenServiceClient) sendVerifyToken(token string, ttype int64, overhour int64) (err error) {
 	oprot := p.OutputProtocol
 	if oprot == nil {
 		oprot = p.ProtocolFactory.GetProtocol(p.Transport)
@@ -506,9 +506,9 @@ func (p *TokenServicePingResult) String() string {
 //  - Ttype
 //  - Overhour
 type TokenServiceVerifyTokenArgs struct {
-	Token    string  `thrift:"token,1" json:"token"`
-	Ttype    int64   `thrift:"ttype,2" json:"ttype"`
-	Overhour float64 `thrift:"overhour,3" json:"overhour"`
+	Token    string `thrift:"token,1" json:"token"`
+	Ttype    int64  `thrift:"ttype,2" json:"ttype"`
+	Overhour int64  `thrift:"overhour,3" json:"overhour"`
 }
 
 func NewTokenServiceVerifyTokenArgs() *TokenServiceVerifyTokenArgs {
@@ -523,7 +523,7 @@ func (p *TokenServiceVerifyTokenArgs) GetTtype() int64 {
 	return p.Ttype
 }
 
-func (p *TokenServiceVerifyTokenArgs) GetOverhour() float64 {
+func (p *TokenServiceVerifyTokenArgs) GetOverhour() int64 {
 	return p.Overhour
 }
 func (p *TokenServiceVerifyTokenArgs) Read(iprot thrift.TProtocol) error {
@@ -586,7 +586,7 @@ func (p *TokenServiceVerifyTokenArgs) readField2(iprot thrift.TProtocol) error {
 }
 
 func (p *TokenServiceVerifyTokenArgs) readField3(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadDouble(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return thrift.PrependError("error reading field 3: ", err)
 	} else {
 		p.Overhour = v
@@ -643,10 +643,10 @@ func (p *TokenServiceVerifyTokenArgs) writeField2(oprot thrift.TProtocol) (err e
 }
 
 func (p *TokenServiceVerifyTokenArgs) writeField3(oprot thrift.TProtocol) (err error) {
-	if err := oprot.WriteFieldBegin("overhour", thrift.DOUBLE, 3); err != nil {
+	if err := oprot.WriteFieldBegin("overhour", thrift.I64, 3); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:overhour: ", p), err)
 	}
-	if err := oprot.WriteDouble(float64(p.Overhour)); err != nil {
+	if err := oprot.WriteI64(int64(p.Overhour)); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T.overhour (3) field write error: ", p), err)
 	}
 	if err := oprot.WriteFieldEnd(); err != nil {

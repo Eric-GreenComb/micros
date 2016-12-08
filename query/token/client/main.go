@@ -104,7 +104,7 @@ func main() {
 	}
 }
 
-func getOverHours(ttype int64) float64 {
+func getOverHours(ttype int64) int64 {
 	switch ttype {
 
 	// 0 - 2.0

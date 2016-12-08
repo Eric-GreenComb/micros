@@ -9,5 +9,5 @@ type TokenService interface {
 	//  - Token
 	//  - Ttype
 	//  - Overhour
-	VerifyToken(token string, ttype int64, overhour float64) int64
+	VerifyToken(token string, ttype int64, overhour int64) int64
 }

@@ -25,7 +25,7 @@ func (m loggingMiddleware) Ping() (v string) {
 	return
 }
 
-func (m loggingMiddleware) VerifyToken(key string, ttype int64, overhour float64) (v int64) {
+func (m loggingMiddleware) VerifyToken(key string, ttype int64, overhour int64) (v int64) {
 	defer func(begin time.Time) {
 		m.Logger.Log(
 			"method", "VerifyToken",
